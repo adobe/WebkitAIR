@@ -1,0 +1,55 @@
+#include "../../../../products/AIR/osx/Mac/AIR-Common.xcconfig"
+
+// AIR.xcconfig turns this on, but this library will fail with this enabled, so turn it back off
+GCC_WARN_HIDDEN_VIRTUAL_FUNCTIONS = NO
+
+DEAD_CODE_STRIPPING = YES;
+GCC_C_LANGUAGE_STANDARD = gnu99;
+GCC_DEBUGGING_SYMBOLS = full;
+GCC_DYNAMIC_NO_PIC = NO;
+GCC_ENABLE_CPP_EXCEPTIONS = NO;
+GCC_ENABLE_CPP_RTTI = NO;
+GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+GCC_ENABLE_OBJC_GC = NO;
+GCC_ENABLE_SYMBOL_SEPARATION = NO;
+GCC_FAST_OBJC_DISPATCH = YES;
+GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+GCC_PRECOMPILE_PREFIX_HEADER = YES;
+GCC_THREADSAFE_STATICS = NO;
+GCC_TREAT_WARNINGS_AS_ERRORS = YES;
+GCC_TREAT_WARNINGS_AS_ERRORS[arch=x86_64] = NO
+GCC_WARN_ABOUT_MISSING_NEWLINE = YES;
+GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
+GCC_WARN_NON_VIRTUAL_DESTRUCTOR = YES;
+LINKER_DISPLAYS_MANGLED_NAMES = YES;
+PREBINDING = NO;
+VALID_ARCHS = i386 x86_64;
+WARNING_CFLAGS = -Wall -W -Wcast-align -Wchar-subscripts -Wformat-security -Wmissing-format-attribute -Wpointer-arith -Wwrite-strings -Wno-format-y2k -Wno-unused-parameter -Wundef $(AIR_WEBKIT_EXTRA_CFLAGS) -Wno-unused-function -Wshorten-64-to-32;
+
+ARCHS = i386 x86_64;
+//ARCHS = i386;
+
+GCC_PREFIX_HEADER = ../WebKitPrefix.h;
+HEADER_SEARCH_PATHS = "${WEBKIT_SRC_ROOT}/apollo/include" "${WEBKIT_SRC_ROOT}/apollo/source" "${WEBKIT_SRC_ROOT}/apollo/include/mac" "${WEBKIT_SRC_ROOT}/../JavaScriptCore" "${WEBKIT_SRC_ROOT}/../JavaScriptCore/bindings" "${WEBKIT_SRC_ROOT}/../JavaScriptCore/kjs" "${WEBKIT_SRC_ROOT}/../JavaScriptCore/VM" "${WEBKIT_SRC_ROOT}/../JavaScriptCore/wtf" "${WEBKIT_SRC_ROOT}/../WebCore/bindings" "${WEBKIT_SRC_ROOT}/../WebCore/bindings/js" "${WEBKIT_SRC_ROOT}/../WebCore/dom" "${WEBKIT_SRC_ROOT}/../WebCore/css" "${WEBKIT_SRC_ROOT}/../WebCore/history" "${WEBKIT_SRC_ROOT}/../WebCore/rendering" "${WEBKIT_SRC_ROOT}/../WebCore/rendering/style" "${WEBKIT_SRC_ROOT}/../WebCore/bridge" "${WEBKIT_SRC_ROOT}/../WebCore/plugins" "${WEBKIT_SRC_ROOT}/../WebCore/editing" "${WEBKIT_SRC_ROOT}/../WebCore/page" "${WEBKIT_SRC_ROOT}/../WebCore/loader" "${WEBKIT_SRC_ROOT}/../WebCore/loader/icon" "${WEBKIT_SRC_ROOT}/../WebCore/loader/apollo" "${WEBKIT_SRC_ROOT}/../WebCore/html" "${WEBKIT_SRC_ROOT}/../WebCore/platform" "${WEBKIT_SRC_ROOT}/../WebCore/platform/apollo" "${WEBKIT_SRC_ROOT}/../WebCore/platform/network" "${WEBKIT_SRC_ROOT}/../WebCore/platform/network/apollo" "${WEBKIT_SRC_ROOT}/../WebCore/platform/graphics" "${WEBKIT_SRC_ROOT}/../WebCore/platform/text" "${WEBKIT_SRC_ROOT}/../WebCore/icu" "${WEBKIT_SRC_ROOT}/../WebKitLibraries" "${PROJECT_TEMP_DIR}/../WebCore.build/${CONFIGURATION}/DerivedSources" $(HEADER_SEARCH_PATHS);
+CONFIGURATION_BUILD_DIR = ${WEBKIT_BUILD_DIR}/mac/int/${CONFIGURATION}
+GCC_PFE_FILE_C_DIALECTS = c++;
+PRODUCT_NAME = WebKit
+INSTALL_PATH = /usr/local/lib
+GCC_GENERATE_DEBUGGING_SYMBOLS = YES
+
+COPY_PHASE_STRIP = NO
+FEATURE_DEFINES = ENABLE_XPATH=1 ENABLE_XSLT=1 ENABLE_ICONDATABASE=0 ENABLE_DATABASE=0 ENABLE_FTPDIR=0
+GCC_PREPROCESSOR_DEFINITIONS = BUILDING_APOLLO__ WTF_PLATFORM_CG WTF_PLATFORM_CF $(FEATURE_DEFINES) $(DEBUG_DEFINES) $(GCC_PREPROCESSOR_DEFINITIONS)
+EXPORTED_SYMBOLS_FILE = WebKit.exp
+LIBRARY_SEARCH_PATHS = "$(SDKROOT)/usr/lib" $(CONFIGURATION_TEMP_DIR)/WebKitSystemInterface/$(CURRENT_ARCH) $(LIBRARY_SEARCH_PATHS)
+OTHER_LDFLAGS = -lWebKitSystemInterface $(OTHER_LDFLAGS)
+
+GCC_STRICT_ALIASING = NO
+
+
+// Set the sdkroot to the value set in CompilerSettings.xcconfig
+SDKROOT = ${AIR_SDKROOT}
+
+MACOSX_DEPLOYMENT_TARGET[arch=x86_64] = 10.6
+MACOSX_DEPLOYMENT_TARGET[arch=i386] = 10.6
+GCC_VERSION = ${AIR_WEBKIT_GCC_VERSION}

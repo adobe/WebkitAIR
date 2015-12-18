@@ -1,0 +1,910 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 44;
+	objects = {
+
+/* Begin PBXAggregateTarget section */
+		81456B3F0BD589BE00441506 /* libWebKitSystemInterface */ = {
+			isa = PBXAggregateTarget;
+			buildConfigurationList = 81456B530BD589D900441506 /* Build configuration list for PBXAggregateTarget "libWebKitSystemInterface" */;
+			buildPhases = (
+				81456B560BD589EA00441506 /* ranlib */,
+			);
+			dependencies = (
+			);
+			name = libWebKitSystemInterface;
+			productName = libWebKitSystemInterface;
+		};
+/* End PBXAggregateTarget section */
+
+/* Begin PBXBuildFile section */
+		26C39CF913A14D5F00E447E1 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 26C39CF813A14D5F00E447E1 /* QuartzCore.framework */; };
+		2BBCAB520E089DA8004B6E95 /* WebString.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2BBCAB510E089DA8004B6E95 /* WebString.cpp */; };
+		504AAF590E6FF81900C171CA /* WebDebugListenerImpl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 504AAF550E6FF81900C171CA /* WebDebugListenerImpl.cpp */; };
+		504AAF5A0E6FF81900C171CA /* WebDebugStateImpl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 504AAF570E6FF81900C171CA /* WebDebugStateImpl.cpp */; };
+		50A815BC0F715FC200AB3295 /* WebMainFrameView.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 50A815BA0F715FC200AB3295 /* WebMainFrameView.cpp */; };
+		50B356470FF8CC41002643B6 /* WebSamplerImpl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 50B356450FF8CC41002643B6 /* WebSamplerImpl.cpp */; };
+		812E8AF60BC1B21E007210FF /* WebViewImpl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 812E8AF40BC1B21E007210FF /* WebViewImpl.cpp */; };
+		814331D30BC31A2200FE4654 /* WebChromeClient.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 814331D20BC31A2200FE4654 /* WebChromeClient.cpp */; };
+		814332260BC3230E00FE4654 /* WebContextMenuClient.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 814332250BC3230E00FE4654 /* WebContextMenuClient.cpp */; };
+		8143325F0BC3251600FE4654 /* WebEditorClient.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8143325E0BC3251600FE4654 /* WebEditorClient.cpp */; };
+		814332BD0BC3289600FE4654 /* WebDragClient.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 814332BC0BC3289600FE4654 /* WebDragClient.cpp */; };
+		815DD32A0BC5BC8B00BE66AC /* WebSharedTimer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 815DD3290BC5BC8B00BE66AC /* WebSharedTimer.cpp */; };
+		816C31980BC34A5E00BAA904 /* WebFocusManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 816C31960BC34A5E00BAA904 /* WebFocusManager.cpp */; };
+		817578100BC958FB005155B8 /* WebResourceRequestImpl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8175780E0BC958FB005155B8 /* WebResourceRequestImpl.cpp */; };
+		817578780BC95E67005155B8 /* WebResourceHandleClientImpl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 817578760BC95E67005155B8 /* WebResourceHandleClientImpl.cpp */; };
+		818A47930C6D191A00A90A57 /* libxslt.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 818A47920C6D191A00A90A57 /* libxslt.dylib */; };
+		818E8AC00BC4484900FDFD00 /* ApplicationServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 818E8ABF0BC4484900FDFD00 /* ApplicationServices.framework */; };
+		818E8AC50BC448AE00FDFD00 /* libxml2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 818E8AC40BC448AE00FDFD00 /* libxml2.dylib */; };
+		818E8ACA0BC44BDC00FDFD00 /* libicucore.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 818E8AC90BC44BDC00FDFD00 /* libicucore.dylib */; };
+		818E8ACC0BC44C1D00FDFD00 /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 818E8ACB0BC44C1D00FDFD00 /* libsqlite3.dylib */; };
+		818E8CEA0BC46A1D00FDFD00 /* AppKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 818E8CE90BC46A1D00FDFD00 /* AppKit.framework */; };
+		819F1B6C0BC6E18B00AA1266 /* WebFrameImpl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 819F1B6B0BC6E18B00AA1266 /* WebFrameImpl.cpp */; };
+		819F1B900BC6E2F700AA1266 /* WebViewImplMac.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 819F1B8F0BC6E2F700AA1266 /* WebViewImplMac.cpp */; };
+		81D4755A0BD1869E00F890E1 /* WebSystemInterface.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 81D475590BD1869D00F890E1 /* WebSystemInterface.cpp */; };
+		81E2330A0BBF14060093C40C /* WebKit.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 81E233090BBF14060093C40C /* WebKit.cpp */; };
+		81E233400BBF160B0093C40C /* libJavaScriptCore.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 81E233270BBF15F60093C40C /* libJavaScriptCore.a */; };
+		81E233C30BBF1A730093C40C /* libWebCore.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 81E233C20BBF1A620093C40C /* libWebCore.a */; };
+		81E233CC0BBF1B490093C40C /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 81E233CB0BBF1B490093C40C /* CoreFoundation.framework */; };
+		81E233DE0BBF1C4B0093C40C /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 81E233DD0BBF1C4B0093C40C /* Foundation.framework */; };
+		EAACF5540C2AFE8400D703CF /* WebPopupWindowClientImpl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EAACF5520C2AFE8400D703CF /* WebPopupWindowClientImpl.cpp */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		81775F2B0C5969A30094180D /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 81E233BC0BBF1A620093C40C /* WebCore.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 81EE68A50C595ABE002FFFE8;
+			remoteInfo = DeprecatedCarbonFunctions;
+		};
+		8191C06B0BD58DBD005138FA /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 81A82A440BBF0C97001DED9C /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 81456B3F0BD589BE00441506;
+			remoteInfo = libWebKitSystemInterface;
+		};
+		81E233260BBF15F60093C40C /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 81E233200BBF15F60093C40C /* JavaScriptCore.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 8152CC530BB32D480075B74E;
+			remoteInfo = JavaScriptCore;
+		};
+		81E233B90BBF1A350093C40C /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 81E233200BBF15F60093C40C /* JavaScriptCore.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = D2AAC045055464E500DB518D;
+			remoteInfo = JavaScriptCore;
+		};
+		81E233C10BBF1A620093C40C /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 81E233BC0BBF1A620093C40C /* WebCore.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 81C869790BB83D9400A7B16B;
+			remoteInfo = WebCore;
+		};
+		81E233C40BBF1A7D0093C40C /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 81E233BC0BBF1A620093C40C /* WebCore.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = D2AAC045055464E500DB518D;
+			remoteInfo = WebCore;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		26C39CF813A14D5F00E447E1 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
+		2BBCAB510E089DA8004B6E95 /* WebString.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = WebString.cpp; path = ../../apollo/source/WebString.cpp; sourceTree = SOURCE_ROOT; };
+		504AAF550E6FF81900C171CA /* WebDebugListenerImpl.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = WebDebugListenerImpl.cpp; path = ../../apollo/source/WebDebugListenerImpl.cpp; sourceTree = SOURCE_ROOT; };
+		504AAF560E6FF81900C171CA /* WebDebugListenerImpl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = WebDebugListenerImpl.h; path = ../../apollo/source/WebDebugListenerImpl.h; sourceTree = SOURCE_ROOT; };
+		504AAF570E6FF81900C171CA /* WebDebugStateImpl.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = WebDebugStateImpl.cpp; path = ../../apollo/source/WebDebugStateImpl.cpp; sourceTree = SOURCE_ROOT; };
+		504AAF580E6FF81900C171CA /* WebDebugStateImpl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = WebDebugStateImpl.h; path = ../../apollo/source/WebDebugStateImpl.h; sourceTree = SOURCE_ROOT; };
+		504AAF5B0E6FF83100C171CA /* WebDebugListener.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = WebDebugListener.h; path = ../../apollo/include/WebKitApollo/WebDebugListener.h; sourceTree = SOURCE_ROOT; };
+		504AAF5C0E6FF83100C171CA /* WebDebugState.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = WebDebugState.h; path = ../../apollo/include/WebKitApollo/WebDebugState.h; sourceTree = SOURCE_ROOT; };
+		504AAF5D0E6FF84100C171CA /* WebDebugListenerHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = WebDebugListenerHelper.h; path = ../../apollo/include/WebKitApollo/helpers/WebDebugListenerHelper.h; sourceTree = SOURCE_ROOT; };
+		504AAF5E0E6FF84200C171CA /* WebDebugStateHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = WebDebugStateHelper.h; path = ../../apollo/include/WebKitApollo/helpers/WebDebugStateHelper.h; sourceTree = SOURCE_ROOT; };
+		50A815BA0F715FC200AB3295 /* WebMainFrameView.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = WebMainFrameView.cpp; path = ../../apollo/source/WebMainFrameView.cpp; sourceTree = SOURCE_ROOT; };
+		50A815BB0F715FC200AB3295 /* WebMainFrameView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = WebMainFrameView.h; path = ../../apollo/source/WebMainFrameView.h; sourceTree = SOURCE_ROOT; };
+		50B356410FF8CC22002643B6 /* WebSamplerHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = WebSamplerHelper.h; path = ../../apollo/include/WebKitApollo/helpers/WebSamplerHelper.h; sourceTree = SOURCE_ROOT; };
+		50B356420FF8CC22002643B6 /* WebSamplerListenerHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = WebSamplerListenerHelper.h; path = ../../apollo/include/WebKitApollo/helpers/WebSamplerListenerHelper.h; sourceTree = SOURCE_ROOT; };
+		50B356430FF8CC30002643B6 /* WebSampler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = WebSampler.h; path = ../../apollo/include/WebKitApollo/WebSampler.h; sourceTree = SOURCE_ROOT; };
+		50B356440FF8CC30002643B6 /* WebSamplerListener.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = WebSamplerListener.h; path = ../../apollo/include/WebKitApollo/WebSamplerListener.h; sourceTree = SOURCE_ROOT; };
+		50B356450FF8CC41002643B6 /* WebSamplerImpl.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = WebSamplerImpl.cpp; path = ../../apollo/source/WebSamplerImpl.cpp; sourceTree = SOURCE_ROOT; };
+		50B356460FF8CC41002643B6 /* WebSamplerImpl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = WebSamplerImpl.h; path = ../../apollo/source/WebSamplerImpl.h; sourceTree = SOURCE_ROOT; };
+		50B357320FFA3649002643B6 /* WebSamplerMembersListHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = WebSamplerMembersListHelper.h; path = ../../apollo/include/WebKitApollo/helpers/WebSamplerMembersListHelper.h; sourceTree = SOURCE_ROOT; };
+		50B357330FFA3655002643B6 /* WebSamplerMembersList.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = WebSamplerMembersList.h; path = ../../apollo/include/WebKitApollo/WebSamplerMembersList.h; sourceTree = SOURCE_ROOT; };
+		8129CE3B0D0A0DD90015D04A /* WebNavigationPolicyAction.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = WebNavigationPolicyAction.h; path = ../../apollo/include/WebKitApollo/WebNavigationPolicyAction.h; sourceTree = SOURCE_ROOT; };
+		8129CE3C0D0A0DD90015D04A /* WebNavigationType.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = WebNavigationType.h; path = ../../apollo/include/WebKitApollo/WebNavigationType.h; sourceTree = SOURCE_ROOT; };
+		812E8A960BC1720B007210FF /* WebResourceRequestHelper.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = WebResourceRequestHelper.h; path = ../../apollo/include/WebKitApollo/helpers/WebResourceRequestHelper.h; sourceTree = SOURCE_ROOT; };
+		812E8AF40BC1B21E007210FF /* WebViewImpl.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = WebViewImpl.cpp; path = ../../apollo/source/WebViewImpl.cpp; sourceTree = SOURCE_ROOT; };
+		812E8AF50BC1B21E007210FF /* WebViewImpl.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = WebViewImpl.h; path = ../../apollo/source/WebViewImpl.h; sourceTree = SOURCE_ROOT; };
+		812E8B5C0BC2EAF4007210FF /* WebFrameImpl.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = WebFrameImpl.h; path = ../../apollo/source/WebFrameImpl.h; sourceTree = SOURCE_ROOT; };
+		813972E50BC0C6CA00B6B547 /* WebBitmapHelper.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = WebBitmapHelper.h; path = ../../apollo/include/WebKitApollo/helpers/WebBitmapHelper.h; sourceTree = SOURCE_ROOT; };
+		813972E60BC0C6CA00B6B547 /* WebFrameHelper.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = WebFrameHelper.h; path = ../../apollo/include/WebKitApollo/helpers/WebFrameHelper.h; sourceTree = SOURCE_ROOT; };
+		813972E70BC0C6CA00B6B547 /* WebHostHelper.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = WebHostHelper.h; path = ../../apollo/include/WebKitApollo/helpers/WebHostHelper.h; sourceTree = SOURCE_ROOT; };
+		813972E90BC0C6CA00B6B547 /* WebResourceHandleClientHelper.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = WebResourceHandleClientHelper.h; path = ../../apollo/include/WebKitApollo/helpers/WebResourceHandleClientHelper.h; sourceTree = SOURCE_ROOT; };
+		813972EA0BC0C6CA00B6B547 /* WebResourceHandleHelper.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = WebResourceHandleHelper.h; path = ../../apollo/include/WebKitApollo/helpers/WebResourceHandleHelper.h; sourceTree = SOURCE_ROOT; };
+		813972EC0BC0C6CA00B6B547 /* WebScriptProxyHelper.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = WebScriptProxyHelper.h; path = ../../apollo/include/WebKitApollo/helpers/WebScriptProxyHelper.h; sourceTree = SOURCE_ROOT; };
+		813972ED0BC0C6CA00B6B547 /* WebViewHelper.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = WebViewHelper.h; path = ../../apollo/include/WebKitApollo/helpers/WebViewHelper.h; sourceTree = SOURCE_ROOT; };
+		813972EE0BC0C6CA00B6B547 /* WebWindowHelper.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = WebWindowHelper.h; path = ../../apollo/include/WebKitApollo/helpers/WebWindowHelper.h; sourceTree = SOURCE_ROOT; };
+		814331D10BC31A2200FE4654 /* WebChromeClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = WebChromeClient.h; path = ../../apollo/source/WebChromeClient.h; sourceTree = SOURCE_ROOT; };
+		814331D20BC31A2200FE4654 /* WebChromeClient.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = WebChromeClient.cpp; path = ../../apollo/source/WebChromeClient.cpp; sourceTree = SOURCE_ROOT; };
+		814332240BC3230E00FE4654 /* WebContextMenuClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = WebContextMenuClient.h; path = ../../apollo/source/WebContextMenuClient.h; sourceTree = SOURCE_ROOT; };
+		814332250BC3230E00FE4654 /* WebContextMenuClient.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = WebContextMenuClient.cpp; path = ../../apollo/source/WebContextMenuClient.cpp; sourceTree = SOURCE_ROOT; };
+		8143325D0BC3251600FE4654 /* WebEditorClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = WebEditorClient.h; path = ../../apollo/source/WebEditorClient.h; sourceTree = SOURCE_ROOT; };
+		8143325E0BC3251600FE4654 /* WebEditorClient.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = WebEditorClient.cpp; path = ../../apollo/source/WebEditorClient.cpp; sourceTree = SOURCE_ROOT; };
+		814332BB0BC3289600FE4654 /* WebDragClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = WebDragClient.h; path = ../../apollo/source/WebDragClient.h; sourceTree = SOURCE_ROOT; };
+		814332BC0BC3289600FE4654 /* WebDragClient.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = WebDragClient.cpp; path = ../../apollo/source/WebDragClient.cpp; sourceTree = SOURCE_ROOT; };
+		815CB2D10BD2F6350034FD47 /* WebKeyboardCodes.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = WebKeyboardCodes.h; path = ../../apollo/include/WebKitApollo/WebKeyboardCodes.h; sourceTree = SOURCE_ROOT; };
+		815CDD0B0BCEDC1700B15FDF /* WebResourceResponseHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = WebResourceResponseHelper.h; path = ../../apollo/include/WebKitApollo/helpers/WebResourceResponseHelper.h; sourceTree = SOURCE_ROOT; };
+		815DD3290BC5BC8B00BE66AC /* WebSharedTimer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = WebSharedTimer.cpp; path = ../../apollo/source/WebSharedTimer.cpp; sourceTree = SOURCE_ROOT; };
+		816C31960BC34A5E00BAA904 /* WebFocusManager.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = WebFocusManager.cpp; path = ../../apollo/source/WebFocusManager.cpp; sourceTree = SOURCE_ROOT; };
+		816C31970BC34A5E00BAA904 /* WebFocusManager.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = WebFocusManager.h; path = ../../apollo/source/WebFocusManager.h; sourceTree = SOURCE_ROOT; };
+		8175780E0BC958FB005155B8 /* WebResourceRequestImpl.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = WebResourceRequestImpl.cpp; path = ../../apollo/source/WebResourceRequestImpl.cpp; sourceTree = SOURCE_ROOT; };
+		8175780F0BC958FB005155B8 /* WebResourceRequestImpl.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = WebResourceRequestImpl.h; path = ../../apollo/source/WebResourceRequestImpl.h; sourceTree = SOURCE_ROOT; };
+		817578760BC95E67005155B8 /* WebResourceHandleClientImpl.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = WebResourceHandleClientImpl.cpp; path = ../../apollo/source/WebResourceHandleClientImpl.cpp; sourceTree = SOURCE_ROOT; };
+		817578770BC95E67005155B8 /* WebResourceHandleClientImpl.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = WebResourceHandleClientImpl.h; path = ../../apollo/source/WebResourceHandleClientImpl.h; sourceTree = SOURCE_ROOT; };
+		817578AB0BC9F4D5005155B8 /* WebResourceResponse.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = WebResourceResponse.h; path = ../../apollo/include/WebKitApollo/WebResourceResponse.h; sourceTree = SOURCE_ROOT; };
+		818A47920C6D191A00A90A57 /* libxslt.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libxslt.dylib; path = /usr/lib/libxslt.dylib; sourceTree = "<absolute>"; };
+		818E8ABF0BC4484900FDFD00 /* ApplicationServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ApplicationServices.framework; path = /System/Library/Frameworks/ApplicationServices.framework; sourceTree = "<absolute>"; };
+		818E8AC40BC448AE00FDFD00 /* libxml2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libxml2.dylib; path = /usr/lib/libxml2.dylib; sourceTree = "<absolute>"; };
+		818E8AC90BC44BDC00FDFD00 /* libicucore.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libicucore.dylib; path = /usr/lib/libicucore.dylib; sourceTree = "<absolute>"; };
+		818E8ACB0BC44C1D00FDFD00 /* libsqlite3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.dylib; path = /usr/lib/libsqlite3.dylib; sourceTree = "<absolute>"; };
+		818E8CE90BC46A1D00FDFD00 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = /System/Library/Frameworks/AppKit.framework; sourceTree = "<absolute>"; };
+		819F1B6B0BC6E18B00AA1266 /* WebFrameImpl.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = WebFrameImpl.cpp; path = ../../apollo/source/WebFrameImpl.cpp; sourceTree = SOURCE_ROOT; };
+		819F1B8F0BC6E2F700AA1266 /* WebViewImplMac.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = WebViewImplMac.cpp; path = ../../apollo/source/mac/WebViewImplMac.cpp; sourceTree = SOURCE_ROOT; };
+		81A82A610BBF0CF1001DED9C /* WebKit.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = WebKit.xcconfig; sourceTree = "<group>"; };
+		81A82A6D0BBF0D97001DED9C /* WebKit.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = WebKit.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
+		81D475590BD1869D00F890E1 /* WebSystemInterface.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 30; name = WebSystemInterface.cpp; path = ../../apollo/source/mac/WebSystemInterface.cpp; sourceTree = SOURCE_ROOT; };
+		81D987710BC7EB8A00F67F25 /* WebCursor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = WebCursor.h; path = ../../apollo/include/WebKitApollo/WebCursor.h; sourceTree = SOURCE_ROOT; };
+		81E232CB0BBF104E0093C40C /* WebKit.Debug.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = WebKit.Debug.xcconfig; sourceTree = "<group>"; };
+		81E232DE0BBF10F70093C40C /* WebKit.Release.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = WebKit.Release.xcconfig; sourceTree = "<group>"; };
+		81E232EC0BBF123B0093C40C /* WebKit.exp */ = {isa = PBXFileReference; explicitFileType = text; fileEncoding = 4; path = WebKit.exp; sourceTree = "<group>"; };
+		81E232EF0BBF125F0093C40C /* WebBitmap.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = WebBitmap.h; path = ../../apollo/include/WebKitApollo/WebBitmap.h; sourceTree = SOURCE_ROOT; };
+		81E232F00BBF125F0093C40C /* WebError.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = WebError.h; path = ../../apollo/include/WebKitApollo/WebError.h; sourceTree = SOURCE_ROOT; };
+		81E232F10BBF125F0093C40C /* WebFrame.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = WebFrame.h; path = ../../apollo/include/WebKitApollo/WebFrame.h; sourceTree = SOURCE_ROOT; };
+		81E232F20BBF125F0093C40C /* WebHost.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = WebHost.h; path = ../../apollo/include/WebKitApollo/WebHost.h; sourceTree = SOURCE_ROOT; };
+		81E232F30BBF125F0093C40C /* WebKit.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = WebKit.h; path = ../../apollo/include/WebKitApollo/WebKit.h; sourceTree = SOURCE_ROOT; };
+		81E232F40BBF125F0093C40C /* WebPoint.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = WebPoint.h; path = ../../apollo/include/WebKitApollo/WebPoint.h; sourceTree = SOURCE_ROOT; };
+		81E232F50BBF125F0093C40C /* WebRect.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = WebRect.h; path = ../../apollo/include/WebKitApollo/WebRect.h; sourceTree = SOURCE_ROOT; };
+		81E232F60BBF125F0093C40C /* WebResourceHandle.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = WebResourceHandle.h; path = ../../apollo/include/WebKitApollo/WebResourceHandle.h; sourceTree = SOURCE_ROOT; };
+		81E232F70BBF125F0093C40C /* WebResourceHandleClient.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = WebResourceHandleClient.h; path = ../../apollo/include/WebKitApollo/WebResourceHandleClient.h; sourceTree = SOURCE_ROOT; };
+		81E232F80BBF125F0093C40C /* WebResourceRequest.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = WebResourceRequest.h; path = ../../apollo/include/WebKitApollo/WebResourceRequest.h; sourceTree = SOURCE_ROOT; };
+		81E232FA0BBF125F0093C40C /* WebScriptProxy.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = WebScriptProxy.h; path = ../../apollo/include/WebKitApollo/WebScriptProxy.h; sourceTree = SOURCE_ROOT; };
+		81E232FB0BBF125F0093C40C /* WebView.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = WebView.h; path = ../../apollo/include/WebKitApollo/WebView.h; sourceTree = SOURCE_ROOT; };
+		81E232FC0BBF125F0093C40C /* WebWindow.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = WebWindow.h; path = ../../apollo/include/WebKitApollo/WebWindow.h; sourceTree = SOURCE_ROOT; };
+		81E232FE0BBF12760093C40C /* WebConfig.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = WebConfig.h; path = ../../apollo/include/mac/WebKitApollo/WebConfig.h; sourceTree = SOURCE_ROOT; };
+		81E233090BBF14060093C40C /* WebKit.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = WebKit.cpp; path = ../../apollo/source/WebKit.cpp; sourceTree = SOURCE_ROOT; };
+		81E233200BBF15F60093C40C /* JavaScriptCore.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = JavaScriptCore.xcodeproj; path = ../../../JavaScriptCore/JavaScriptCore.apolloproj/mac/JavaScriptCore.xcodeproj; sourceTree = SOURCE_ROOT; };
+		81E2334C0BBF169E0093C40C /* WebKitPrefix.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = WebKitPrefix.h; path = ../WebKitPrefix.h; sourceTree = SOURCE_ROOT; };
+		81E233BC0BBF1A620093C40C /* WebCore.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = WebCore.xcodeproj; path = ../../../WebCore/WebCore.apolloproj/mac/WebCore.xcodeproj; sourceTree = SOURCE_ROOT; };
+		81E233CB0BBF1B490093C40C /* CoreFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreFoundation.framework; path = /System/Library/Frameworks/CoreFoundation.framework; sourceTree = "<absolute>"; };
+		81E233DD0BBF1C4B0093C40C /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
+		EAACF54E0C2AFE4500D703CF /* WebPopupWindow.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = WebPopupWindow.h; path = ../../apollo/include/WebKitApollo/WebPopupWindow.h; sourceTree = SOURCE_ROOT; };
+		EAACF54F0C2AFE4500D703CF /* WebPopupWindowClient.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = WebPopupWindowClient.h; path = ../../apollo/include/WebKitApollo/WebPopupWindowClient.h; sourceTree = SOURCE_ROOT; };
+		EAACF5500C2AFE5200D703CF /* WebPopupWindowClientHelper.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = WebPopupWindowClientHelper.h; path = ../../apollo/include/WebKitApollo/helpers/WebPopupWindowClientHelper.h; sourceTree = SOURCE_ROOT; };
+		EAACF5510C2AFE5200D703CF /* WebPopupWindowHelper.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = WebPopupWindowHelper.h; path = ../../apollo/include/WebKitApollo/helpers/WebPopupWindowHelper.h; sourceTree = SOURCE_ROOT; };
+		EAACF5520C2AFE8400D703CF /* WebPopupWindowClientImpl.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = WebPopupWindowClientImpl.cpp; path = ../../apollo/source/WebPopupWindowClientImpl.cpp; sourceTree = SOURCE_ROOT; };
+		EAACF5530C2AFE8400D703CF /* WebPopupWindowClientImpl.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = WebPopupWindowClientImpl.h; path = ../../apollo/source/WebPopupWindowClientImpl.h; sourceTree = SOURCE_ROOT; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		81A82A6B0BBF0D97001DED9C /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				818E8CEA0BC46A1D00FDFD00 /* AppKit.framework in Frameworks */,
+				818E8AC00BC4484900FDFD00 /* ApplicationServices.framework in Frameworks */,
+				81E233CC0BBF1B490093C40C /* CoreFoundation.framework in Frameworks */,
+				81E233DE0BBF1C4B0093C40C /* Foundation.framework in Frameworks */,
+				81E233400BBF160B0093C40C /* libJavaScriptCore.a in Frameworks */,
+				81E233C30BBF1A730093C40C /* libWebCore.a in Frameworks */,
+				818E8ACA0BC44BDC00FDFD00 /* libicucore.dylib in Frameworks */,
+				818E8ACC0BC44C1D00FDFD00 /* libsqlite3.dylib in Frameworks */,
+				818E8AC50BC448AE00FDFD00 /* libxml2.dylib in Frameworks */,
+				818A47930C6D191A00A90A57 /* libxslt.dylib in Frameworks */,
+				26C39CF913A14D5F00E447E1 /* QuartzCore.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		813972E20BC0C6AF00B6B547 /* helpers */ = {
+			isa = PBXGroup;
+			children = (
+				50B357320FFA3649002643B6 /* WebSamplerMembersListHelper.h */,
+				50B356410FF8CC22002643B6 /* WebSamplerHelper.h */,
+				50B356420FF8CC22002643B6 /* WebSamplerListenerHelper.h */,
+				504AAF5D0E6FF84100C171CA /* WebDebugListenerHelper.h */,
+				504AAF5E0E6FF84200C171CA /* WebDebugStateHelper.h */,
+				813972E50BC0C6CA00B6B547 /* WebBitmapHelper.h */,
+				813972E60BC0C6CA00B6B547 /* WebFrameHelper.h */,
+				813972E70BC0C6CA00B6B547 /* WebHostHelper.h */,
+				8129CE3B0D0A0DD90015D04A /* WebNavigationPolicyAction.h */,
+				8129CE3C0D0A0DD90015D04A /* WebNavigationType.h */,
+				EAACF5500C2AFE5200D703CF /* WebPopupWindowClientHelper.h */,
+				EAACF5510C2AFE5200D703CF /* WebPopupWindowHelper.h */,
+				813972E90BC0C6CA00B6B547 /* WebResourceHandleClientHelper.h */,
+				813972EA0BC0C6CA00B6B547 /* WebResourceHandleHelper.h */,
+				812E8A960BC1720B007210FF /* WebResourceRequestHelper.h */,
+				815CDD0B0BCEDC1700B15FDF /* WebResourceResponseHelper.h */,
+				813972EC0BC0C6CA00B6B547 /* WebScriptProxyHelper.h */,
+				813972ED0BC0C6CA00B6B547 /* WebViewHelper.h */,
+				813972EE0BC0C6CA00B6B547 /* WebWindowHelper.h */,
+			);
+			name = helpers;
+			sourceTree = "<group>";
+		};
+		819F1B8E0BC6E2DF00AA1266 /* mac */ = {
+			isa = PBXGroup;
+			children = (
+				819F1B8F0BC6E2F700AA1266 /* WebViewImplMac.cpp */,
+			);
+			name = mac;
+			sourceTree = "<group>";
+		};
+		81A82A420BBF0C97001DED9C = {
+			isa = PBXGroup;
+			children = (
+				50B356450FF8CC41002643B6 /* WebSamplerImpl.cpp */,
+				50B356460FF8CC41002643B6 /* WebSamplerImpl.h */,
+				81D472000BD182FF00F890E1 /* System Libraries */,
+				81E2334C0BBF169E0093C40C /* WebKitPrefix.h */,
+				81E232EE0BBF12470093C40C /* public */,
+				81E233050BBF12C90093C40C /* source */,
+				81A82A600BBF0CD8001DED9C /* Configurations */,
+				81A82A6E0BBF0D97001DED9C /* Products */,
+				81E232EC0BBF123B0093C40C /* WebKit.exp */,
+				81E233200BBF15F60093C40C /* JavaScriptCore.xcodeproj */,
+				81E233BC0BBF1A620093C40C /* WebCore.xcodeproj */,
+				26C39CF813A14D5F00E447E1 /* QuartzCore.framework */,
+			);
+			sourceTree = "<group>";
+		};
+		81A82A600BBF0CD8001DED9C /* Configurations */ = {
+			isa = PBXGroup;
+			children = (
+				81A82A610BBF0CF1001DED9C /* WebKit.xcconfig */,
+				81E232CB0BBF104E0093C40C /* WebKit.Debug.xcconfig */,
+				81E232DE0BBF10F70093C40C /* WebKit.Release.xcconfig */,
+			);
+			name = Configurations;
+			sourceTree = "<group>";
+		};
+		81A82A6E0BBF0D97001DED9C /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				81A82A6D0BBF0D97001DED9C /* WebKit.dylib */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		81D472000BD182FF00F890E1 /* System Libraries */ = {
+			isa = PBXGroup;
+			children = (
+				818E8CE90BC46A1D00FDFD00 /* AppKit.framework */,
+				818E8ABF0BC4484900FDFD00 /* ApplicationServices.framework */,
+				81E233CB0BBF1B490093C40C /* CoreFoundation.framework */,
+				81E233DD0BBF1C4B0093C40C /* Foundation.framework */,
+				818E8AC90BC44BDC00FDFD00 /* libicucore.dylib */,
+				818E8ACB0BC44C1D00FDFD00 /* libsqlite3.dylib */,
+				818E8AC40BC448AE00FDFD00 /* libxml2.dylib */,
+				818A47920C6D191A00A90A57 /* libxslt.dylib */,
+			);
+			name = "System Libraries";
+			sourceTree = "<group>";
+		};
+		81E232EE0BBF12470093C40C /* public */ = {
+			isa = PBXGroup;
+			children = (
+				50B357330FFA3655002643B6 /* WebSamplerMembersList.h */,
+				50B356430FF8CC30002643B6 /* WebSampler.h */,
+				50B356440FF8CC30002643B6 /* WebSamplerListener.h */,
+				504AAF5B0E6FF83100C171CA /* WebDebugListener.h */,
+				504AAF5C0E6FF83100C171CA /* WebDebugState.h */,
+				813972E20BC0C6AF00B6B547 /* helpers */,
+				81E232FD0BBF12640093C40C /* mac */,
+				81E232EF0BBF125F0093C40C /* WebBitmap.h */,
+				81D987710BC7EB8A00F67F25 /* WebCursor.h */,
+				81E232F00BBF125F0093C40C /* WebError.h */,
+				81E232F10BBF125F0093C40C /* WebFrame.h */,
+				81E232F20BBF125F0093C40C /* WebHost.h */,
+				815CB2D10BD2F6350034FD47 /* WebKeyboardCodes.h */,
+				81E232F30BBF125F0093C40C /* WebKit.h */,
+				81E232F40BBF125F0093C40C /* WebPoint.h */,
+				EAACF54E0C2AFE4500D703CF /* WebPopupWindow.h */,
+				EAACF54F0C2AFE4500D703CF /* WebPopupWindowClient.h */,
+				81E232F50BBF125F0093C40C /* WebRect.h */,
+				81E232F60BBF125F0093C40C /* WebResourceHandle.h */,
+				81E232F70BBF125F0093C40C /* WebResourceHandleClient.h */,
+				81E232F80BBF125F0093C40C /* WebResourceRequest.h */,
+				817578AB0BC9F4D5005155B8 /* WebResourceResponse.h */,
+				81E232FA0BBF125F0093C40C /* WebScriptProxy.h */,
+				81E232FB0BBF125F0093C40C /* WebView.h */,
+				81E232FC0BBF125F0093C40C /* WebWindow.h */,
+			);
+			name = public;
+			sourceTree = "<group>";
+		};
+		81E232FD0BBF12640093C40C /* mac */ = {
+			isa = PBXGroup;
+			children = (
+				81E232FE0BBF12760093C40C /* WebConfig.h */,
+			);
+			name = mac;
+			sourceTree = "<group>";
+		};
+		81E233050BBF12C90093C40C /* source */ = {
+			isa = PBXGroup;
+			children = (
+				819F1B8E0BC6E2DF00AA1266 /* mac */,
+				814331D20BC31A2200FE4654 /* WebChromeClient.cpp */,
+				814331D10BC31A2200FE4654 /* WebChromeClient.h */,
+				814332250BC3230E00FE4654 /* WebContextMenuClient.cpp */,
+				814332240BC3230E00FE4654 /* WebContextMenuClient.h */,
+				504AAF550E6FF81900C171CA /* WebDebugListenerImpl.cpp */,
+				504AAF560E6FF81900C171CA /* WebDebugListenerImpl.h */,
+				504AAF570E6FF81900C171CA /* WebDebugStateImpl.cpp */,
+				504AAF580E6FF81900C171CA /* WebDebugStateImpl.h */,
+				814332BC0BC3289600FE4654 /* WebDragClient.cpp */,
+				814332BB0BC3289600FE4654 /* WebDragClient.h */,
+				2BBCAB510E089DA8004B6E95 /* WebString.cpp */,
+				8143325E0BC3251600FE4654 /* WebEditorClient.cpp */,
+				8143325D0BC3251600FE4654 /* WebEditorClient.h */,
+				816C31960BC34A5E00BAA904 /* WebFocusManager.cpp */,
+				816C31970BC34A5E00BAA904 /* WebFocusManager.h */,
+				819F1B6B0BC6E18B00AA1266 /* WebFrameImpl.cpp */,
+				812E8B5C0BC2EAF4007210FF /* WebFrameImpl.h */,
+				81E233090BBF14060093C40C /* WebKit.cpp */,
+				50A815BA0F715FC200AB3295 /* WebMainFrameView.cpp */,
+				50A815BB0F715FC200AB3295 /* WebMainFrameView.h */,
+				EAACF5520C2AFE8400D703CF /* WebPopupWindowClientImpl.cpp */,
+				EAACF5530C2AFE8400D703CF /* WebPopupWindowClientImpl.h */,
+				817578760BC95E67005155B8 /* WebResourceHandleClientImpl.cpp */,
+				817578770BC95E67005155B8 /* WebResourceHandleClientImpl.h */,
+				8175780E0BC958FB005155B8 /* WebResourceRequestImpl.cpp */,
+				8175780F0BC958FB005155B8 /* WebResourceRequestImpl.h */,
+				815DD3290BC5BC8B00BE66AC /* WebSharedTimer.cpp */,
+				81D475590BD1869D00F890E1 /* WebSystemInterface.cpp */,
+				812E8AF40BC1B21E007210FF /* WebViewImpl.cpp */,
+				812E8AF50BC1B21E007210FF /* WebViewImpl.h */,
+			);
+			name = source;
+			sourceTree = "<group>";
+		};
+		81E233210BBF15F60093C40C /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				81E233270BBF15F60093C40C /* libJavaScriptCore.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		81E233BD0BBF1A620093C40C /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				81E233C20BBF1A620093C40C /* libWebCore.a */,
+				81775F2C0C5969A30094180D /* libDeprecatedCarbonFunctions.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		81A82A6C0BBF0D97001DED9C /* WebKit */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 81A82A6F0BBF0D97001DED9C /* Build configuration list for PBXNativeTarget "WebKit" */;
+			buildPhases = (
+				81BD517A0BBF1F6700F5B93A /* Create Output Directory */,
+				81A82A6A0BBF0D97001DED9C /* Sources */,
+				81A82A6B0BBF0D97001DED9C /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				81E233BA0BBF1A350093C40C /* PBXTargetDependency */,
+				81E233C50BBF1A7D0093C40C /* PBXTargetDependency */,
+				8191C06C0BD58DBD005138FA /* PBXTargetDependency */,
+			);
+			name = WebKit;
+			productName = WebKit;
+			productReference = 81A82A6D0BBF0D97001DED9C /* WebKit.dylib */;
+			productType = "com.apple.product-type.library.dynamic";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		81A82A440BBF0C97001DED9C /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+			};
+			buildConfigurationList = 81A82A450BBF0C97001DED9C /* Build configuration list for PBXProject "WebKit" */;
+			compatibilityVersion = "Xcode 3.0";
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				English,
+				Japanese,
+				French,
+				German,
+			);
+			mainGroup = 81A82A420BBF0C97001DED9C;
+			productRefGroup = 81A82A6E0BBF0D97001DED9C /* Products */;
+			projectDirPath = "";
+			projectReferences = (
+				{
+					ProductGroup = 81E233210BBF15F60093C40C /* Products */;
+					ProjectRef = 81E233200BBF15F60093C40C /* JavaScriptCore.xcodeproj */;
+				},
+				{
+					ProductGroup = 81E233BD0BBF1A620093C40C /* Products */;
+					ProjectRef = 81E233BC0BBF1A620093C40C /* WebCore.xcodeproj */;
+				},
+			);
+			projectRoot = ../..;
+			targets = (
+				81A82A6C0BBF0D97001DED9C /* WebKit */,
+				81456B3F0BD589BE00441506 /* libWebKitSystemInterface */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXReferenceProxy section */
+		81775F2C0C5969A30094180D /* libDeprecatedCarbonFunctions.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libDeprecatedCarbonFunctions.a;
+			remoteRef = 81775F2B0C5969A30094180D /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		81E233270BBF15F60093C40C /* libJavaScriptCore.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libJavaScriptCore.a;
+			remoteRef = 81E233260BBF15F60093C40C /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		81E233C20BBF1A620093C40C /* libWebCore.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libWebCore.a;
+			remoteRef = 81E233C10BBF1A620093C40C /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+/* End PBXReferenceProxy section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		81456B560BD589EA00441506 /* ranlib */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"$(PROJECT_DIR)/../../../WebKitLibraries/libWebKitSystemInterfaceTiger.a",
+				"$(PROJECT_DIR)/../../../WebKitLibraries/libWebKitSystemInterfaceLeopard.a",
+				"$(PROJECT_DIR)/../../../WebKitLibraries/libWebKitSystemInterfaceSnowLeopard.a",
+			);
+			name = ranlib;
+			outputPaths = (
+				"$(CONFIGURATION_TEMP_DIR)/WebKitSystemInterface/i386/libWebKitSystemInterface.a",
+				"$(CONFIGURATION_TEMP_DIR)/WebKitSystemInterface/x86_64/libWebKitSystemInterface.a",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "if [[ $MACOSX_DEPLOYMENT_TARGET == \"10.4\" ]]\nthen\n\techo cp \"${SCRIPT_INPUT_FILE_0}\" \"${SCRIPT_OUTPUT_FILE_0}\"\n\tcp \"${SCRIPT_INPUT_FILE_0}\" \"${SCRIPT_OUTPUT_FILE_0}\"\n\tcp \"${SCRIPT_INPUT_FILE_1}\" \"${SCRIPT_OUTPUT_FILE_1}\"\nfi\n\nif [[ $MACOSX_DEPLOYMENT_TARGET == \"10.5\" ]]\nthen\n\techo cp \"${SCRIPT_INPUT_FILE_1}\" \"${SCRIPT_OUTPUT_FILE_0}\"\n\tcp \"${SCRIPT_INPUT_FILE_1}\" \"${SCRIPT_OUTPUT_FILE_0}\"\n\tcp \"${SCRIPT_INPUT_FILE_1}\" \"${SCRIPT_OUTPUT_FILE_1}\"\nfi\n\nif [[ $MACOSX_DEPLOYMENT_TARGET == \"10.6\" ]]\nthen\n\techo cp \"${SCRIPT_INPUT_FILE_2}\" \"${SCRIPT_OUTPUT_FILE_0}\"\n\tcp \"${SCRIPT_INPUT_FILE_2}\" \"${SCRIPT_OUTPUT_FILE_0}\"\n\tcp \"${SCRIPT_INPUT_FILE_2}\" \"${SCRIPT_OUTPUT_FILE_1}\"\nfi\n\nranlib \"${SCRIPT_OUTPUT_FILE_0}\"\nranlib \"${SCRIPT_OUTPUT_FILE_1}\"";
+		};
+		81BD517A0BBF1F6700F5B93A /* Create Output Directory */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Create Output Directory";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "mkdir -p \"${CONFIGURATION_BUILD_DIR}\"\n";
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		81A82A6A0BBF0D97001DED9C /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				81E2330A0BBF14060093C40C /* WebKit.cpp in Sources */,
+				812E8AF60BC1B21E007210FF /* WebViewImpl.cpp in Sources */,
+				814331D30BC31A2200FE4654 /* WebChromeClient.cpp in Sources */,
+				814332260BC3230E00FE4654 /* WebContextMenuClient.cpp in Sources */,
+				8143325F0BC3251600FE4654 /* WebEditorClient.cpp in Sources */,
+				814332BD0BC3289600FE4654 /* WebDragClient.cpp in Sources */,
+				816C31980BC34A5E00BAA904 /* WebFocusManager.cpp in Sources */,
+				815DD32A0BC5BC8B00BE66AC /* WebSharedTimer.cpp in Sources */,
+				819F1B6C0BC6E18B00AA1266 /* WebFrameImpl.cpp in Sources */,
+				819F1B900BC6E2F700AA1266 /* WebViewImplMac.cpp in Sources */,
+				817578100BC958FB005155B8 /* WebResourceRequestImpl.cpp in Sources */,
+				817578780BC95E67005155B8 /* WebResourceHandleClientImpl.cpp in Sources */,
+				81D4755A0BD1869E00F890E1 /* WebSystemInterface.cpp in Sources */,
+				EAACF5540C2AFE8400D703CF /* WebPopupWindowClientImpl.cpp in Sources */,
+				2BBCAB520E089DA8004B6E95 /* WebString.cpp in Sources */,
+				504AAF590E6FF81900C171CA /* WebDebugListenerImpl.cpp in Sources */,
+				504AAF5A0E6FF81900C171CA /* WebDebugStateImpl.cpp in Sources */,
+				50A815BC0F715FC200AB3295 /* WebMainFrameView.cpp in Sources */,
+				50B356470FF8CC41002643B6 /* WebSamplerImpl.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		8191C06C0BD58DBD005138FA /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 81456B3F0BD589BE00441506 /* libWebKitSystemInterface */;
+			targetProxy = 8191C06B0BD58DBD005138FA /* PBXContainerItemProxy */;
+		};
+		81E233BA0BBF1A350093C40C /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = JavaScriptCore;
+			targetProxy = 81E233B90BBF1A350093C40C /* PBXContainerItemProxy */;
+		};
+		81E233C50BBF1A7D0093C40C /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = WebCore;
+			targetProxy = 81E233C40BBF1A7D0093C40C /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		81456B540BD589D900441506 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				PRODUCT_NAME = libWebKitSystemInterface;
+			};
+			name = Debug;
+		};
+		81456B550BD589D900441506 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = YES;
+				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				PRODUCT_NAME = libWebKitSystemInterface;
+				ZERO_LINK = NO;
+			};
+			name = Release;
+		};
+		81A82A460BBF0C97001DED9C /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 81A82A610BBF0CF1001DED9C /* WebKit.xcconfig */;
+			buildSettings = {
+				APOLLO_SRC_ROOT = "$(PROJECT_DIR)/../../../..";
+				FEATURE_DEFINES = "ENABLE_XPATH=1 ENABLE_XSLT=1 ENABLE_ICONDATABASE=0 ENABLE_DATABASE=0 ENABLE_FTPDIR=0 ENABLE_NETSCAPE_PLUGIN_API=0";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					BUILDING_APOLLO__,
+					WTF_PLATFORM_CG,
+					WTF_PLATFORM_CF,
+					"$(FEATURE_DEFINES)",
+					"$(DEBUG_DEFINES)",
+					"$(GCC_PREPROCESSOR_DEFINITIONS)",
+				);
+				HEADER_SEARCH_PATHS = (
+					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_86)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_85)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_1)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_2)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_3)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_4)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_5)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_6)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_7)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_8)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_44)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_9)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_10)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_11)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_45)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_12)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_13)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_14)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_15)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_16)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_17)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_18)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_19)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_20)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_21)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_22)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_23)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_24)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_25)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_26)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_27)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_28)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_29)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_30)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_31)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_32)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_33)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_34)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_35)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_36)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_37)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_38)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_39)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_40)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_41)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_42)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_43)",
+					"$(HEADER_SEARCH_PATHS)",
+				);
+				HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_1 = "\"${WEBKIT_SRC_ROOT}/apollo/include\"";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_10 = "\"${WEBKIT_SRC_ROOT}/../JavaScriptCore/bytecode\"";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_11 = "\"${WEBKIT_SRC_ROOT}/../JavaScriptCore/bytecompiler\"";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_12 = "\"${WEBKIT_SRC_ROOT}/../JavaScriptCore/debugger\"";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_13 = "\"${WEBKIT_SRC_ROOT}/../WebCore/bindings\"";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_14 = "\"${WEBKIT_SRC_ROOT}/../WebCore/bindings/js\"";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_15 = "\"${WEBKIT_SRC_ROOT}/../WebCore/dom\"";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_16 = "\"${WEBKIT_SRC_ROOT}/../WebCore/css\"";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_17 = "\"${WEBKIT_SRC_ROOT}/../WebCore/history\"";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_18 = "\"${WEBKIT_SRC_ROOT}/../WebCore/rendering\"";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_19 = "\"${WEBKIT_SRC_ROOT}/../WebCore/rendering/style\"";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_2 = "\"${WEBKIT_SRC_ROOT}/apollo/source\"";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_20 = "\"${WEBKIT_SRC_ROOT}/../WebCore/bridge\"";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_21 = "\"${WEBKIT_SRC_ROOT}/../WebCore/plugins\"";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_22 = "\"${WEBKIT_SRC_ROOT}/../WebCore/editing\"";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_23 = "\"${WEBKIT_SRC_ROOT}/../WebCore/page\"";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_24 = "\"${WEBKIT_SRC_ROOT}/../WebCore/page/animation\"";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_25 = "\"${WEBKIT_SRC_ROOT}/../WebCore/loader\"";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_26 = "\"${WEBKIT_SRC_ROOT}/../WebCore/loader/icon\"";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_27 = "\"${WEBKIT_SRC_ROOT}/../WebCore/loader/apollo\"";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_28 = "\"${WEBKIT_SRC_ROOT}/../WebCore/html\"";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_29 = "\"${WEBKIT_SRC_ROOT}/../WebCore/platform\"";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_3 = "\"${WEBKIT_SRC_ROOT}/apollo/include/mac\"";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_30 = "\"${WEBKIT_SRC_ROOT}/../WebCore/platform/animation\"";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_31 = "\"${WEBKIT_SRC_ROOT}/../WebCore/platform/apollo\"";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_32 = "\"${WEBKIT_SRC_ROOT}/../WebCore/platform/network\"";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_33 = "\"${WEBKIT_SRC_ROOT}/../WebCore/platform/network/apollo\"";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_34 = "\"${WEBKIT_SRC_ROOT}/../WebCore/platform/graphics\"";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_35 = "\"${WEBKIT_SRC_ROOT}/../WebCore/platform/graphics/transforms\"";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_36 = "\"${WEBKIT_SRC_ROOT}/../WebCore/platform/graphics/apollo/mac\"";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_37 = "\"${WEBKIT_SRC_ROOT}/../WebCore/platform/text\"";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_38 = "\"${WEBKIT_SRC_ROOT}/../WebCore/icu\"";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_39 = "\"${WEBKIT_SRC_ROOT}/../WebCore/inspector\"";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_4 = "\"${WEBKIT_SRC_ROOT}/../JavaScriptCore\"";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_40 = "\"${WEBKIT_SRC_ROOT}/../JavaScriptCore/wtf\"";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_41 = "\"${WEBKIT_SRC_ROOT}/../WebKitLibraries\"";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_42 = "\"${PROJECT_TEMP_DIR}/../WebCore.build/${CONFIGURATION}/DerivedSources\"";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_43 = "\"${PROJECT_TEMP_DIR}/../JavaScriptCore.build/${CONFIGURATION}/FrameworkHeaders\"";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_44 = "\"${WEBKIT_SRC_ROOT}/../JavaScriptCore/profiler\"";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_45 = "\"${WEBKIT_SRC_ROOT}/../JavaScriptCore/assembler\"";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_5 = "\"${WEBKIT_SRC_ROOT}/../JavaScriptCore/bindings\"";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_6 = "\"${WEBKIT_SRC_ROOT}/../JavaScriptCore/runtime\"";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_7 = "\"${WEBKIT_SRC_ROOT}/../JavaScriptCore/interpreter\"";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_8 = "\"${WEBKIT_SRC_ROOT}/../JavaScriptCore/jit\"";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_85 = "\"${WEBKIT_SRC_ROOT}/../JavaScriptCore//API/\"";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_86 = "\"${WEBKIT_SRC_ROOT}/../WebCore//bridge/jsc\"";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_9 = "\"${WEBKIT_SRC_ROOT}/../JavaScriptCore/parser\"";
+				WEBKIT_BUILD_DIR = "${WEBKIT_SRC_ROOT}/../../build";
+				WEBKIT_SRC_ROOT = "${PROJECT_DIR}/../..";
+			};
+			name = Debug;
+		};
+		81A82A470BBF0C97001DED9C /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 81A82A610BBF0CF1001DED9C /* WebKit.xcconfig */;
+			buildSettings = {
+				APOLLO_SRC_ROOT = "$(PROJECT_DIR)/../../../..";
+				FEATURE_DEFINES = "ENABLE_XPATH=1 ENABLE_XSLT=1 ENABLE_ICONDATABASE=0 ENABLE_DATABASE=0 ENABLE_FTPDIR=0 ENABLE_NETSCAPE_PLUGIN_API=0";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					BUILDING_APOLLO__,
+					WTF_PLATFORM_CG,
+					WTF_PLATFORM_CF,
+					"$(FEATURE_DEFINES)",
+					"$(DEBUG_DEFINES)",
+					"$(GCC_PREPROCESSOR_DEFINITIONS)",
+				);
+				HEADER_SEARCH_PATHS = (
+					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_86)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_85)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_40)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_41)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_42)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_43)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_44)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_45)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_46)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_47)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_83)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_48)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_49)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_50)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_84)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_51)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_52)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_53)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_54)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_55)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_56)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_57)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_58)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_59)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_60)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_61)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_62)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_63)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_64)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_65)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_66)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_67)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_68)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_69)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_70)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_71)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_72)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_73)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_74)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_75)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_76)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_77)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_78)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_79)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_80)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_81)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_82)",
+					"$(HEADER_SEARCH_PATHS)",
+				);
+				HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_1 = "\"${WEBKIT_SRC_ROOT}/apollo/include\"";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_10 = "\"${WEBKIT_SRC_ROOT}/../JavaScriptCore/bytecode\"";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_11 = "\"${WEBKIT_SRC_ROOT}/../JavaScriptCore/bytecompiler\"";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_12 = "\"${WEBKIT_SRC_ROOT}/../JavaScriptCore/debugger\"";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_13 = "\"${WEBKIT_SRC_ROOT}/../JavaScriptCore/wtf\"";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_14 = "\"${WEBKIT_SRC_ROOT}/../WebCore/bindings\"";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_15 = "\"${WEBKIT_SRC_ROOT}/../WebCore/bindings/js\"";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_16 = "\"${WEBKIT_SRC_ROOT}/../WebCore/dom\"";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_17 = "\"${WEBKIT_SRC_ROOT}/../WebCore/css\"";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_18 = "\"${WEBKIT_SRC_ROOT}/../WebCore/history\"";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_19 = "\"${WEBKIT_SRC_ROOT}/../WebCore/rendering\"";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_2 = "\"${WEBKIT_SRC_ROOT}/apollo/source\"";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_20 = "\"${WEBKIT_SRC_ROOT}/../WebCore/rendering/style\"";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_21 = "\"${WEBKIT_SRC_ROOT}/../WebCore/bridge\"";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_22 = "\"${WEBKIT_SRC_ROOT}/../WebCore/plugins\"";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_23 = "\"${WEBKIT_SRC_ROOT}/../WebCore/editing\"";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_24 = "\"${WEBKIT_SRC_ROOT}/../WebCore/page\"";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_25 = "\"${WEBKIT_SRC_ROOT}/../WebCore/loader\"";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_26 = "\"${WEBKIT_SRC_ROOT}/../WebCore/loader/icon\"";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_27 = "\"${WEBKIT_SRC_ROOT}/../WebCore/loader/apollo\"";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_28 = "\"${WEBKIT_SRC_ROOT}/../WebCore/html\"";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_29 = "\"${WEBKIT_SRC_ROOT}/../WebCore/platform\"";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_3 = "\"${WEBKIT_SRC_ROOT}/apollo/include/mac\"";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_30 = "\"${WEBKIT_SRC_ROOT}/../WebCore/platform/apollo\"";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_31 = "\"${WEBKIT_SRC_ROOT}/../WebCore/platform/network\"";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_32 = "\"${WEBKIT_SRC_ROOT}/../WebCore/platform/network/apollo\"";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_33 = "\"${WEBKIT_SRC_ROOT}/../WebCore/platform/graphics\"";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_34 = "\"${WEBKIT_SRC_ROOT}/../WebCore/platform/text\"";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_35 = "\"${WEBKIT_SRC_ROOT}/../WebCore/inspector\"";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_36 = "\"${WEBKIT_SRC_ROOT}/../WebCore/icu\"";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_37 = "\"${WEBKIT_SRC_ROOT}/../WebKitLibraries\"";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_38 = "\"${PROJECT_TEMP_DIR}/../WebCore.build/${CONFIGURATION}/DerivedSources\"";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_39 = "\"${PROJECT_TEMP_DIR}/../JavaScriptCore.build/${CONFIGURATION}/FrameworkHeaders\"";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_4 = "\"${WEBKIT_SRC_ROOT}/../JavaScriptCore\"";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_40 = "\"${WEBKIT_SRC_ROOT}/apollo/include\"";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_41 = "\"${WEBKIT_SRC_ROOT}/apollo/source\"";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_42 = "\"${WEBKIT_SRC_ROOT}/apollo/include/mac\"";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_43 = "\"${WEBKIT_SRC_ROOT}/../JavaScriptCore\"";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_44 = "\"${WEBKIT_SRC_ROOT}/../JavaScriptCore/bindings\"";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_45 = "\"${WEBKIT_SRC_ROOT}/../JavaScriptCore/runtime\"";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_46 = "\"${WEBKIT_SRC_ROOT}/../JavaScriptCore/interpreter\"";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_47 = "\"${WEBKIT_SRC_ROOT}/../JavaScriptCore/jit\"";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_48 = "\"${WEBKIT_SRC_ROOT}/../JavaScriptCore/parser\"";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_49 = "\"${WEBKIT_SRC_ROOT}/../JavaScriptCore/bytecode\"";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_5 = "\"${WEBKIT_SRC_ROOT}/../JavaScriptCore/bindings\"";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_50 = "\"${WEBKIT_SRC_ROOT}/../JavaScriptCore/bytecompiler\"";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_51 = "\"${WEBKIT_SRC_ROOT}/../JavaScriptCore/debugger\"";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_52 = "\"${WEBKIT_SRC_ROOT}/../WebCore/bindings\"";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_53 = "\"${WEBKIT_SRC_ROOT}/../WebCore/bindings/js\"";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_54 = "\"${WEBKIT_SRC_ROOT}/../WebCore/dom\"";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_55 = "\"${WEBKIT_SRC_ROOT}/../WebCore/css\"";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_56 = "\"${WEBKIT_SRC_ROOT}/../WebCore/history\"";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_57 = "\"${WEBKIT_SRC_ROOT}/../WebCore/rendering\"";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_58 = "\"${WEBKIT_SRC_ROOT}/../WebCore/rendering/style\"";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_59 = "\"${WEBKIT_SRC_ROOT}/../WebCore/bridge\"";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_6 = "\"${WEBKIT_SRC_ROOT}/../JavaScriptCore/runtime\"";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_60 = "\"${WEBKIT_SRC_ROOT}/../WebCore/plugins\"";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_61 = "\"${WEBKIT_SRC_ROOT}/../WebCore/editing\"";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_62 = "\"${WEBKIT_SRC_ROOT}/../WebCore/page\"";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_63 = "\"${WEBKIT_SRC_ROOT}/../WebCore/page/animation\"";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_64 = "\"${WEBKIT_SRC_ROOT}/../WebCore/loader\"";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_65 = "\"${WEBKIT_SRC_ROOT}/../WebCore/loader/icon\"";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_66 = "\"${WEBKIT_SRC_ROOT}/../WebCore/loader/apollo\"";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_67 = "\"${WEBKIT_SRC_ROOT}/../WebCore/html\"";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_68 = "\"${WEBKIT_SRC_ROOT}/../WebCore/platform\"";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_69 = "\"${WEBKIT_SRC_ROOT}/../WebCore/platform/animation\"";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_7 = "\"${WEBKIT_SRC_ROOT}/../JavaScriptCore/jit\"";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_70 = "\"${WEBKIT_SRC_ROOT}/../WebCore/platform/apollo\"";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_71 = "\"${WEBKIT_SRC_ROOT}/../WebCore/platform/network\"";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_72 = "\"${WEBKIT_SRC_ROOT}/../WebCore/platform/network/apollo\"";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_73 = "\"${WEBKIT_SRC_ROOT}/../WebCore/platform/graphics\"";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_74 = "\"${WEBKIT_SRC_ROOT}/../WebCore/platform/graphics/transforms\"";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_75 = "\"${WEBKIT_SRC_ROOT}/../WebCore/platform/graphics/apollo/mac\"";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_76 = "\"${WEBKIT_SRC_ROOT}/../WebCore/platform/text\"";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_77 = "\"${WEBKIT_SRC_ROOT}/../WebCore/icu\"";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_78 = "\"${WEBKIT_SRC_ROOT}/../WebCore/inspector\"";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_79 = "\"${WEBKIT_SRC_ROOT}/../JavaScriptCore/wtf\"";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_8 = "\"${WEBKIT_SRC_ROOT}/../JavaScriptCore/interpreter\"";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_80 = "\"${WEBKIT_SRC_ROOT}/../WebKitLibraries\"";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_81 = "\"${PROJECT_TEMP_DIR}/../WebCore.build/${CONFIGURATION}/DerivedSources\"";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_82 = "\"${PROJECT_TEMP_DIR}/../JavaScriptCore.build/${CONFIGURATION}/FrameworkHeaders\"";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_83 = "\"${WEBKIT_SRC_ROOT}/../JavaScriptCore/profiler\"";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_84 = "\"${WEBKIT_SRC_ROOT}/../JavaScriptCore/assembler\"";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_85 = "\"${WEBKIT_SRC_ROOT}/../JavaScriptCore//API/\"";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_86 = "\"${WEBKIT_SRC_ROOT}/../WebCore//bridge/jsc\"";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_9 = "\"${WEBKIT_SRC_ROOT}/../JavaScriptCore/parser\"";
+				WEBKIT_BUILD_DIR = "${WEBKIT_SRC_ROOT}/../../build";
+				WEBKIT_SRC_ROOT = "${PROJECT_DIR}/../..";
+			};
+			name = Release;
+		};
+		81A82A700BBF0D97001DED9C /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 81E232CB0BBF104E0093C40C /* WebKit.Debug.xcconfig */;
+			buildSettings = {
+				OTHER_LDFLAGS = "$(OTHER_LDFLAGS)";
+			};
+			name = Debug;
+		};
+		81A82A710BBF0D97001DED9C /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 81E232DE0BBF10F70093C40C /* WebKit.Release.xcconfig */;
+			buildSettings = {
+				OTHER_LDFLAGS = "$(OTHER_LDFLAGS)";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		81456B530BD589D900441506 /* Build configuration list for PBXAggregateTarget "libWebKitSystemInterface" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				81456B540BD589D900441506 /* Debug */,
+				81456B550BD589D900441506 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		81A82A450BBF0C97001DED9C /* Build configuration list for PBXProject "WebKit" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				81A82A460BBF0C97001DED9C /* Debug */,
+				81A82A470BBF0C97001DED9C /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		81A82A6F0BBF0D97001DED9C /* Build configuration list for PBXNativeTarget "WebKit" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				81A82A700BBF0D97001DED9C /* Debug */,
+				81A82A710BBF0D97001DED9C /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 81A82A440BBF0C97001DED9C /* Project object */;
+}

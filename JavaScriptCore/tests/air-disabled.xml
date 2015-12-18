@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="yes"?>
+<disabled-tests>
+
+  <!-- 
+    These tests are disabled because they also fail when run against Safari.
+   -->
+  
+  <test file="mozilla/ecma/ExecutionContexts/10.2.1.js" />
+  <test file="mozilla/ecma/ExecutionContexts/10.2.2-1.js" />
+  <test file="mozilla/ecma/ExecutionContexts/10.2.2-2.js" />
+  <test file="mozilla/ecma/ExecutionContexts/10.2.2-2.js" />
+
+  <!-- requires modifiying the GLOBAL variable at the top scope after reading shell.js -->
+  <test file="mozilla/ecma/ObjectObjects/15.2.4.2.js" />
+
+  <!-- requires modifiying the GLOBAL variable at the top scope after reading shell.js -->
+  <test file="mozilla/ecma/String/15.5.4.6-2.js" />
+  
+  <!-- requires modifiying the GLOBAL variable at the top scope after reading shell.js -->
+  <test file="mozilla/ecma/Statements/12.10-1.js" />
+  
+  <!-- requires JS versioning -->
+  <test file="mozilla/ecma_2/Exceptions/function-001.js" />
+  
+  <!-- integer overflow problems.... -->
+  <test file="mozilla/ecma/TypeConversion/9.3.1-3.js"/>
+
+  <!-- requires modifiying the GLOBAL variable at the top scope after reading shell.js -->
+  <test file="mozilla/ecma_2/FunctionObjects/call-1.js" />
+  
+  <!-- does not work with regular html global object, only works with testkjs's global object-->
+  <test file="mozilla/ecma_2/Statements/forin-002.js" />
+
+  <!-- function.name is not supported by JSCore -->
+  <test file="mozilla/js1_2/function/Function_object.js" />
+
+  <!-- function.body is not supported by JSCore -->
+  <test file="mozilla/js1_2/function/tostring-1.js" />
+  <test file="mozilla/js1_2/function/tostring-2.js" />
+  
+  <!-- new Object().toString does not evaluate to "{}" in JSCore -->
+  <test file="mozilla/js1_2/Objects/toString-001.js" />
+  
+  <!-- tests cases in here make no sense -->
+  <test file="mozilla/js1_2/operator/equality.js"/>
+
+
+  <!-- tests cases in here seem to be broken, or no longer valid in modern browsers-->
+  <test file="mozilla/js1_2/regexp/beginLine.js"/>
+  <test file="mozilla/js1_2/regexp/endLine.js"/>
+  <test file="mozilla/js1_2/regexp/RegExp_lastIndex.js"/>
+  <test file="mozilla/js1_2/regexp/RegExp_multiline.js"/>
+  <test file="mozilla/js1_2/regexp/RegExp_multiline_as_array.js"/>
+  <test file="mozilla/js1_2/regexp/string_split.js"/>
+  <test file="mozilla/js1_2/version120/boolean-001.js"/>
+
+  <!-- These Date-related tests do not run reliably on our daily run Windows WMware machine, where the
+       default timezone is not always set to PDT. There is already a bug at webkit.org for it, see:
+       https://bugs.webkit.org/show_bug.cgi?id=4930
+  -->
+  <test file="mozilla/ecma/Date/15.9.5.10-1.js" />
+  <test file="mozilla/ecma/Date/15.9.5.12-1.js" />
+  <test file="mozilla/ecma/Date/15.9.5.31-1.js" />
+  <test file="mozilla/ecma/Date/15.9.5.35-1.js" />
+  <test file="mozilla/ecma/Date/15.9.5.8.js" />
+  <test file="mozilla/ecma/Date/15.9.5.14.js" />
+  <test file="mozilla/ecma/Date/15.9.5.34-1.js" />
+  <test file="mozilla/ecma/Date/15.9.5.28-1.js" />
+  <test file="mozilla/ecma/Date/15.9.5.29-1.js" />
+  
+</disabled-tests>

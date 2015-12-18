@@ -1,0 +1,33 @@
+#include "../../../../products/AIR/osx/Mac/AIR-Common.xcconfig"
+
+// AIR.xcconfig turns this on, but this library will fail with this enabled, so turn it back off
+GCC_WARN_HIDDEN_VIRTUAL_FUNCTIONS = NO
+
+#include "../../Configurations/Base.xcconfig"
+
+VALID_ARCHS = i386 x86_64
+ARCHS = i386 x86_64
+
+//OBJROOT=${WEBKIT_BUILD_DIR}/mac/int;
+//SYMROOT=${WEBKIT_BUILD_DIR}/mac/int;
+//SHARED_PRECOMPS_DIR=${WEBKIT_BUILD_DIR}/mac/int/PrecompiledHeaders
+
+// Override Base.xcconfig setting the SDK and target to the current MAC OS version
+// Set the sdkroot to the value set in CompilerSettings.xcconfig
+SDKROOT = ${AIR_SDKROOT}
+
+GCC_PREFIX_HEADER = ../../JavaScriptCorePrefix.h;
+GCC_PREPROCESSOR_DEFINITIONS = BUILDING_APOLLO__ $(DEBUG_DEFINES) $(GCC_PREPROCESSOR_DEFINITIONS);
+HEADER_SEARCH_PATHS = "${JAVASCRIPTCORE_SRC_ROOT}/." "${JAVASCRIPTCORE_SRC_ROOT}/bindings" "${JAVASCRIPTCORE_SRC_ROOT}/bindings/jni" "${JAVASCRIPTCORE_SRC_ROOT}/pcre" "${JAVASCRIPTCORE_SRC_ROOT}/kjs" "${JAVASCRIPTCORE_SRC_ROOT}/profiler" "${JAVASCRIPTCORE_SRC_ROOT}/VM" "${JAVASCRIPTCORE_SRC_ROOT}/wtf" "$(SDKROOT)/usr/include" "${JAVASCRIPTCORE_SRC_ROOT}/icu" "${JAVASCRIPTCORE_SRC_ROOT}/../WebKit/apollo/include" "${JAVASCRIPTCORE_SRC_ROOT}/../WebKit/apollo/include/mac" "${JAVASCRIPTCORE_SRC_ROOT}/../../../SDK/Loki/include" "${PROJECT_TEMP_DIR}/${CONFIGURATION}/FrameworkHeaders" "${PROJECT_TEMP_DIR}/${CONFIGURATION}/DerivedSources" $(HEADER_SEARCH_PATHS);
+GCC_PFE_FILE_C_DIALECTS = c c++ objective-c++;
+PRODUCT_NAME = JavaScriptCore
+INSTALL_PATH = /usr/local/lib
+GCC_GENERATE_DEBUGGING_SYMBOLS = YES
+COPY_PHASE_STRIP = NO
+GCC_WARN_ABOUT_RETURN_TYPE = YES
+GCC_WARN_UNUSED_VARIABLE = YES
+GCC_STRICT_ALIASING = NO
+
+GCC_TREAT_WARNINGS_AS_ERRORS = YES
+
+GCC_VERSION = ${AIR_WEBKIT_GCC_VERSION}

@@ -1,0 +1,346 @@
+
+<script>
+var mytitle = "I am f1.html!";
+var currentFrame = "f1";
+var otherFrame = "f2";
+</script>
+
+
+
+
+
+
+
+<!--------------------------- COMMON CODE ---------------------------->
+
+
+<script>
+
+document.write( mytitle );
+
+
+function get_title_from_this()
+{
+  return this.mytitle;
+}
+
+///////////////////////////////////
+
+function testmyapply( name )
+{
+  alert( name + " raw: " + get_title_from_this() );		      
+ 
+  // Alert title variable that is retrieved from "this" when getmytitle is called with apply
+  // with null "this" -- this is the interesting part!
+  var str = name + " applythis: " + get_title_from_this.apply( null ); 
+  alert( str );
+}
+
+function testapply()
+{
+  testmyapply( currentFrame );                      // test in current frame
+  parent[ otherFrame ].testmyapply( otherFrame );   // test in other frame
+}
+
+///////////////////////////////////
+
+
+function testmycall( name )
+{
+  alert( name + " raw: " + get_title_from_this() );		      
+ 
+  // Alert title variable that is retrieved from "this" when getmytitle is called with call
+  // with null "this" -- this is the interesting part!
+  var str = name + " callthis: " + get_title_from_this.call( null ); 
+  alert( str );
+}
+
+function testcall()
+{
+  testmycall( currentFrame );                      // test in current frame
+  parent[ otherFrame ].testmycall( otherFrame );   // test in other frame
+}
+
+
+///////////////////////////////////
+
+function arraysortfunc( a, b )
+{
+  alert( "Sort: " + this.mytitle );  	// alert so we can see what "this" is in sort func
+  return 1;
+}
+
+function notarraysortfunc( a, b )
+{
+  alert( "Sort of non-array: " + this.mytitle );  	// alert so we can see what "this" is in sort func
+  return 1;
+}
+
+function arrayFilterFunc( element, index, array )
+{
+  alert( "Filter: " + this.mytitle );
+  return true;
+}
+
+function arrayMapFunc( element )
+{
+  alert( "Map: " + this.mytitle );
+  return element;
+}
+
+function arrayEveryFunc( element, index, array )
+{
+  alert( "Every: " + this.mytitle );
+  return true;
+}
+
+function arrayforEachFunc( element, index, array )
+{
+  alert( "ForEach: " + this.mytitle );
+}
+
+function arraySomeFunc( element, index, array )
+{
+  alert( "Some: " + this.mytitle );
+  return true;
+}
+
+function testmyArraystuff( currentFrame )
+{
+  var onearray = [ "foo" ];
+  var twoarray = [ "foo", "bar" ];
+
+  // test array.sort() on actual array
+  twoarray.sort( arraysortfunc );	
+
+  // test array.sort() being run against non-array (yes, really!)
+  var notanarray = { 0: "foo", 1: "bar", length: 2 };
+  onearray.sort.call( notanarray, notarraysortfunc );
+
+  // test array.filter()
+  if ( !onearray.filter )
+    alert( "No array.filter function!" );
+  else {
+    onearray.filter( arrayFilterFunc );
+  }
+
+  // test array.map()
+  if ( !onearray.map )
+    alert( "No array.map function!" );
+  else {
+    onearray.map( arrayMapFunc );
+  }
+
+  // test array.every()
+  if ( !onearray.every )
+    alert( "No array.every function!" );
+  else {
+    onearray.every( arrayEveryFunc );
+  }
+
+  // test array.forEach()
+  if ( !onearray.forEach )
+    alert( "No array.forEach function!" );
+  else {
+    onearray.forEach( arrayforEachFunc );
+  }
+
+  // test array.some()
+  if ( !onearray.some )
+    alert( "No array.some function!" );
+  else {
+    onearray.some( arraySomeFunc );
+  }
+}
+
+
+function testArraystuff()
+{
+  testmyArraystuff( currentFrame );                      // test in current frame
+  parent[ otherFrame ].testmyArraystuff( otherFrame );   // test in other frame
+}
+
+
+///////////////////////////////////
+
+
+function testmyfunctioncallthroughvar() 
+{ 
+  var x = get_title_from_this;
+  alert( x() );
+}
+
+function testfunctioncallthroughvar()
+{
+  testmyfunctioncallthroughvar( currentFrame );                      // test in current frame
+  parent[ otherFrame ].testmyfunctioncallthroughvar( otherFrame );   // test in other frame
+}
+
+///////////////////////////////////
+
+function returngettitlefunc()
+{
+  return get_title_from_this;
+}
+
+
+function testmyfunctioncallvalue() 
+{ 
+  alert( returngettitlefunc()() );
+}
+
+
+function testfunctioncallvalue()
+{
+  testmyfunctioncallvalue( currentFrame );                      // test in current frame
+  parent[ otherFrame ].testmyfunctioncallvalue( otherFrame );   // test in other frame
+}
+
+///////////////////////////////////
+
+function strreplacefunc(str, p1, p2, offset, s)
+{
+  alert( "String.replace str/function: " + this.mytitle );
+  return "bar";
+}
+
+function strreplaceregexfunc(str, p1, p2, offset, s)
+{
+  alert( "String.replace regex/function: " + this.mytitle );
+  return "bar";
+}
+
+function testmystringreplace() 
+{ 
+  var str = "foo";
+  str.replace( "foo", strreplacefunc );	  	// call string.replace with function and string
+  str.replace( /foo/, strreplaceregexfunc );	// call string.replace with function and regex
+}
+
+function teststringreplace()
+{
+  testmystringreplace( currentFrame );                      // test in current frame
+  parent[ otherFrame ].testmystringreplace( otherFrame );   // test in other frame
+}
+
+///////////////////////////////////
+
+
+function testDomException()
+{
+  // Set DOMException.foo in this frame
+  DOMException.foo = currentFrame
+
+  // Tell other frame to print out DOMException.foo - should be undefined
+  alert( parent[ otherFrame ].DOMException.foo );
+
+  delete DOMException.foo;
+}
+
+
+///////////////////////////////////
+
+
+function testXMLHttpRequest()
+{
+  // Set foo property of XMLHttpRequest proto for THIS frame
+  var x = new XMLHttpRequest;
+  x.__proto__.foo = currentFrame;
+
+  // Create XMLHttpRequest from ctor in OTHER frame
+  var z = new parent[ otherFrame ].XMLHttpRequest;
+
+  // Alert foo property from other frame XHR object - should be undefined since we set it in OUR proto
+  // if it isn't, means other ctor picked up our proto, which is wrong
+  alert( z.foo );
+
+  delete x.__proto__.foo;
+}
+
+
+///////////////////////////////////
+
+function testXSLTProcessor_()
+{
+  // Set foo property of XSLTProcessor proto for THIS frame
+  var x = new XSLTProcessor;
+  x.__proto__.foo = currentFrame;
+
+  // Create XSLTProcessor from ctor in OTHER frame
+  var z = new parent[ otherFrame ].XSLTProcessor;
+
+  // Alert foo property from other frame XHR object - should be undefined since we set it in OUR proto
+  // if it isn't, means other ctor picked up our proto, which is wrong
+  alert( z.foo );
+
+  delete x.__proto__.foo;
+}
+
+
+///////////////////////////////////
+
+
+
+///////////////////////////////////
+
+
+
+</script>
+
+<br>
+
+<br>
+<button onclick="testapply();">Test apply(null)</button>
+<br>Expected sequence (Win IE, Win FF): &nbsp;
+<script>
+document.write( currentFrame + ", " + currentFrame + ", " + otherFrame + ", " + otherFrame );
+</script>
+
+<br><br>
+<button onclick="testcall();">Test call(null)</button>
+<br>Expected sequence (Win IE, Win FF): &nbsp;
+<script>
+document.write( currentFrame + ", " + currentFrame + ", " + otherFrame + ", " + otherFrame );
+</script>
+
+<br><br>
+<button onclick="testArraystuff();">Test array stuff</button>
+<br>Expected sequence (Win FF): &nbsp;
+<script>
+document.write( "Sort-" + currentFrame + ", SortNA-" + currentFrame + ", Filter-" + currentFrame + ", Map-" + currentFrame + ", Every-" + currentFrame + ", ForEach-" + currentFrame + ", Some-" + currentFrame );
+document.write( "Sort-" + otherFrame + ", SortNA-" + otherFrame + ", Filter-" + otherFrame + ", Map-" + otherFrame + ", Every-" + otherFrame + ", ForEach-" + otherFrame + ", Some-" + otherFrame );
+</script>
+
+<br><br>
+<button onclick="testfunctioncallthroughvar();">Test function call through var</button>
+<br>Expected sequence (Win IE, Win FF): &nbsp;
+<script>
+document.write( currentFrame + ", " + otherFrame );
+</script>
+
+<br><br>
+<button onclick="testfunctioncallvalue();">Test function value call</button>
+<br>Expected sequence (Win IE, Win FF): &nbsp;
+<script>
+document.write( currentFrame + ", " + otherFrame );
+</script>
+
+<br><br>
+<button onclick="teststringreplace();">Test string.replace with function</button>
+<br>Expected sequence (Win IE, Win FF): &nbsp;
+<script>
+document.write( currentFrame + ", " + currentFrame + ", " + otherFrame + ", " + otherFrame );
+</script>
+
+<br><br>
+<button onclick="testDomException();">Test DOMException ctor access</button>
+<br>Expected sequence (Win FF): undefined
+
+<br><br>
+<button onclick="testXMLHttpRequest();">Test XMLHttpRequest proto access</button>
+<br>Expected sequence (Win FF): undefined
+
+<br><br>
+<button onclick="testXSLTProcessor_();">Test XSLTProcessor proto access</button>
+<br>Expected sequence (Win FF): undefined
+

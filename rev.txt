@@ -1,0 +1,2 @@
+Updated to Safari Version 5.0.3 (7533.19.4).
+http://svn.webkit.org/repository/webkit/tags/Safari-533.19.4/

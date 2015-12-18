@@ -1,0 +1,1206 @@
+Copyright 2007 Adobe Systems Incorporated. All Rights Reserved.
+
+
+---------------------------------------------------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------------------------------------------
+
+This file contains information about how script bridging works (see also comments in proxy_obj.cpp) as well as some TODO
+items for our script bridging work, some enhancements we'd like to see to webkit, and extensive research on how Webkit
+works.
+
+
+---------------------------------------------------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------------------------------------------
+
+
+TODO LIST
+---------
+
+- Enter bugs against WebKit for stuff listed below in Interpreter::globalObject() section.
+  Test media is in /JavaScriptCore/tests/adobe/html-globaltest folder - see readme.txt in that folder
+  Geoff Garen recommends entering separate bugs for each issue, which probably would require splitting
+  the test file into many files. See what he did in WebKit bug 11884 for a guide.
+
+- Test and enter bug against webkit for associating wrong RootObject with RuntimeObjectImp. Search for
+  ***AND I BELIEVE THAT THIS IS A BUG IN WEBKIT*** below to find the relevant info.
+
+-------
+
+reference writeup below from proxy_obj.cpp?
+
+/* TODO
+webkit rootobject system (in email) and x-frame stuff (see below) 
+*/
+
+----------------
+
+
+---------------------------------------------------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------------------------------------------
+
+
+Some enhancements to JavaScriptCore that would be nice
+------------------------------------------------------
+1. Tighten up JSOBject interface docs. E.g. whether canput/put are atomic, whether canput must be called before put, 
+   whether hasprop/get are atomic, which can throw JS exceptions and which can't, failure mode for put and get, etc. 
+   Also comment about what can/cannot be re-entered.
+
+2. Put in asserts and comments around JSType definition - don't reorder to make values bigger or you screw JSImmediate 
+   storing type in 2 bits. Not only that, but some code (e.g. equal) actually does >= on some of these types, so order 
+   is important
+
+3. I believe that toPrimitive() and defaultValue() can legally return an error object (which must also be thrown) iff they 
+   hits an error. On the face of it this violates ECMA 262 8.6.2.6 and 9.1 which state that defaultvalue() and toPrimitive()
+   return non-object types. However, per email discussion with Geoff Garen at Apple, these functions must be able to throw
+   exceptions and thus can return error objects. Should document with toPrimitive and defaultValue. This is contrary to 
+   current docs in object.h (which I think are wrong), as the defaultValue() implementation in object.cpp can clearly return 
+   an object.
+
+4. Refactor JSObject hierarchy to push some stuff down out of JSObject (to subclasses) to make bridging more 
+   robust/future-proof. Basically make JSObject more of an interface and move e.g. its built-in hashtable to a subclass.
+   a. Determine which methods can be moved to implementation subclass of JSObject
+   b. Methods that cannot be moved in present form may need to be made virtual or do evil downcast()-like tricks.
+      Some that aren't virtual are OK cuz they eventually call virtuals to do the real work.
+   c. Figure out how to implement remaining methods  that are in base class (need to look at usages for some)
+   d. Put in implementation subclass (intro pure virt func into JSObject and recompile to find all derivatives, as well as grep)
+   
+
+Clarifications on parts of JSObject interface:
+---------------------------------------------
+implementsConstruct
+implementsCall
+implementsHasInstance
+
+	How do these behave? options:
+	1. static by classinfo/classname [always return the same thing for ANY object instance]
+	2. static by object instance [always return same thing for a given object instance]
+	3. dynamic [a given object instance can return a different answer at different times]
+
+	RuntimeObjectImp::implementsCall() and JSHTMLElement::implementsCall() use approach #2
+	ACTUALLY IF TAGNAME CAN BE CHANGED JSHTMLElement::implementsCall() could be #3
+
+	Most implementations of implementsConstruct() do #1, though JSCallbackObject::implementsConstruct() does #2. I'm 
+		not sure if this is proof that #2 is OK though. There are two call sites for implementsConstruct().
+		1. NewExprNode::evaluate() - which would be OK with any of the three options - simply gates call to construct()
+		2. JSObjectIsConstructor() - which returns result of calling implementsConstruct(). JSObjectIsConstructor()
+			is not called from within webkit though... so not sure what of the option sit would be OK with
+
+	Most implementations of implementsHasInstance() do #1 though JSCallbackObject::implementsHasInstance() does #2. I'm
+		not sure if this is proof that #2 is OK though. Looking at the two call sites for implementsHasInstance():
+		1. RelationalNode::evaluate() - OK with any of the three options - just uses implementsHasInstance() to gate a
+			call to hasInstance()
+		2. JSValueIsInstanceOfConstructor() - not sure who uses this - only test code appears to call it from within webkit
+
+	Per Geoff Garen at Apple: "Though I don't know of any classes that respond dynamically, I don't think it would be harmful 
+	if they did. The only requirement is that you must implement construct() and callAsFunction, respectively, if you return 
+	true from one of these functions."
+
+	Regarding implementation, if it were necessary to do case #1 (which it seems not to be), it would be necessary to have 
+	multiple version of ProxyObjectImp so it can return different things depending on what type of object it is proxying for.
+	
+	Given case #3 (dynamic), the "implements" moniker is misleading - perhaps should be "supports" or "canSupport" or something
+
+	
+---------------------------------------------------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------------------------------------------
+
+Info on how Webkit handles bridging its JavaScript objects and Netscape plugins etc.
+------------------------------------------------------------------------------------
+
+NOTE: Most of my specific research is around the NPObject (Netscape plugin) bridging, but the concepts (and many of the 
+interfaces generalize to Java/JNI and ObjectiveC). Note that a JSObject subclass that wraps/proxies to an "other object" 
+(such as an NPObject in a plugin) is called a RuntimeObjectImp. The NPObject "subclass" (C-style) that wraps/proxies to 
+a JSObject is called a JavaScriptObject. I have made detailed diagrams about the data structures involved, ownership 
+relationships, call flows, etc. These are done on paper.
+
+An important topic is how Webkit achieves the following when bridging between JSObjects (javascript objects) and other 
+objects (e.g. NSPI NPObjects):
+1. Choosing/providing an Interpreter to use for script execution when control flow goes from a plugin to a proxy object 
+   ("JavaScriptObject") that wraps a JSObject. Also ensuring that when script execution goes from a plugin to a JSObject, 
+   it is not possible to use an Interpreter that has already been destroyed (e.g. if the Frame the interpreter was 
+   associated with was destroyed).
+2. Ensuring that JSObjects referenced by a plugin (via a JavaScriptObject proxy) are kept alive while the plugin is using 
+   them, and are allowed to be GCed once the plugin stops using them.
+3. Ensuring that plugin objects referenced by JavaScript objects (via a RuntimeObjectImp proxy) are not used improperly if 
+   the plugin is torn down while the objects are still being referenced. Plugin lifetime is not altered by having extant 
+   objects that refer to its objects - if the plugin goes down, the referent objects must be made dead.
+
+Cases #1 and #2 are handled in the following way:
+When a JavaScriptObject (NPObject subclass that proxies to a JSObject) is created, it is associated with a "RootObject" 
+which in turn is associated with a Frame (global/window object). This RootObject is retrieved from 
+FramePrivate::m_bindingRootObject and a strong reference to it is stored in the JavaScriptObject. The job of this RootObject 
+is twofold: 
+  a) it points at an Interpreter that will be used for script execution when control flows from the plugin into the wrapped 
+     JSObject, and 
+  b) handles adding/removing strong references to JSObjects as JavaScriptObjects are created and destroyed, ensuring that 
+     JSObjects don't get GCed out from under the JavaScriptObjects that proxy to them.
+
+Why is an intermediate RootObject involved, rather than having JavaScriptObjects point directly at Interpreters and directly 
+handle strong ref management of JSObjects when JavaScriptObjects are created/destroyed? The answer is invalidation - if the 
+Frame that the RootObject is associated with is torn down, it tells the RootObject (FramePrivate::m_bindingRootObject) that 
+it is invalid, and then destroys its Interpreter. This causes the following to occur:
+  a) Since the interpreter held by the RootObject is tied to the Frame, the Interpreter has gone away and must not be used 
+     again. This is handled by the JavaScriptObject code that wants to use the interpreter first asking the RootObject if it 
+     is still valid. If the RootObject is invalid, the JavaScriptObject code reports failure to its caller (the plugin 
+     code), treating the JavaScriptObject as "dead". In this way, if the Frame/Interpreter get torn down, the 
+     JavaScriptObjects associated with that Frame/Interpreter become dead because the RootObject they reference becomes 
+     invalid.
+  b) All JavaScriptObjects that hold strong references on JSObjects associated with the RootObject/Frame are made to release 
+     their strong references. This is accomplished by walking a map (RootObject::m_protectCountSet) in the RootObject that 
+     JavaScriptObjects register/unregister with as they are created/destroyed. Strictly, a map shouldn't be required and 
+     strong refs should be acquired/released only when the JavaScriptObjects (or similar proxies for JNI etc) are 
+     created/destroyed. However, checkin comments indicate that the Java code is notoriously sloppy in destroying these 
+     proxies, which would lead to strong references sticking around and never getting cleaned up, even though the frame 
+     containing the plugin (and thus the plugin itself) had gone away. This map has a secondary benefit in that it ensures 
+     that strong reference cycles crossing the plugin/JavaScript boundaries do not cause leaks because it says "the frame 
+     is being torn down and I'm breaking all the references/invalidating the objects". Note that JavaScriptObjects cooperate 
+     with the map approach - if a JavaScriptObject is torn down, it will tell the map it is going away, and the strong 
+     reference can be removed - it doesn't have to wait for the RootObject to be invalidated.
+
+So how does a JavaScriptObject (proxy from NPObject to JSObject) get associated with a particular RootObject/Frame in order 
+for the above services to be provided? There are three cases:
+  I. When a plugin requests access to a JavaScript object via NPN_GetValue (NPNVWindowNPObject and NPNVPluginElementNPObject 
+     cases) the resultant JavaScriptObject is associated with the RootObject for the frame for the object (NPNVWindowNPObject) 
+     or for the frame containing the plugin (NPNVPluginElementNPObject)
+  II. When a call from the plugin side to the JavaScript side (by way of a JavaScriptObject proxy) results in a JSObject (for 
+      NPN_GetProperty, NPN_Evaluate, NPN_InvokeDefault, NPN_Invoke) it is necessary to create a new JavaScriptObject to wrap 
+      the JSObject. This JavaScriptObject will be associated with the same RootObject as the JavaScriptObject that the method 
+      was called on, UNLESS the JSObject being wrapped is a window object, in which case the JavaScriptObject is associated 
+      with the RootObject for the Frame associated with the JSObject.
+  III. When a put() or call() operation on a RuntimeObjectImp (proxy from JSObject to NPObject) must create a JavaScriptObject 
+       (to wrap the value being put, or the function arguments so that the plugin can consume them) the JavaScriptObject is 
+       associated with the RootObject for the Frame associated with the current interpreter unless the JSObject is a window 
+       object, in which case the JavaScriptObject is associated with the RootObject for the Frame associated with the JSObject 
+       (see convertValueToNPVariant()). Note that this special logic for window objects causes us to need extra security checks. 
+       These are made by calling _isSafeScript() when an incoming get/set/call/etc comes from the NSPI side. _isSafeScript 
+       basically compares the Interpreter which was the current Interpreter when the variant was created ("origin interpreter") 
+       to the Interpreter that will be used for execution. When they are different, isSafeScript() does same origin checks 
+       between the interpreters. These extra checks are needed because we may be calling into the JSObject with a different 
+       interpreter from the one that we got to the JSObject from ("origin interpreter") when we made the JavaScriptObject wrapper. 
+       In this case, we are enforcing the security rules as if we were accesssing the JSObject as the origin interpreter, not 
+       the other interpreter (which of course would always have access since it is the interpreter associated with the global 
+       object the JavaScriptObject references). Note that these security checks are actually stricter than would otherwise be 
+       needed in some cases - for example, they prevent all access to a window object's properties, while normally some 
+       properties are NOT security-controlled (e.g. location).
+
+In summary, this logic attempts to keep JavaScriptObjects associated with the RootObject corresponding to the Frame that 
+"owns" the JSObject being wrapped by the JavaScriptObject. I put "owns" in quotes because most JSObject are not truly owned by 
+frames - things like DOM nodes, window objects, etc. ARE truly owned by frames. Arbitrarily constructed objects are not truly 
+owned - JavaScriptCore does not have hard boundaries or sandboxes separating JSObjects constructed in the context of one frame 
+or another. Any JSObject can point at any other, and same-origin checks for cross-site scripting are made ONLY when doing a 
+property get/set/call on a window object (caller is validated). So, for case I above, we have perfect assocation between 
+JavaScriptObject and RootObject/Frame. For case II, we generally get it "right" in that any JSObject reachable from a Frame A 
+without passing into another Frame B is considered to be associated with Frame A. Obviously, it is possible say to store a DOM 
+object from Frame B directly as a property of Frame A, in which case a JavaScriptObject wrapped around the DOM JSObject would 
+be incorrectly associated with Frame A not Frame B. Case III is interesting - given the lack of any other information on the 
+"ownership" of the JSObject, the code assumes that it is owned by the currently executing interpreter (unless the JSObject 
+itself is a window/frame object, in which case we definitively know what Frame/RootObject to know). Note that the current 
+interpreter does NOT change when crossing window object boundaries, so if code is running in Frame A, then calls into Frame B 
+and causes a JavaScriptObject to be constructed say for a JSObject for a Frame B DOM node, the JavaScriptObject will be 
+associated with Frame A not frame B. Note that it is not the end of the world for a JavaScriptObject to be associated with the 
+"wrong" RootObject. See the "Why it matters what Interpreter we use" comment in proxy_obj.cpp for more details. I'd like to see 
+this issue solved similarly to what is proposed in the "So what is the ideal solution to all of this mess" comment in 
+proxy_obj.cpp.
+
+How does Mozilla handle Interpreter Association?
+It looks like Mozilla gets the JSContext needed to run JS stuff when coming in from PI side by mapping from NPP to document 
+(jumps through several steps to do this), and then getting JSContext from document (see GetJSContext() in nsJSNPRuntime.cpp). 
+This is subject to some of the same bugs described above. Mozilla does not appear to have any WebKit-like logic for changing 
+what frame a wrapper is associated with if it moves between global objs. One reason for this is that it doesn't seem to key 
+off of frames at all - both JS wrappers for NPObjects (nsNPObjWrapper) and NPObject wrappers for JS objects (nsJSObjWrapper) 
+are stored in association with an NPP, not with a frame. This is different from WebKit which stores its version of 
+nsJSObjWrapper (called JavaScriptObject) in assocation with the frame that the JS object is believed to belong to.
+
+
+Case #3 from above is handled as follows: 
+When a RuntimeObjectImp (JSObject subclass that proxies to e.g. an NSPI NPObject) is created, it is associated (via 
+RuntimeObject ctor) with a "RootObject" which in turn is associated with the plugin that the NPObject belongs to. Such 
+RootObjects are obtained in PluginView[Win/Mac]::bindingInstance(). When the plugin is destructed, the invalidate() method of 
+the associated RootObject is called (from Frame::cleanupScriptObjectsForPlugin()), and it in turn calls invalidate() on all of 
+the RootObjects. This causes them to go "dead", which is necessary because the NPObjects that they proxy to have gone away, but 
+since the RuntimeObjectImp lifetimes are controlled by JavaScript GC, they will outlive the NPObjects if they are still 
+referenced. Basically, the mechanism is that a RuntimeObjectImp registered to be told when the NPObject it is wrapping goes away, 
+and goes dead when this occurs. One interesting point to note is that the invalidation cannot be handed on the NPObject side 
+(having them remain in existence and throw exceptions from all methods) because the plugin code that implements them may 
+actually have been unloaded.
+
+So how does a RuntimeObjectImp get associated with the correct RootObject/plugin for a given NPObject? 
+a. If JavaScript requests the plugin's script root object, a RuntimeObjectImp is created to wrap the NPObject. It is known what 
+   plugin is being talked to, so the RootObject associated with that plugin instance is associated with the RuntimeObjectImp.
+b. NPObjects returned by property gets or as the result of function calls on the RuntimeObjectImp (which are proxied to the 
+   underlying NPObject) are in turn wrapped by new RuntimeObjectImp objects that are associated with the same RootObject as the 
+   RuntimeObjectImp from upon which the get/call is operating. Note one subtlety in that the plugin may return an NPObject that 
+   actually is a JavaScriptObject (NPObject subclass that is a wrapper around a JSObject). In this case, the JavaScriptObject is 
+   not further wrapped by a RuntimeObjectImp - the underlying JSObject is merely unwrapped.
+c. When the plugin side performs a call or property set on a JSObject (by way of a JavaScriptObject proxy) it is necessary to 
+   wrap the NPObjects passed as args/new property value in new RuntimeObjectImp objects before they can be handed to the JSObject. 
+   Currently (as of 9/27/2007), ***AND I BELIEVE THAT THIS IS A BUG IN WEBKIT***, the new RuntimeObjectImp objects are given the 
+   same RootObject as the JavaScriptObject. The problem is that this is a RootObject for a frame, not for the plugin that the 
+   NPObjects came from, which means that the RuntimeObjectImps will NOT be invalidated if the plugin is torn down, and could lead 
+   to undefined and ugly behavior if the RuntimeObjectImps are used. It seems like this could be fixed by changing the offending 
+   code to map from NPP to PluginView[Win/Mac] and looking up the right RootObject from there (the only issue would be if a plugin 
+   can get ahold of an NPObject for a different plugin, as the NPP and the NPObject would not match - alas, this can happen - see 
+   below). As a design note, I think that having the exact same RootObject class do double duty for JavaScriptObjects and 
+   RuntimeObjectImps is unwise - should at least use subclasses - compiler type checking could probably have caught this issue.
+
+***POSSIBLE BUG***: It appears that a plugin can be given (e.g. via NPN_SetProperty) an NPObject associated with a different 
+plugin. I think that is legal - certainly it is legal for a plugin to be given an NPObject that isn't one of its own (e.g. one 
+that represents say the JS window object). Unfortunately, it means that my scheme above to map from NPP to RootObject would not 
+be correct since the WebKit side could be passed an NPP and NPObject that are unrelated. It'd probably yield the right results 
+most of the time, and at least be more correct than just using the frame, but wouldn't be 100% accurate. Further, there is no way 
+of finding out that a plugin is hanging onto a different plugin's NPObject, so if the other plugin went down, the first plugin 
+could wind up calling into a destroyed NPObject. I looked at the Mozilla code, and I'm pretty sure they have the same 
+problems. The Mozilla code is a bit different than the WebKit code in that it handles direct calls into the NPClass methods 
+(which aren't passed an NPP) as opposed to just the NPN_SetProperty helpers etc. like WebKit does. Getting the NPP in these 
+cases is implemented by way of an "NPPStack" (see uses in nsJSNPRuntime.cpp) which is updated by NPPAutoPusher objects when 
+control flows into or out of a plugin (but don't think they know to update stack if plugin is getting a timer or something). 
+They peek at the top of the stack to decide what NPP an NPObject passed to e.g. NPN_SetProperty should be associated with. 
+However, none of this means that the same bugs aren't present - Mozilla uses a similar scheme to invalidate proxy objects when 
+a plugin is torn down, and suffers from the same possibility that an NPP and NPObject are out of sync. It also suffers from 
+the possibility of plugin A holding onto an NPObject from plugin B, and using it after plugin B has been destroyed.
+Possible Fixes:
+  - Rev NPObject so that it always points at NPP it came from 
+  - Chris idea - first time we see a unique NPObject come out of a plugin, we know it came from that plugin and we put it in 
+    a map, and then nobody else gets the unwrapped NPObject, just a wrapper. The plugin the NPObject came from it the only 
+    thing allowed to get it back unwrapped. The trick is that no plugin will ever have another plugin's raw NPObject, always 
+    a wrapper, and we can track what PI the wrapper is associated with and make it dead if that PI is killed.
+
+---------------------------------------------------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------------------------------------------
+
+Info on systems for handling dead/invalid objects
+-------------------------------------------------
+
+Webkit (between JavaScriptCore and Netscape plugins) - see detailed writeup above:
+- When plugin killed, invalidates JavaScript objects that proxy to plugin objects. Plugin lifetimes are not modified by 
+  extant reference to objects from the plugin.
+- When Frame killed, invalidate proxy objects (pointed at by plugins) that point at JavaScript objects and break their 
+  references on the JavaScript objects. Objects need to be invalidated because they cache an Interpreter (which is gone), 
+  not because it is bad to continue to hold references on JavaScript objects after a frame is gone. In WebKit, very few 
+  JavaScript objects are truly associated with a Frame (window, DOM objects, maybe some more) and all objects stay alive 
+  as long as they are referenced, even after the frame goes down (though some things may not work anymore - e.g. window 
+  object is pretty much dead once its m_frame ptr goes to NULL when Window::disconnectFrame() is called from ~Frame).
+
+Mozilla (between SpiderMonkey and Netscape plugins)
+- When plugin killed, both wrappers from JSObject->NPObject and wrappers from NPObject->JSObject that were created either 
+  to wrap the plugin's NPObjects or on behalf of the plugin are invalidated.
+
+AIR Script bridging (Between AS3 and JS): 
+- When WebKit frame destructed, all JSCoreVariant objects on WebKit side (used for AS->JS proxying) associated with the 
+  Frame's Interpreter are made dead, as the Interpreter is going away. If we didn't have an Interpreter that was going 
+  away, we'd have no need to invalidate.
+- AS3 objects are totally lifetime-controlled by GC, so the only time we invalidate is when we are tearing down the runtime 
+  and we need to deal with any objects still around (possibly due to GC cycles). In this case, we invalidate all of the 
+  WebScriptProxyObjects (used for JS->AS proxying) in the entire app prior to calling final GC. After final GC (which will 
+  destruct any remaining HTMLControl and its Frames as well as all remaining AS3 objects) we force a GC of WebKit which 
+  sweeps up remaining JSObjects. See case study on paper for worst case scenario walkthrough.
+
+
+
+---------------------------------------------------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------------------------------------------
+
+
+-------------------------------------------------
+-------------------------------------------------
+Who uses Interpreter?
+-------------------------------------------------
+-------------------------------------------------
+
+Interpreter::globalObject()	[refreshed this sweep using Webkit code in Apollo branch 9/1/2007 ]
+
+	THESE SEEM INNOCUOUS IN CURRENT USAGE (checking to see if getting correct object depending on current interp, etc):
+		JSContextGetGlobalObject() - returns global obj. OK because JSContextGetGlobalObject() is part of \API\ and not used internally
+		JSObjectCallAsFunction() - if no "this" object passed, uses global obj from interpreter as this. Called by DebuggerDocumnet::callGlobalFunction - used only by debugger with known frame
+		JavaJSObject::createNative() - used only in JNI to get global obj from RootObject
+		ScheduledAction::execute() - used in asserting window's interpreter's global obj is same as window
+		evaluateWebScript - get() used to get eval() function, used as this arg in call to Interpreter::Evaluate() - debugger uses this to eval in same call frame as callstack entry - uses exec/interp associated with the call frame
+		_didExecute - used in objc bridge - pulling global obj off RootObject to get to window to get to document to call updateRendering()
+		SVGScriptElement::executeScript() - in #if 0 code
+		Frame::~Frame() - used to get window object for Frame and tell window to disconnect from frame
+		Window::retrieve() - returns global object for passed Frame* - not based on current dynamic interpreter or anything
+		createWindow() - calls Window::retrieveActive which casts dynamic interp global object to Window and returns it - uses global for referrer and URL absolutification - this is OK, matches IE and FF behavior
+		Window::put() [Location] - calls Window::retrieveActive which casts dynamic interp global object to Window and returns it - uses global for referrer and URL absolutification - this is OK, matches IE and FF behavior
+		WindowFunc::callAsFunction() [Window::Open] - calls Window::retrieveActive which casts dynamic interp global object to Window and returns it - uses global for referrer and URL absolutification - this is OK, matches IE and FF behavior
+		Location::put() [various cases] x 2 - calls Window::retrieveActive which casts dynamic interp global object to Window and returns it - uses global for referrer and URL absolutification - this is OK, matches IE and FF behavior
+		LocationFunc::callAsFunction() [Location::Replace, Location::Assign] - calls Window::retrieveActive which casts dynamic interp global object to Window and returns it - uses global for referrer and URL absolutification - this is OK, matches IE and FF behavior (actually FF behaves differently for assign vs. replace which is weird)
+		JSXMLHttpRequestPrototypeFunction::callAsFunction() [JSXMLHttpRequest::Open] - calls Window::retrieveActive which casts dynamic interp global object to Window and returns it - uses global for URL absolutification - this does not match IE behavior, but does match behavior of other URL fixup (e.g. for window.open) so I'm not calling it a bug
+		FunctionImp::callAsFunction() - global obj passed to ctor of Context that is being created to use for executing function - this could be a bug if codeType==GlobalCode or codeType==AnonymousCode or codeType==EvalCode (see below) but as of now (10/15/2007) the only thing ever used is FunctionCode
+			Context ctor use of global object it is passed:
+				If codetype==GlobalCode or (codetype==EvalCode and !m_callingContext), Context::m_variable will point at the global object
+				If codetype==GlobalCode, Context::m_thisVal will point at the global object
+				If codeType==GlobalCode or codeType==AnonymousCode or (codeType==EvalCode and !m_callingContext) global object pushed on scope chain of context
+		getGlobalObject() - AIR - whole purpose of this function (in bridge) is to get global object and give back variant for it
+
+	THESE SEEM TO BE BUGS (checking to see if getting correct object depending on current interp, etc):
+		FunctionProtoFunc::callAsFunction() [Apply case] - used as "this" in call to func if not passed as arg - webkit bug 11884
+		FunctionProtoFunc::callAsFunction() [Call case] - used as "this" in call to func if not passed as arg 
+		ArrayInstance::sort() - (indirectly) used as "this" in call to compareFunction - to call the JS-provided compare function
+		ArrayProtoFunc::callAsFunction() [Sort case] - used as "this" in call to sort function
+		ArrayProtoFunc::callAsFunction() [Filter/Map case] - used as "this" in call to callback func if this not passed as arg
+		ArrayProtoFunc::callAsFunction() [Every/ForEach/Some case] - used as "this" in call to callback func if this not passed as arg
+		FunctionCallValueNode::evaluate() - used as this for calling function (used when calling through variable that points at function)
+		FunctionCallResolveNode::evaluate() - used as "this" for calling function (used when calling through function returned by expression)
+		replace() - in string code - used (x2) as "this" for calling callback function that coughs up replacement string
+		FunctionObjectImp::construct() - global obj from lexical interp pushed onto newly created ScopeChain which is given to new DeclaredFunctionImp object. Problem would arise if called directly from plugin - lexical interp would actually be dynamic interp. FunctionObjectImp perhaps needs to point directly at its globalobj as GlobalFunctionImp does
+		GlobalFuncImp::callAsFunction() x 2 - passed to Context that is being created to use for executing global eval() function
+			If called directly (e.g. from plugin or AS3) without Apollo-specific hack, will crash using exec->context()->thisValue()
+			because context() will return NULL. If it didn't crash, it'd still be wrong because it is using exec->dynamicInterpreter()->globalObject()
+			as the global scope for the eval (due to lack of Context to get global from). I believe a GlobalFunctionImp needs to point 
+			at its associated window obj (and make sure to mark it!) and use that as the global scope when directly called.
+			The Apollo-specific hack should be removed (it uses dynamicinterp global obj) as it is also wrong - it prevents the
+			crash but makes possibly the wrong global obj the global scope for eval - should take global obj from assoc window obj. 
+		getDOMExceptionConstructor - calls cacheGlobalObject() which uses global object from lexical interp, which is OK unless lexical interp is wrong (as in my test)
+		JSXMLHttpRequest ctor - calls cacheGlobalObject() which uses global object from lexical interp, which is OK unless lexical interp is wrong (as it is in my test)
+		JSXSLTProcessor ctor - calls cacheGlobalObject() which uses global object from lexical interp, which is OK unless lexical interp is wrong (as it is in my test)
+		
+	
+Interpreter::initGlobalObject()	
+	Window::clear() - after resetting window to pristine state (nuking properties), reinits the window as a global obj
+	Interpreter::init() - ctor calls init() which calls initGlobalObject()
+	
+Interpreter::globalExec()	
+	JSGlobalContextCreate()	- returns globalexec. Note that JSGlobalContextCreate() is part of \API\ and not used internally
+	_NPN_Invoke() - used as ExecState in call to JSObject::get()
+	[also used in a bunch more places in NP_jsobject.cpp, jni_jsobject.cpp, webscriptobject.mm]
+	Interpreter::evaluate() - used in outputting exception info to console
+	JSRunCopyGlobalObject() - part of \JavaScriptGlue\ and not used internally...
+	JSRunEvaluate() - part of \JavaScriptGlue\ and not used internally...
+	getThreadGlobalExecState() - part of \JavaScriptGlue\ and not used internally...
+	ScriptInterpreter::globalExec() - called by subclass implementation
+	JSAbstractEventListener::handleEvent() - used for a lot of stuff here
+	JSLazyEventListener::parseCode() - used for several things here
+	JSHTMLElement::implementsCall() - used for <OBJECT> case in call to getRuntimeObject()	
+	KJSProxy::evaluate() - used in calls to toJS(), toString(), toObject() 
+	JSNodeFilterCondition::acceptNode() - used in call to toJS() and JSObject::call()
+	ScheduledAction::execute() - used in call to JSObject::call() and to get/set set exception on exec
+	_initializeScriptDOMNodeImp - used in call to toJS()
+	HTMLPlugInElement::createNPObject() - used in call to toJS()
+	[used in a couple places in webcorescriptdebugger.mm]
+	
+Interpreter::checkSyntax()
+	JSCheckScriptSyntax() - part of \API\ and not used internally
+	JSRun::CheckSyntax() - part of \javascriptglue\ and not used internally
+	
+X - here on down need to look at uses	
+	
+Interpreter::evaluate()	
+	JSEvaluateScript()
+	_NPN_Evaluate()
+	JavaJSObject::eval()
+	JSRun::Evaluate()
+	KJSProxy::evaluate()
+	evaluateWebScript
+	evaluateWebScript
+
+Interpreter::builtinObject()
+	FunctionObjectImp::construct()
+	ObjectLiteralNode::evaluate()
+	PropertyListNode::evaluate()
+	FuncDeclNode::processFuncDecl()
+	FuncExprNode::evaluate()	
+	
+Interpreter::builtinFunction()
+	JSObjectMakeFunction()
+	JSLazyEventListener::parseCode()	
+	
+Interpreter::builtinArray()	
+	ArrayProtoFunc::callAsFunction() [Concat, Slice, Splice, Filter, Map cases]
+	ElementNode::evaluate()
+	ArrayNode::evaluate()
+	RegExpObjectImp::arrayOfMatches()
+	StringProtoFunc::callAsFunction() [Match, Search, Split cases]
+	Clipboard::getValueProperty() [Types case]
+
+Interpreter::builtinBoolean()
+	JSImmediate::toObject()	
+	
+Interpreter::builtinString()	
+	<not called>
+	
+Interpreter::builtinNumber()
+	NumberImp::toObject()
+	JSImmediate::toObject()
+
+Interpreter::builtinDate()
+	<not called>
+	
+Interpreter::builtinRegExp()	
+	RegExpNode::evaluate()
+	RegExpProtoFunc::callAsFunction() [Test, Exec cases]
+	replace()
+	StringProtoFunc::callAsFunction() [Match, Search cases]
+	
+Interpreter::builtinError()	
+	Error::create()
+	
+Interpreter::builtinObjectPrototype()	
+	JSCallbackConstructor::JSCallbackConstructor()
+	OpaqueJSClass::prototype()
+	JSObjectMake()
+	JSObjectMakeWithPrototype()
+	JSObjectMakeConstructor()
+	DeclaredFunctionImp::construct()
+	Arguments::Arguments()
+	KJS_DEFINE_PROTOTYPE - ctor
+	ObjectObjectImp::construct()
+	JSHTMLOptionElementConstructor ctor
+	JSXMLHttpRequestConstructorImp ctor
+	XSLTProcessorConstructorImp ctor
+	DOMStyleSheet ctor
+	DOMStyleSheetList ctor
+	DOMRGBColor ctor
+	DOMRect ctor
+	DOMNodeList ctor
+	DOMExceptionConstructor ctor
+	DOMNamedNodesCollection ctor
+	ImageConstructorImp  ctor
+	Navigator  ctor
+	PluginBase  ctor
+	History  ctor
+	FrameArray  ctor
+	Screen ctor
+	BarInfo ctor
+	
+Interpreter::builtinFunctionPrototype()	
+	JSCallbackFunction ctor
+	ArrayProtoFunc ctor
+	DateProtoFunc ctor
+	FunctionImp ctor
+	KJS_IMPLEMENT_PROTOFUNC - ctor
+	MathFuncImp ctor
+	StringProtoFunc ctor
+	JSHTMLInputElementBaseFunction ctor
+	HTMLElementFunction ctor
+
+Interpreter::builtinArrayPrototype()	
+	RuntimeArray ctor
+	ArrayObjectImp::construct() x 2
+	BooleanObjectImp::construct()
+	
+Interpreter::builtinStringPrototype()	
+	StringImp::toObject()
+	StringObjectImp::construct()
+	DOMCSSStyleDeclaration::cssPropertyGetter()
+	
+Interpreter::builtinNumberPrototype()	
+	NumberObjectImp::construct()
+	
+Interpreter::builtinDatePrototype()
+	DateObjectImp::construct()
+	JSObject::defaultValue()
+	
+Interpreter::builtinRegExpPrototype()	
+	RegExpObjectImp::construct()
+	
+Interpreter::builtinErrorPrototype()	
+	ErrorObjectImp::construct()
+	
+Interpreter::builtinEvalError()
+Interpreter::builtinRangeError() 
+Interpreter::builtinReferenceError() 
+Interpreter::builtinSyntaxError() 
+Interpreter::builtinTypeError() 
+Interpreter::builtinURIError() 
+	Error::create()	
+
+Interpreter::builtinEvalErrorPrototype() 
+Interpreter::builtinRangeErrorPrototype() 
+Interpreter::builtinReferenceErrorPrototype() 
+Interpreter::builtinSyntaxErrorPrototype()
+Interpreter::builtinTypeErrorPrototype() 
+Interpreter::builtinURIErrorPrototype() 
+	<not called>
+
+Interpreter::setCompatMode()
+	KJSProxy::initScriptIfNeeded() x 2
+	
+Interpreter::compatMode()
+	DateProtoFunc::callAsFunction() [GetYear case]
+	
+Interpreter::rtti()	
+	<not called>
+	
+	
+X = need to look at who calls and what they do with it	
+	
+-------------------------------------------------
+-------------------------------------------------
+When is ScriptInterpreter (vs. Interpreter) Used?
+-------------------------------------------------
+-------------------------------------------------
+ScriptInterpreter augments Interpreter by:
+- adding the wasRunByUserGesture() method, which is fed from data provided to it via setCurrentEvent(), 
+	setInlineCode(), setProcessingTimerCallback()
+- adding the frame() accessor which is used in various ways (see below)
+- adding a variety of static methods which don't actually operate on any instance at all (I'm not sure why
+  they are part of ScriptInterpreter at all... maybe just so they can be marked when the mark comes through...)
+- globalExec() override calls Frame::keepAlive() before calling base class globalExec()
+- sets up timeout value in constructor
+- providing implementation of isGlobalObject() which checks to see if JSValue is a Window object
+- providing implementation of isSafeScript() which calls static Window::isSafeScript() method
+- providing implementation of interpreterForGlobalObject() which asks the passed Window obj for its interpreter
+- providing implementation of createLanguageInstanceForValue() which has special-case handling for ObjC binding,
+  then calls the base class implementation
+- providing implementation of shouldInterruptScript() which calls Frame::shouldInterruptJavaScript().
+  shouldInterruptScript() is used by the currently dormant timeout code...
+  Frame::shouldInterruptJavaScript() evidently is just routed out to the host (even in Mac Frame code, not just Apollo)
+
+
+ScriptInterpreter::putDOMObject(), 
+ScriptInterpreter::forgetDOMObject(), 
+ScriptInterpreter::forgetDOMNodeForDocument(),
+ScriptInterpreter::getDOMNodeForDocument(), 
+ScriptInterpreter::putDOMNodeForDocument(), 
+ScriptInterpreter::forgetAllDOMNodesForDocument()
+ScriptInterpreter::updateDOMNodeDocument()
+	used in many places, but these methods are static so don't really matter WRT use of subclass interface
+
+Using ScriptInterpreter type but only base Interpreter interface [could just use base interface]
+	JSLazyEventListener::parseCode()
+
+ScriptInterpreter::setCurrentEvent()
+	used in JSAbstractEventListener::handleEvent()
+
+ScriptInterpreter::frame()
+	used in 
+		JSHTMLDocument::putValueProperty() [Location case] - used to get frame's document's URL and frame's referer
+		MimeType::getValueProperty() [EnabledPlugin case] - pluginsEnabled() method of frame is called
+		Window::isSafeScript() [both implementations] - frame is used to:
+			get document, get url, get opener or parent frame, compare against window's frame, call addMessageToConsole()
+			
+ScriptInterpreter::wasRunByUserGesture()
+	used in 
+		JSHTMLDocument::putValueProperty() [Location case]
+		allowPopUp()
+		createNewWindow()
+		Window::put() [Location_ case]
+		Location::put()
+		LocationFunc::callAsFunction() [Replace, Reload, Assign cases]
+		WindowFunc::callAsFunction()	[3 times in Open case]
+		Frame::userGestureHint()
+	
+ScriptInterpreter::setInlineCode() - note that the only point of this func is for wasRunByUserGesture() imp
+	used in KJSProxy::evaluate()
+	
+ScriptInterpreter::ScriptInterpreter() [ctor]
+	used in KJSProxy::initScriptIfNeeded()
+	
+ScriptInterpreter::setProcessingTimerCallback()	- note that the only point of this func is for wasRunByUserGesture() imp
+	used in ScheduledAction::execute()
+
+
+
+
+
+
+
+What are RuntimeObjectImp/RuntimeArray/etc. and JSCallbackObject (and friends) and UserObjectImp?
+-------------------------------------------------------------------------------------------------
+1. RuntimeObjectImp, RuntimeArray are used for script bridging to Netscape APIs, JNI, and ObjectiveC
+2. Not sure exactly what JSCallbackObject is, but it is not compiled into our build - is likely interface 
+   to JavaScriptCore when JavaScriptCore is used as separate framework
+3. UserObjectImp is part of JavaScriptGlue which is a separate framework Apple ships, apparently used to i
+   nterpret proxy.pac files
+
+
+---------
+---------
+Functions
+---------
+---------
+
+Window::getOwnPropertySlot() 
+----------------------------
+does lookup in its static hashtable. 
+If resultant prop has function attr
+	uses getDirect() to see if already have entry in props
+	if so, 
+		that is result of lookup
+	if not, 
+		constructs WindowFunc around prop 
+		uses putDirect() to cache the WindowFunc in props
+		
+WindowFunc is partially defined via the KJS_IMPLEMENT_PROTOFUNC macro.
+WindowFunc derives from InternalFunctionImp which derives from JSObject
+InternalFunctionImp adds very little to JSObject:
+	an implementsCall() method that rets true
+	an implementsHasInstance() method that rets true
+	a member that stores the function name and an accessor to return it
+	a ClassInfo accessor implemention 		
+The WindowFunc class does the following:
+	its ctor:
+		puts a "length" prop into itself as read-only, non-deleteable, non-enumerable 
+			??think this is the # of args??
+		sets its proto up to be the result of a call to builtinFunctionPrototype() which is a FunctionPrototype object
+		caches the function ID for use in callAsFunction
+	its callAsFunction() method does:
+		XXXX - todo
+		it switches on the ID rather than using separate func for each ID...
+
+FunctionPrototype derives from InternalFunctionImp which derives from JSObject
+	It adds very little to JSObject:
+		a callAsFunction() method that rets undefined
+		its ctor does the following:
+			puts a "length" prop with value 0 into itself as read-only, non-deleteable, non-enumerable 
+			constructs a FunctionProtoFunc for toString and puts it directly into its property map under ""
+			constructs a FunctionProtoFunc for apply and puts it directly into its property map under "apply"
+			constructs a FunctionProtoFunc for call and puts it directly into its property map under "call"
+
+FunctionProtoFunc derives from InternalFunctionImp which derives from JSObject
+	its ctor:
+		puts a "length" prop into itself as read-only, non-deleteable, non-enumerable 
+			??think this is the # of args??
+	its callAsFunction() method:
+		implements handling for toString, apply, call. Note that the toString handling is where you get
+			either the function code (defined func) or "[native code]" from
+
+
+--------------------------------------------------------
+--------------------------------------------------------
+How does a get on a JSObject that wraps a NPObject work?
+--------------------------------------------------------
+--------------------------------------------------------
+
+RuntimeObjectImp::getOwnPropertySlot()
+	indirectly leads to RuntimeObjectImp::fieldGetter()
+		which calls Instance::getValueOfField()
+			which calls CField::valueFromInstance()
+				which calls through the NPObject's class's getProperty() method
+				then result NPVariant is passed to convertNPVariantToValue()
+					which has different cases for different types, the most interesting case being NPVariantType_Object
+						for which Instance::createRuntimeObject() is called for the NPObject in the NPVariant
+							which calls Instance::createBindingForLanguageInstance() [see below] to get an Instance
+							and then does "new RuntimeObjectImp" and gives it the Instance
+							
+
+---------------------------------------------------
+---------------------------------------------------
+How do we wind up getting JSObject for an <OBJECT?>
+---------------------------------------------------
+---------------------------------------------------
+
+
+getRuntimeObject() 
+	if tag == embed/object/applet
+		calls HTMLObjectElement::getInstance() and wraps new RuntimeObjectImp around it and returns RuntimeObjectImp
+		
+HTMLObjectElement::getInstance()		
+	calls FrameMac::getObjectInstanceForWidget() which just calls getInstanceForView()
+
+getInstanceForView()
+	calls createPluginScriptableObject() to get NPObject
+	calls RootObject::findRootObjectForNativeHandleFunction() to get a RootObject
+	calls createBindingForLanguageInstance( CLanguage, NPObject, RootObject ) and returns resultant Instance
+
+createPluginScriptableObject()
+	calls NPP_GetValue( ... NPPVpluginScriptableNPObject ) and gives back result
+	
+RootObject::findRootObjectForNativeHandleFunction()
+	basically this winds up as a call to executionContextForView()
+		
+executionContextForView()	
+	does "new RootObject" and gives it NSView as arg to ctor
+	calls setRootObjectImp() on RootObject, giving it JSObject for the Window associated with the NSView
+	calls setInterpreter() on RootObject
+	calls FrameMac::addPluginRootObject() and gives it RootObject
+
+FrameMac::addPluginRootObject()
+	puts RootObject onto a vector. Each RootObject on the vector has its removeAllNativeReferences() method
+		called by FrameMac::cleanupPluginRootObjects() which is called anytime FrameMac::setView() is called
+		(including from the FrameMac dtor)
+
+Instance::createBindingForLanguageInstance
+	for CLanguage case
+		calls CInstance ctor with passed NPObject
+
+
+who calls getRuntimeObject?
+---------------------------
+JSHTMLElement::getOwnPropertySlot()
+	if tag == embed/object/applet
+		if prop == __apple_runtime_object
+			result of prop get is call to getRuntimeObject()
+		else
+			calls getRuntimeObject()
+			then calls hasProperty() on runtime object and if found
+				result of prop get is result of forwarding get to runtime object
+		
+JSHTMLElement::implementsCall()
+	if tag == embed/object/applet
+		calls getRuntimeObject()
+		then calls implementsCall() on runtime object 
+
+JSHTMLElement::callAsFunction()
+	if tag == embed/object/applet
+		calls getRuntimeObject()
+		then calls call() on runtime object 
+
+JSHTMLElement::put()
+	if tag == embed/object/applet
+		calls getRuntimeObject()
+		then calls canPut() on runtime object and if rets true
+			forwards put to runtime object
+
+
+----------------------------------------
+
+class JSValue {
+private:
+    JSValue();
+    virtual ~JSValue();
+
+public:
+    JSType type() const;
+    bool isUndefined() const;
+    bool isNull() const;
+    bool isUndefinedOrNull() const;
+    bool isBoolean() const;
+    bool isNumber() const;
+    bool isString() const;
+    bool isObject() const;
+    bool isObject(const ClassInfo *) const;
+
+    bool getBoolean(bool&) const;
+    bool getBoolean() const; // false if not a boolean
+    bool getNumber(double&) const;
+    double getNumber() const; // NaN if not a number
+    bool getString(UString&) const;
+    UString getString() const; // null string if not a string
+    JSObject *getObject(); // NULL if not an object
+    const JSObject *getObject() const; // NULL if not an object
+
+    bool getUInt32(uint32_t&) const;
+
+    JSValue *toPrimitive(ExecState *exec, JSType preferredType = UnspecifiedType) const;
+    bool toBoolean(ExecState *exec) const;
+    double toNumber(ExecState *exec) const;
+    UString toString(ExecState *exec) const;
+    JSObject *toObject(ExecState *exec) const;
+
+    double toInteger(ExecState *exec) const;
+    int32_t toInt32(ExecState*) const;
+    int32_t toInt32(ExecState*, bool& ok) const;
+    uint32_t toUInt32(ExecState *exec) const;
+    uint16_t toUInt16(ExecState *exec) const;
+
+    void mark();
+    bool marked() const;
+
+private:
+
+    JSCell *downcast();
+    const JSCell *downcast() const;
+    inline int32_t toInt32Inline(ExecState*, bool& ok) const;
+};
+
+
+class JSCell : public JSValue {
+private:
+    explicit JSCell(bool destructorIsThreadSafe = true);
+    virtual ~JSCell();
+
+public:
+
+    virtual JSType type() const = 0;
+		[see data for same method in JSObject]
+
+    
+    bool isNumber() const;
+    bool isString() const;
+    bool isObject() const;
+    bool isObject(const ClassInfo *) const;
+
+    bool getNumber(double&) const;
+    double getNumber() const; // NaN if not a number
+    bool getString(UString&) const;
+    UString getString() const; // null string if not a string
+    JSObject *getObject(); // NULL if not an object
+    const JSObject *getObject() const; // NULL if not an object
+
+    virtual bool getUInt32(uint32_t&) const;
+		overridden by NumberImp
+
+    virtual JSValue *toPrimitive(ExecState *exec, JSType preferredType = UnspecifiedType) const = 0;
+		[see data for same method in JSObject]
+
+    virtual bool toBoolean(ExecState *exec) const = 0;
+		[see data for same method in JSObject]
+
+    virtual double toNumber(ExecState *exec) const = 0;
+		[see data for same method in JSObject]
+
+    virtual UString toString(ExecState *exec) const = 0;
+		[see data for same method in JSObject]
+
+    virtual JSObject *toObject(ExecState *exec) const = 0;
+		[see data for same method in JSObject]
+
+    void *operator new(size_t);
+
+    virtual void mark();
+		[see data for same method in JSObject]
+
+    bool marked() const;
+};
+
+
+class JSObject : public JSCell {
+public:
+
+	JSObject(JSValue* proto, bool destructorIsThreadSafe = true);
+	explicit JSObject(bool destructorIsThreadSafe = true);
+
+	virtual void mark();
+		overridden by many many classes
+	
+	virtual JSType type() const;
+		overridden by StringImp, NumberImp, GetterSetterImp, ObjCallbackObjectImp
+
+	virtual const ClassInfo *classInfo() const;
+		overridden by pretty much every class descended from JSCell
+	
+	bool inherits(const ClassInfo *cinfo) const;
+
+	JSValue *prototype() const;
+		called by
+			JSObjectGetPrototype(), ActivationImp::put(), Interpreter::initGlobalObject(), JSObject::hasInstance(),
+			ObjectProtoFunc::callAsFunction() - IsPrototypeOf/LookupGetter/LookupSetter,
+			DOMNamedNodeMap::getOwnPropertySlot(), JSHTMLCollection::getOwnPropertySlot()
+		!!!SEE BELOW FOR BREAKDOWN OF WHAT EACH IS USED FOR!!!
+	
+	void setPrototype(JSValue *proto);
+		called by JSObjectSetPrototype(), Interpreter::initGlobalObject() x2, JSObject::put(), Window::clear()
+			JSHTMLInputElementBase ctor, JSHTMLOptionElementConstructor ctor, JSXMLHttpRequestConstructorImp ctor,
+			JSXMLHttpRequest ctor, JSXSLTProcessor ctor, XSLTProcessorConstructorImp ctor, DOMCSSStyleDeclaration ctor,
+			DOMStyleSheet ctor, DOMStyleSheetList ctor, DOMMediaList ctor, DOMCSSStyleSheet ctor, DOMCSSValue ctor,
+			DOMRGBColor ctor, DOMRect ctor, DOMNode ctor, DOMEventTargetNode ctor, DOMNodeList ctor, 
+			DOMNamedNodeMap ctor, DOMExceptionConstructor ctor, DOMNamedNodesCollection ctor, DOMEvent ctor,
+			Clipboard ctor, JSHTMLDocument ctor, JSHTMLElement ctor, JSHTMLCollection ctor,  ImageConstructorImp ctor,
+			Navigator ctor, PluginBase ctor, DOMNodeFilter ctor, History ctor, FrameArray ctor, Screen ctor, BarInfo ctor
+		!!!SEE BELOW FOR BREAKDOWN OF WHAT EACH IS USED FOR!!!
+
+	virtual UString className() const;
+		overridden by JSCallbackObject
+
+	JSValue *get(ExecState *exec, const Identifier &propertyName) const;
+	JSValue *get(ExecState *exec, unsigned propertyName) const;
+
+	bool getPropertySlot(ExecState *, const Identifier&, PropertySlot&);
+	bool getPropertySlot(ExecState *, unsigned, PropertySlot&);
+
+	virtual bool getOwnPropertySlot(ExecState *, const Identifier&, PropertySlot&);
+	virtual bool getOwnPropertySlot(ExecState *, unsigned index, PropertySlot&);
+		overridden by JSCallbackObject, RuntimeArray, RuntimeMethod, RuntimeObjectImp, ObjcFallbackObjectImp,
+			ArrayInstance, ArrayPrototype, DatePrototype, FunctionImp, 
+			AND MANY MANY MORE
+
+	virtual void put(ExecState *exec, const Identifier &propertyName, JSValue *value, int attr = None);
+	virtual void put(ExecState *exec, unsigned propertyName, JSValue *value, int attr = None);
+		overridden by JSCallbackObject, RuntimeArray, RuntimeObjectImp, ObjcFallbackObjectImp, ArrayInstance,
+			FunctionImp, Arguments, ActivationImp, RegExpObjectImp, StringInstance, UserObjectImp, JSHTMLInputElementBase,
+			JSXMLHttpRequest, DOMCSSStyleDeclaration, DOMStyleSheet, DOMMediaList, DOMCSSRule, DOMCSSValue, DOMNode,
+			DOMEventTargetNode, DOMEvent, Clipboard, JSHTMLDocument, JSHTMLElement, Window, Location
+
+	virtual bool canPut(ExecState *exec, const Identifier &propertyName) const;
+		overridden by RuntimeObjectImp, ObjcFallbackObjectImp
+		called only by JSObject::put() and JSHTMLElement::put()
+
+	bool propertyIsEnumerable(ExecState *exec, const Identifier &propertyName) const;
+		called by ObjectProtoFunc::callAsFunction() - PropertyIsEnumerable
+
+	bool hasProperty(ExecState *exec, const Identifier &propertyName) const;
+	bool hasProperty(ExecState *exec, unsigned propertyName) const;
+		called by JSCallbackObject::getOwnPropertySlot(), JSObjectHasProperty(), _NPN_RemoveProperty,()
+			_NPN_HasProperty(), Node::setExceptionDetailsIfNeeded(), RelationalNode::evaluate(),
+			VarDeclNode::processVarDecls(), ForInNode::execute(), KJSValueToCFTypeInternal(),
+			DOMNamedNodeMap::getOwnPropertySlot(), JSHTMLElement::getOwnPropertySlot(),
+			JSHTMLCollection::getOwnPropertySlot()	
+		overridden by: <nothing>
+
+	virtual bool deleteProperty(ExecState *exec, const Identifier &propertyName);
+	virtual bool deleteProperty(ExecState *exec, unsigned propertyName);
+		overridden by JSCallbackObject, RuntimeArray, RuntimeObjectImp, ObjcFallbackObjectImp, ArrayInstance,
+			FunctionImp, Arguments, ActivationImp, StringInstance
+
+	virtual JSValue *defaultValue(ExecState *exec, JSType hint) const;
+		overridden by RuntimeObjectImp, ObjcFallbackObjectImp
+		called by JSObject::toPrimitive()
+		
+	virtual bool implementsConstruct() const;
+		overridden by JSCallbackConstructor, JSCallbackObject, ArrayObjectImp, BooleanObjectImp,
+			DateObjectImp, ErrorObjectImp, NativeErrorImp, DeclaredFunctionImp, FunctionObjectImp,
+			NumberObjectImp, ObjectObjectImp, RegExpObjectImp, StringObjectImp, JSHTMLOptionElementConstructor,
+			JSXMLHttpRequestConstructorImp, XSLTProcessorConstructorImp, ImageConstructorImp
+		called by JSObjectIsConstructor(), NewExprNode::evaluate()
+
+	virtual JSObject* construct(ExecState* exec, const List& args);
+	virtual JSObject* construct(ExecState* exec, const List& args, const Identifier& functionName, const UString& sourceURL, int lineNumber);
+		overridden by EXACT SAME LIST AS FOR implementsConstruct()
+		called by JSObjectMakeFunction(), JSObjectCallAsConstructor(), ArrayProtoFunc::callAsFunction() [Concat, Slice, Splice, Filter, Map], 
+			ArrayObjectImp::callAsFunction(), ErrorObjectImp::callAsFunction(), NativeErrorImp::callAsFunction(),
+			FunctionObjectImp::construct() [both overrides], FunctionObjectImp::callAsFunction(), NumberImp::toObject(), JSImmediate::toObject() x 2,
+			RegExpNode::evaluate(), ElementNode::evaluate(), ArrayNode::evaluate(), ObjectLiteralNode::evaluate(), PropertyListNode::evaluate(),
+			NewExprNode::evaluate(), FuncDeclNode::processFuncDecl(), FuncExprNode::evaluate(), Error::create(), ObjectObjectImp::callAsFunction(),
+			RegExpObjectImp::arrayOfMatches(), RegExpObjectImp::callAsFunction(), StringProtoFunc::callAsFunction() [Match,Search, Split],
+			JSLazyEventListener::parseCode(), Clipboard::getValueProperty()
+			
+
+	virtual bool implementsCall() const;
+		overridden by JSCallbackObject, ObjcFallbackObjectImp, InternalFunctionImp, UserObjectImp, 
+			DOMNodeList (to allow list(0) to fetch item 0), JSHTMLElement (for object,applet,embed), 
+			JSHTMLCollection (similar to DOMNodeList)
+		called by JSObjectIsFunction(), ArrayProtoFunc::callAsFunction(), FunctionProtoFunc::callAsFunction(),
+			FunctionCallValueNode::evaluate(), FunctionCallResolveNode::evaluate(), FunctionCallBracketNode::evaluate(),
+			FunctionCallDotNode::evaluate(), typeStringForValue(), JSObject::call(), tryGetAndCallProperty(),
+			ObjectProtoFunc::callAsFunction(), replace(), JSAbstractEventListener::handleEvent(),
+			JSHTMLDocumentProtoFunc::callAsFunction(), JSHTMLElement::implementsCall(), toNodeFilter(),
+			JSNodeFilterCondition::acceptNode(), WindowFunc::callAsFunction(), ScheduledAction::execute(),
+			evaluateWebScript()
+			
+	JSValue *call(ExecState *exec, JSObject *thisObj, const List &args);
+	virtual JSValue *callAsFunction(ExecState *exec, JSObject *thisObj, const List &args);
+		overridden by JSCallbackFunction, JSCallbackObject, RuntimeMethod, RuntimeObjectImp, ObjcFallbackObjectImp
+			ArrayProtoFunc, ArrayObjectImp, BooleanProtoFunc, AND MANY MORE!!
+		
+	virtual bool implementsHasInstance() const;
+		overridden by JSCallbackConstructor, JSCallbackFunction, JSCallbackObject, InternalFunctionImp
+		called by JSValueIsInstanceOfConstructor(), RelationalNode::evaluate()
+
+	virtual bool hasInstance(ExecState *exec, JSValue *value);
+		overridden by JSCallbackObject
+		called by JSCallbackObject::hasInstance(), JSValueIsInstanceOfConstructor(), RelationalNode::evaluate()
+
+	virtual void getPropertyNames(ExecState*, PropertyNameArray&);
+		overridden by JSCallbackObject, ArrayInstance, StringInstance, UserObjectImp
+		called by JSCallbackObject::getPropertyNames(), JSObjectCopyPropertyNames(),
+			ArrayInstance::getPropertyNames(), ForInNode::execute(), StringInstance::getPropertyNames(),
+			KJSValueToCFTypeInternal(), JSValueWrapper::JSObjectCopyPropertyNames(), UserObjectImp::getPropertyNames()
+
+	virtual JSValue *toPrimitive(ExecState *exec, JSType preferredType = UnspecifiedType) const;
+		overridden by StringImp, NumberImp, UserObjectImp, DOMNode, DOMNodeList, Location, Selection	
+		called by:
+			DateObjectImp::construct (preferredType=UnspecifiedType)	
+			JSObject::toNumber (preferredType=NumberType)
+			JSObject::toString (preferredType=StringType)
+			equal x 2 (preferredType=UnspecifiedType)	
+			relation x 2 (preferredType=NumberType)
+			add x 2 (preferredType=either UnspecifiedType or NumberType)
+			UserObjectImp::getOwnPropertySlot (preferredType=UnspecifiedType)	
+			aeDescFromJSValue (preferredType=UnspecifiedType)	
+	
+	virtual bool toBoolean(ExecState *exec) const;
+		overridden by ObjcFallbackObjectImp, StringImp, NumberImp, GetterSetterImp, StringInstanceThatMasqueradesAsUndefined,
+			UserObjectImp, JSXMLHttpRequest, DOMStyleSheet, DOMStyleSheetList, DOMMediaList, DOMNode, DOMNodeList, DOMNamedNodeMap
+			Clipboard, JSHTMLCollection, HTMLAllCollection, Window
+			
+	virtual double toNumber(ExecState *exec) const;
+		overridden by JSCallbackObject, StringImp, NumberImp, GetterSetterImp, UserObjectImp
+	
+	virtual UString toString(ExecState *exec) const;
+		overridden by JSCallbackObject, StringImp, NumberImp, GetterSetterImp, UserObjectImp, DOMObject, DOMNode,
+			JSHTMLElement, Window, FrameArray, Location, Selection, History
+	
+	virtual JSObject *toObject(ExecState *exec) const;
+		overridden by StringImp, NumberImp, GetterSetterImp
+
+	bool getPropertyAttributes(const Identifier& propertyName, unsigned& attributes) const;
+		called by JSObject::canPut(), JSObject::propertyIsEnumerable()
+
+	virtual bool masqueradeAsUndefined() const { return false; }
+		overridden by StringInstanceThatMasqueradesAsUndefined, HTMLAllCollection
+		called by typeStringForValue(), equal()
+
+	JSValue *getDirect(const Identifier& propertyName) const
+	JSValue **getDirectLocation(const Identifier& propertyName)
+	void putDirect(const Identifier &propertyName, JSValue *value, int attr = 0);
+	void putDirect(const Identifier &propertyName, int value, int attr = 0);
+
+	void putDirectFunction(InternalFunctionImp*, int attr = 0);
+
+	void fillGetterPropertySlot(PropertySlot& slot, JSValue **location);
+		called by JSObject::getOwnPropertySlot()
+
+	void defineGetter(ExecState *exec, const Identifier& propertyName, JSObject *getterFunc);
+		called by PropertyListNode::evaluate(), ObjectProtoFunc::callAsFunction() - DefineGetter case
+	void defineSetter(ExecState *exec, const Identifier& propertyName, JSObject *setterFunc);
+		called by PropertyListNode::evaluate(), ObjectProtoFunc::callAsFunction() - DefineGetter case
+
+	void clearProperties() { _prop.clear(); }
+		called by Window::clear()
+
+	void saveProperties(SavedProperties &p) const { _prop.save(p); }
+		called by Frame::saveWindowProperties(), Frame::saveLocationProperties()
+	
+	void restoreProperties(const SavedProperties &p) { _prop.restore(p); }
+		called by Frame::restoreWindowProperties(), Frame::restoreLocationProperties()
+
+	virtual bool isActivation() { return false; }
+		overridden by ActivationImp
+		called by FunctionCallResolveNode::evaluate(), FunctionCallBracketNode::evaluate(), FunctionCallDotNode::evaluate()
+
+private:
+	const HashEntry* findPropertyHashEntry( const Identifier& propertyName ) const;
+		called by JSObject::deleteProperty(), JSObject::getPropertyAttributes()
+};
+
+
+
+
+/////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////
+Use of prototype()    [searching both derived and non-derived sources]
+/////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////
+callers
+	JSObjectGetPrototype() - ???
+	ActivationImp::put() - called on itself to assert that prototype is jsnull
+	Interpreter::initGlobalObject() - walks global obj's proto chain to end, then links end to object proto
+	JSObject::hasInstance() - walks proto chain looking for match
+	JSObject::put() - in __proto__ case, walks target objects proto chain to ensure not creating a cycle
+	ObjectProtoFunc::callAsFunction() - 
+		[IsPrototypeOf case] - called on argument and all object's in argument's proto chain
+		[LookupGetter, LookupSetter cases] - called on each object in "this" object's proto chain
+	JSNamedNodeMap::getOwnPropertySlot() - called on itself to see if proto has requested property, if so, rets false so proto handles prop
+	JSHTMLCollection::getOwnPropertySlot() - called on itself to see if proto has requested property, if so, rets false so proto handles prop
+
+
+ANALYSIS:
+If we were to move prototype() to a subclass of JSObject we'd have the following issues:
+	1. JSObjectGetPrototype() - ???
+	2. Basically same issue as discussed for setPrototype() [below]. Would need to either use RTTI
+	   (or something like hasPrototype) to see if method available or ensure that global obj and
+	   its proto chain can only contain objects of subclass type.
+	3. JSObject::hasInstance() - presumably would be OK cuz this imp would move to subclass as well
+    4. ObjectProtoFunc::callAsFunction() - [IsPrototypeOf case] - I think some sort of RTTI solution
+       as discussed in #2 is only viable solution, as we can't control what gets passed as an arg
+    5. ObjectProtoFunc::callAsFunction() - [LookupGetter, LookupSetter cases] - basically same as #2
+ 
+
+/////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////
+Use of setPrototype()   [searching both derived and non-derived sources]
+/////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////
+callers:
+	JSObjectSetPrototype() - ???
+	Interpreter::initGlobalObject() x 2 - called on newly constructed FunctionPrototype() and on obj on end of global obj's proto chain
+	JSObject::put() - called on "this" to implement put of __proto__
+	Window::clear() - calls setPrototype on itself (with JSDOMWindowPrototype)
+	
+	DOMExceptionConstructor ctor - calls setPrototype on itself (with builtinObjectPrototype)
+	DOMEventTargetNode ctor - calls setPrototype on itself (with JSEventTargetNodePrototype)
+	JSHTMLInputElementBase ctor - calls setPrototype on itself (with JSHTMLElementPrototype)
+	JSHTMLOptionElementConstructor ctor - calls setPrototype on itself (with builtinObjectPrototype)
+	DOMNamedNodesCollection ctor - calls setPrototype on itself (with builtinObjectPrototype)
+	JSXMLHttpRequestConstructorImp ctor  - calls setPrototype on itself (with builtinObjectPrototype)
+	JSXMLHttpRequest ctor  - calls setPrototype on itself (with JSXMLHttpRequestPrototype)
+	JSXSLTProcessor ctor - calls setPrototype on itself (with XSLTProcessorPrototype)
+	XSLTProcessorConstructorImp ctor - calls setPrototype on itself (with builtinObjectPrototype)
+	JSStyleSheetList ctor - calls setPrototype on itself (with builtinObjectPrototype)
+	JSRGBColor ctor - calls setPrototype on itself (with builtinObjectPrototype)
+	JSClipboard ctor - calls setPrototype on itself (with JSClipboardPrototype)
+	ImageConstructorImp ctor - calls setPrototype on itself (with builtinObjectPrototype)
+	Navigator ctor - calls setPrototype on itself (with builtinObjectPrototype)
+	PluginBase ctor - calls setPrototype on itself (with builtinObjectPrototype)
+	JSAttrConstructor ctor - calls setPrototype on itself (with builtinObjectPrototype)
+	JSAttr ctor - calls setPrototype on itself (with JSAttrPrototype)	
+	JSBarInfo ctor - calls setPrototype on itself (with JSBarInfoPrototype)
+	... and many more ctors that call it on themselves with hardcoded proto ...
+
+
+ANALYSIS:
+All are calls on self except in JSObjectSetPrototype() and Interpreter::initGlobalObject()
+If we were to move setPrototype() to a subclass of JSObject we'd have the following 3 issues:
+	1. JSObjectSetPrototype() - ???
+	2. JSObject::put() - this is fine - put is virtual
+	3. FunctionPrototype() case (of Interpreter::initGlobalObject()) is fine - we've already got a subclass ptr
+	   global obj case is a problem - not sure how we could solve, unless we've got RTTI to downcast (or
+	   we keep the methods on base class but have "hasPrototype" or something) or if we guarantee that 
+	   prototypes can only be of the subclass and prototype() can only return the subclass
+
+
+/////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////
+Use of put with attr != None
+/////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////
+
+		attrs set
+			None         
+				called from all over the place - this is the typical value
+			ReadOnly     
+				JSObjectMakeConstructor(), various static prop definitions, ArrayProtoFunc ctor, ArrayObjectImp x 2, FunctionObjectImp::construct() x 2,
+				Interpreter::initGlobalObject() x several, KJS_IMPLEMENT_PROTOFUNC - ClassFunc ctor,
+				VarDeclNode::evaluate(), VarDeclNode::processVarDecls(), FuncDeclNode::processFuncDecl() x 2,
+				FuncExprNode::evaluate() x 2, JSHTMLInputElementBaseFunction ctor, JSHTMLOptionElementConstructor ctor,
+				HTMLElementFunction ctor
+			DontEnum     
+				JSObjectMakeConstructor(), various static prop definitions, ArrayProtoFunc ctor,
+				ArrayProtoFunc::callAsFunction() x many, ArrayObjectImp ctor x 2, ErrorPrototype ctor,
+				Arguments ctor, FunctionObjectImp::construct() x 2,
+				Interpreter::initGlobalObject() x several, cacheGlobalObject(), KJS_IMPLEMENT_PROTOFUNC - ClassFunc ctor,
+				ArrayNode::evaluate(), FuncDeclNode::processFuncDecl() x 2, FuncExprNode::evaluate(),
+				RegExpProtoFunc::callAsFunction() x 3, StringProtoFunc::callAsFunction(),
+				JSHTMLInputElementBaseFunction ctor, JSHTMLOptionElementConstructor ctor, HTMLElementFunction ctor
+			DontDelete   
+				JSObjectMakeConstructor(), various static prop definitions, ArrayProtoFunc ctor, ArrayProtoFunc::callAsFunction() x many, 
+				ArrayObjectImp ctor x 2, FunctionObjectImp::construct() x 2, Interpreter::initGlobalObject() x many,
+				KJS_IMPLEMENT_PROTOFUNC - ClassFunc ctor, ArrayNode::evaluate(), VarDeclNode::evaluate(),
+				VarDeclNode::processVarDecls(), TryNode::execute(), FuncDeclNode::processFuncDecl() x 4,
+				FuncExprNode::evaluate() x 3, RegExpProtoFunc::callAsFunction() x 3, StringProtoFunc::callAsFunction(),
+				JSHTMLInputElementBaseFunction ctor, JSHTMLOptionElementConstructor ctor, HTMLElementFunction ctor
+			Internal     
+				Interpreter::initGlobalObject() for bunch of puts on global obj, cacheGlobalObject() for put on global obj
+				VarDeclNode::evaluate(), VarDeclNode::processVarDecls(), FuncDeclNode::processFuncDecl() x 2,
+				FuncExprNode::evaluate() x 2
+			Function     
+				no calls to put with this attr, though used alot for defining static props
+			GetterSetter 
+				no calls to put with this attr
+
+Interpreter::initGlobalObject()
+	puts to global obj or to various well-known obj types newed up within the method
+
+JSObjectMakeConstructor()
+	put is to JSCallbackConstructor object constructed within the method
+
+ArrayProtoFunc ctor, ArrayObjectImp ctor, JSHTMLInputElementBaseFunction ctor, JSHTMLOptionElementConstructor ctor,
+HTMLElementFunction ctor, KJS_IMPLEMENT_PROTOFUNC - ClassFunc ctor, ErrorPrototype ctor, Arguments ctor	
+	put is on itself
+
+cacheGlobalObject
+	put is on global obj pulled from interpreter
+
+FunctionObjectImp::construct()
+	puts are to ObjectObjectImp and DeclaredFunctionImp
+
+ArrayProtoFunc::callAsFunction()
+	puts are to ArrayObjectImp or "this" obj
+
+StringProtoFunc::callAsFunction()
+	put to RegExpImp
+
+RegExpProtoFunc::callAsFunction()
+	puts to "this" obj
+
+ArrayNode::evaluate()
+	puts to ArrayObjectImp
+
+TryNode::execute()
+	put to JSObject (yes, the base class) created by the method
+
+VarDeclNode::evaluate() and VarDeclNode::processVarDecls()
+	not 100% sure, but pretty sure just used for "var x" type stuff
+
+FuncDeclNode::processFuncDecl()
+	put to ObjectObjectImp and DeclaredFunctionImp and I *think* to containing lexical scope (for func def)
+
+FuncExprNode::evaluate()
+	put to ObjectObjectImp, DeclaredFunctionImp, and JSObject (yes, the base class) created by the method

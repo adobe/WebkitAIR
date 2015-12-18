@@ -1,0 +1,3 @@
+#!/bin/bash
+# Assumes cygwin.
+ls /proc/registry/HKEY_LOCAL_MACHINE/HARDWARE/DESCRIPTION/System/CentralProcessor | wc -w

@@ -1,0 +1,2037 @@
+2010-05-25  Mark Rowe  <mrowe@apple.com>
+
+        Merge r60110.
+
+    2010-05-24  Jer Noble  <jer.noble@apple.com>
+
+        Reviewed by Eric Carlson.
+
+        HTML5 <video> tag performance worse than Flash
+        https://bugs.webkit.org/show_bug.cgi?id=39577
+        rdar://problem/7982458
+
+        Added WebKitSystemInterface calls for new CAImageQueue APIs.
+
+        * win/include/WebKitSystemInterface/WebKitSystemInterface.h:
+        * win/lib/WebKitSystemInterface.lib:
+        * win/lib/WebKitSystemInterface_debug.lib:
+
+2010-05-17  Mark Rowe  <mrowe@apple.com>
+
+        <rdar://problem/7987585> Disable SVG filters.
+
+        * win/tools/vsprops/FeatureDefines.vsprops:
+
+2010-04-09  Alexey Proskuryakov  <ap@apple.com>
+
+        Reviewed by Maciej Stachowiak.
+
+        https://bugs.webkit.org/show_bug.cgi?id=24572
+        XMLHttpRequest.statusText returns always "OK" on Mac
+
+        * WebKitSystemInterface.h:
+        * libWebKitSystemInterfaceLeopard.a:
+        * libWebKitSystemInterfaceSnowLeopard.a:
+        * libWebKitSystemInterfaceTiger.a:
+
+2010-04-07  Chris Marrin  <cmarrin@apple.com>
+
+        Reviewed by Steve Falkenburg.
+
+        Remove QuartzCoreInterface from the build
+        
+        No longer needed since QuartzCore.dll is now included in  the latest Safari release (4.0.5).
+
+        * win/bin/QuartzCoreInterface.dll: Removed.
+        * win/include/QuartzCoreInterface: Removed.
+        * win/include/QuartzCoreInterface/QuartzCoreInterface.h: Removed.
+        * win/lib/QuartzCoreInterface.lib: Removed.
+
+2010-04-02  Jer Noble  <jer.noble@apple.com>
+
+        Reviewed by Eric Carlson.
+        
+        https://bugs.webkit.org/show_bug.cgi?id=36624
+
+        Update WebKitSystemInterface
+
+        * WebKitSystemInterface.h: add WKQTMovieSelectPreferredAlternates.
+        * libWebKitSystemInterfaceLeopard.a:
+        * libWebKitSystemInterfaceSnowLeopard.a:
+        * libWebKitSystemInterfaceTiger.a:
+
+2010-04-01  Kinuko Yasuda  <kinuko@chromium.org>
+
+        Reviewed by Dmitry Titov.
+
+        Add FileThread for async file operation support in FileReader and FileWriter
+        https://bugs.webkit.org/show_bug.cgi?id=36896
+
+        Adds ENABLE_FILE_READER and ENABLE_FILE_WRITER feature flags
+        for FileReader and FileWriter support.
+
+        * win/tools/vsprops/FeatureDefines.vsprops:
+        * win/tools/vsprops/FeatureDefinesCairo.vsprops:
+
+2010-03-25  Mark Rowe  <mrowe@apple.com>
+
+        Rubber-stamped by Dan Bernstein.
+
+        Update WebCoreSQLite3 to SQLite v3.6.12.
+
+        * WebCoreSQLite3/sqlite3.h:
+        * WebCoreSQLite3/sqlite3ext.h:
+        * libWebCoreSQLite3.a:
+        * libWebKitSystemInterfaceLeopard.a:
+        * libWebKitSystemInterfaceSnowLeopard.a:
+        * libWebKitSystemInterfaceTiger.a:
+
+2010-03-23  Dan Bernstein  <mitz@apple.com>
+
+        Reviewed by John Sullivan.
+
+        WebKitSystemInterface part of
+        <rdar://problem/7197736> Plug-in clip rect does not update when overflow
+        clip changes
+        https://bugs.webkit.org/show_bug.cgi?id=36479.
+
+        * WebKitSystemInterface.h: Added WKSyncSurfaceToView().
+        * libWebKitSystemInterfaceSnowLeopard.a: Updated
+
+2010-03-16  Dan Bernstein  <mitz@apple.com>
+
+        Reviewed by Sam Weinig.
+
+        Fix incorrect glyph advances when using the Core Graphics (non-GDI) glyph look.
+
+        * win/lib/WebKitSystemInterface.lib:
+        * win/lib/WebKitSystemInterface_debug.lib:
+
+2010-03-15  Andy Estes  <aestes@apple.com>
+
+        Reviewed by John Sullivan.
+
+        Added two new output arguments to WKGetWheelEventDeltas() to return
+        the number of scroll wheel ticks in the x and y directions.
+
+        https://bugs.webkit.org/show_bug.cgi?id=29601.
+        <rdar://problem/7453254>
+
+        * WebKitSystemInterface.h:
+        * libWebKitSystemInterfaceLeopard.a:
+        * libWebKitSystemInterfaceSnowLeopard.a:
+        * libWebKitSystemInterfaceTiger.a:
+
+2010-03-14  Dan Bernstein  <mitz@apple.com>
+
+        Reviewed by Darin Adler.
+
+        WebKitSystemInterface part of removing support for legacy versions of Core Graphics
+
+        * win/include/WebKitSystemInterface/WebKitSystemInterface.h: Removed
+        wkCanCreateCGFontWithLOGFONT(), wkSetFontPlatformInfo(), wkAddFontsInDirectory(),
+        wkAddFontsAtPath(), wkAddFontsFromRegistry(), wkAddFontsFromPlist(), and
+        wkCreateFontsPlist().
+        * win/lib/WebKitSystemInterface.lib: Updated.
+        * win/lib/WebKitSystemInterface_debug.lib: Updated.
+
+2010-03-08  Jian Li  <jianli@chromium.org>
+
+        Reviewed by Dmitry Titov.
+
+        Blob.slice support.
+        https://bugs.webkit.org/show_bug.cgi?id=32993
+
+        Add ENABLE_BLOB_SLICE feature define.
+
+        * win/tools/vsprops/FeatureDefines.vsprops:
+        * win/tools/vsprops/FeatureDefinesCairo.vsprops:
+
+2010-02-19  Maciej Stachowiak  <mjs@apple.com>
+
+        Reviewed by David Levin.
+
+        Add an ENABLE flag for sandboxed iframes to make it possible to disable it in releases
+        https://bugs.webkit.org/show_bug.cgi?id=35147
+
+        * win/tools/vsprops/FeatureDefines.vsprops:
+
+2010-02-18  Steve Falkenburg  <sfalken@apple.com>
+
+        Reviewed by Dan Bernstein.
+
+        WebKit on Windows needs a mechanism to listen for WM_SETTINGCHANGED messages
+        https://bugs.webkit.org/show_bug.cgi?id=35076
+
+        * win/include/WebKitSystemInterface/WebKitSystemInterface.h:
+        * win/lib/WebKitSystemInterface.lib: Updated to add wkSystemFontSmoothingChanged.
+        * win/lib/WebKitSystemInterface_debug.lib: Updated to add wkSystemFontSmoothingChanged.
+
+2010-02-16  Gavin Barraclough  <barraclough@apple.com>
+
+        Reviewed by NOBODY (Build fix).
+
+        Disable warnings preventing use of anonymous structs/onions -
+        don't take all my fun toys away, these are useful & awesome!
+
+        * win/tools/vsprops/common.vsprops:
+
+2010-02-11  Brian Weinstein  <bweinstein@apple.com>
+
+        Rubber-stamped by Eric Seidel.
+
+        Turn back on SVG Filters on Windows, as they were accidentally disabled and cause
+        test breakage.
+
+        * win/tools/vsprops/FeatureDefines.vsprops:
+
+2010-02-08  Maciej Stachowiak  <mjs@apple.com>
+
+        Reviewed by Cameron Zwarich.
+
+        Restore ENABLE_RUBY flag so vendors can ship with Ruby disabled if they choose.
+        https://bugs.webkit.org/show_bug.cgi?id=34698
+
+        * win/tools/vsprops/FeatureDefines.vsprops:
+
+2010-02-04  Mark Rowe  <mrowe@apple.com>
+
+        Reviewed by Steve Falkenburg.
+
+        Update auto-version.sh to better handle major version numbers with fewer than three digits,
+        and the case when WEBKITLIBRARIESDIR is not set.
+
+        * win/tools/scripts/auto-version.sh:
+
+2010-02-04  Steve Falkenburg  <sfalken@apple.com>
+
+        Windows build fix for projects not defining WebKitLibrariesDir.
+
+        * win/tools/scripts/auto-version.sh:
+
+2010-02-03  Dan Bernstein  <mitz@apple.com>
+
+        Reviewed by Anders Carlsson.
+
+        Fixed a bug where WKSetNSURLConnectionDefersCallbacks(true) did not defer callbacks during modal dialogs.
+
+        * libWebKitSystemInterfaceLeopard.a:
+
+2010-02-02  Steve Falkenburg  <sfalken@apple.com>
+
+        Reviewed by Darin Adler.
+
+        Copyright year updating for Windows version resources should be automatic
+        https://bugs.webkit.org/show_bug.cgi?id=34503
+
+        * win/tools/scripts/auto-version.sh:
+
+2010-02-02  Martin Robinson  <mrobinson@webkit.org>
+
+        Unreviewed build fix.
+
+        The WinCairo build requires this script to be executable.
+
+        * win/tools/scripts/feature-defines.sh: Added property svn:executable.
+
+2010-01-29  Mark Rowe  <mrowe@apple.com>
+
+        Keep the Windows feature defines in sync with FeatureDefines.xcconfig.
+
+        * win/tools/vsprops/FeatureDefines.vsprops:
+        * win/tools/vsprops/FeatureDefinesCairo.vsprops:
+
+2010-01-26  Alexey Proskuryakov  <ap@apple.com>
+
+        More Windows build fixing.
+
+        * win/tools/vsprops/common.vsprops: Disable warning C4180 (qualifier applied to function
+        type has no meaning; ignored). This is a known bug - MSVC tries to compile a wrong
+        specialization sometimes - but it's not instantiated, so it's harmless.
+
+2010-01-22  Steve Falkenburg  <sfalken@apple.com>
+
+        Reviewed by Darin Adler.
+
+        https://bugs.webkit.org/show_bug.cgi?id=34025
+        Enable client-based Geolocation abstraction for Mac, Windows AppleWebKit targets.
+
+        * win/tools/vsprops/FeatureDefines.vsprops:
+        * win/tools/vsprops/FeatureDefinesCairo.vsprops:
+
+2010-01-20  Steve Falkenburg  <sfalken@apple.com>
+
+        Reviewed by Darin Adler and Adam Roben.
+
+        Feature defines are difficult to maintain on Windows builds
+        https://bugs.webkit.org/show_bug.cgi?id=33883
+        
+        FeatureDefines.vsprops are now maintained in a way similar to
+        Configurations/FeatureDefines.xcconfig, with the added advantage
+        of having a single FeatureDefines file across all projects.
+        
+        Keep this list of features (not enabled/disabled state) in sync with
+        FeatureDefines.xcconfig files in JavaScriptCore, WebCore, and WebKit.
+        
+        Add new features to both PreprocessorDefinitions and UserMacro sections.
+        Set any ENABLE_FEATURE_NAME macro to an empty string to disable that feature.
+
+        * win/tools/scripts/feature-defines.sh: Added.
+        * win/tools/vsprops/FeatureDefines.vsprops: Added.
+        * win/tools/vsprops/FeatureDefinesCairo.vsprops: Added.
+        * win/tools/vsprops/WinCairo.vsprops: Removed ENABLE_FILTERS. Now set in FeatureDefinesCairo.vsprops.
+
+2010-01-13  Simon Fraser  <simon.fraser@apple.com>
+
+        Reviewed by Darin Adler.
+
+        <rdar://problem/7532544>
+        
+        Expose new method on WebKitSystemInterface, WKGetUserToBaseCTM(), which will
+        be used for a shadow drawing fix. Once more, with feeling. On Windows.
+
+        * win/include/WebKitSystemInterface/WebKitSystemInterface.h:
+        * win/lib/WebKitSystemInterface.lib:
+        * win/lib/WebKitSystemInterface_debug.lib:
+
+2010-01-13  Simon Fraser  <simon.fraser@apple.com>
+
+        Reviewed by Darin Adler.
+
+        <rdar://problem/7532544>
+        
+        Expose new method on WebKitSystemInterface, WKGetUserToBaseCTM(), which will
+        be used for a shadow drawing fix.
+        
+        * win/lib/WebKitSystemInterface.lib:
+        * win/lib/WebKitSystemInterface_debug.lib:
+
+2010-01-13  Simon Fraser  <simon.fraser@apple.com>
+
+        Reviewed by Darin Adler.
+
+        <rdar://problem/7532544>
+        
+        Expose new method on WebKitSystemInterface, WKGetUserToBaseCTM(), which will
+        be used for a shadow drawing fix.
+
+        * WebKitSystemInterface.h:
+        * libWebKitSystemInterfaceLeopard.a:
+        * libWebKitSystemInterfaceSnowLeopard.a:
+        * libWebKitSystemInterfaceTiger.a:
+
+2010-01-07  Alexey Proskuryakov  <ap@apple.com>
+
+        Not reviewed, build fix.
+
+        Windows buid fix - disable warning 4251 (class needs to have dll-interface to be used by
+        clients of another class). WebCore doesn't use all methods of JSString, so
+        we don't export all classes clients could theoretically access via JSString.
+
+        * win/tools/vsprops/common.vsprops:
+
+2009-12-21  Mark Rowe  <mrowe@apple.com>
+
+        Reviewed by Samuel Weinig.
+
+        Update WebKitSystemInterface.
+
+        * libWebKitSystemInterfaceLeopard.a:
+        * libWebKitSystemInterfaceSnowLeopard.a:
+        * libWebKitSystemInterfaceTiger.a:
+
+2009-12-21  Mark Rowe  <mrowe@apple.com>
+
+        Reviewed by Samuel Weinig.
+
+        Update WebKitSystemInterface.
+
+        * WebKitSystemInterface.h:
+        * libWebKitSystemInterfaceLeopard.a:
+        * libWebKitSystemInterfaceSnowLeopard.a:
+        * libWebKitSystemInterfaceTiger.a:
+
+2009-12-18  Sam Weinig  <sam@webkit.org>
+
+        Reviewed by Anders Carlsson.
+
+        Update WebKitSystemInterface for <rdar://problem/7237059>.
+
+        * WebKitSystemInterface.h:
+        * libWebKitSystemInterfaceLeopard.a:
+        * libWebKitSystemInterfaceSnowLeopard.a:
+        * libWebKitSystemInterfaceTiger.a:
+
+2009-12-15  Dan Bernstein  <mitz@apple.com>
+
+        Reviewed by Adam Roben.
+
+        WebKitSystemInterface part of <rdar://problem/7173515> Use LOGFONT support in
+        Core Graphics when available
+
+        * win/include/WebKitSystemInterface/WebKitSystemInterface.h: Declared
+            wkCanCreateCGFontWithLOGFONT().
+        * win/lib/WebKitSystemInterface.lib:
+        * win/lib/WebKitSystemInterface_debug.lib:
+
+2009-12-12  Eric Carlson  <eric.carlson@apple.com>
+
+        Reviewed by Darin Adler.
+
+       <rdar://problem/7453726> Pull shared UI code into WebKit
+
+        * WebKitSystemInterface.h:
+        * libWebKitSystemInterfaceLeopard.a:
+        * libWebKitSystemInterfaceSnowLeopard.a:
+        * libWebKitSystemInterfaceTiger.a:
+
+2009-12-11  Chris Marrin  <cmarrin@apple.com>
+
+        Reviewed by Adam Roben.
+
+        Add QuartzCore build files to OpenSource tree
+        https://bugs.webkit.org/show_bug.cgi?id=31856
+        
+        This allows proper building and linking with QuartzCore
+        when present.
+
+        * win/bin: Added.
+        * win/bin/QuartzCoreInterface.dll: Added.
+        * win/include/QuartzCoreInterface: Added.
+        * win/include/QuartzCoreInterface/QuartzCoreInterface.h: Added.
+        * win/lib/QuartzCoreInterface.lib: Added.
+
+2009-12-07  Adam Roben  <aroben@apple.com>
+
+        Windows build fix for checkouts with a space in the path
+
+        * win/tools/scripts/auto-version.sh: Quote the output file's directory
+        before passing it to mkdir.
+
+2009-12-01  Alexey Proskuryakov  <ap@apple.com>
+
+        Reviewed by Darin Adler.
+
+        https://bugs.webkit.org/show_bug.cgi?id=32036
+        Implement CredentialStorage::getFromPersistentStorage for CFNetwork
+
+        * win/include/WebKitSystemInterface/WebKitSystemInterface.h:
+        * win/lib/WebKitSystemInterface.lib:
+        * win/lib/WebKitSystemInterface_debug.lib:
+        Update WebKitSystemInterface.
+
+2009-11-24  Alexey Proskuryakov  <ap@apple.com>
+
+        Reviewed by Brady Eidson.
+
+        https://bugs.webkit.org/show_bug.cgi?id=31844
+        SocketStreamHandleCFNet should support CONNECT proxy credentials
+
+        * WebKitSystemInterface.h:
+        * libWebKitSystemInterfaceLeopard.a:
+        * libWebKitSystemInterfaceSnowLeopard.a:
+        * libWebKitSystemInterfaceTiger.a:
+        * win/include/WebKitSystemInterface/WebKitSystemInterface.h:
+        * win/lib/WebKitSystemInterface.lib:
+        * win/lib/WebKitSystemInterface_debug.lib:
+        Update WebKitSystemInterface.
+
+2009-11-22  Dan Bernstein  <mitz@apple.com>
+
+        Reviewed by Eric Carlson.
+
+        Updated WebKitSystemInterface.
+
+        * libWebKitSystemInterfaceLeopard.a:
+        * libWebKitSystemInterfaceSnowLeopard.a:
+        * libWebKitSystemInterfaceTiger.a:
+
+2009-11-22  Dan Bernstein  <mitz@apple.com>
+
+        Reviewed by Cameron Zwarich.
+
+        Fixed a leak in WKDrawMediaUIPart().
+
+        * libWebKitSystemInterfaceLeopard.a:
+        * libWebKitSystemInterfaceSnowLeopard.a:
+        * libWebKitSystemInterfaceTiger.a:
+
+2009-11-20  Eric Carlson  <eric.carlson@apple.com>
+
+        Reviewed by Simon Fraser.
+
+        <rdar://problem/7414396> Leopard & Tiger: Support closed caption in <video> element
+
+        * WebKitSystemInterface.h:
+        * libWebKitSystemInterfaceLeopard.a:
+        * libWebKitSystemInterfaceSnowLeopard.a:
+        * libWebKitSystemInterfaceTiger.a:
+
+2009-11-19  Eric Carlson  <eric.carlson@apple.com>
+
+        Reviewed by Dan Bernstein.
+
+        <rdar://problem/7035231>
+        Support closed caption in <video> element
+
+        * WebKitSystemInterface.h:
+            Add prototypes for WKQTMovieHasClosedCaptions and WKQTMovieSetShowClosedCaptions,
+            define WKMediaUIPartToggleClosedCaptionsButton.
+
+2009-11-13  Anders Carlsson  <andersca@apple.com>
+
+        Reviewed by Dan Bernstein.
+
+        Update WebKitSystemInterface.
+
+        * WebKitSystemInterface.h:
+        * libWebKitSystemInterfaceLeopard.a:
+        * libWebKitSystemInterfaceSnowLeopard.a:
+        * libWebKitSystemInterfaceTiger.a:
+
+2009-11-13  Brent Fulgham  <bfulgham@webkit.org>
+
+        Build correction.  No review.
+
+        The WinCairo build requires ENABLE_FILTERS to work properly.
+
+        * win/tools/vsprops/WinCairo.vsprops:
+
+2009-11-02  Dan Bernstein  <mitz@apple.com>
+
+        Reviewed by John Sullivan.
+
+        WebKitSystemInterface part of making the appearance of the full-screen video HUD match
+        QuickTime Player X’s HUD.
+
+        * libWebKitSystemInterfaceLeopard.a:
+        * libWebKitSystemInterfaceSnowLeopard.a:
+        * libWebKitSystemInterfaceTiger.a:
+
+2009-10-26  Mark Rowe  <mrowe@apple.com>
+
+        Reviewed by Adam Roben.
+
+        Clean up the regex madness in auto-version.sh to make it obvious what the script is doing.
+
+        Also teaches auto-version.sh to handle RC_PROJECTSOURCEVERSION that has more than three digits
+        in the major component of the version number.
+
+        * win/tools/scripts/auto-version.sh:
+
+2009-10-19  Marshall Culpepper  <mculpepper@appcelerator.com>
+
+        Reviewed by Eric Seidel.
+
+        added cairo include and lib directories to debug_wincairo.vsprops
+        https://bugs.webkit.org/show_bug.cgi?id=29831
+
+        * win/tools/vsprops/debug_wincairo.vsprops:
+
+2009-10-16  Steve Falkenburg  <sfalken@apple.com>
+
+        Reviewed by Dan Bernstein.
+
+        https://bugs.webkit.org/show_bug.cgi?id=30456
+        Fixes for new Debug_All Windows build configuration.
+
+        * win/tools/vsprops/debug_all.vsprops:
+        Define DEBUG_ALL in Debug_All configuration.
+        Continue to define USE_DEBUG_SAFARI_THEME for open source SafariTheme header usage.
+
+2009-10-16  Steve Falkenburg  <sfalken@apple.com>
+
+        Reviewed by Adam Roben.
+
+        Add a Debug_All configuration to build entire stack as debug.
+        Change Debug_Internal to:
+        - stop using _debug suffix for all WebKit/Safari binaries
+        - not use _debug as a DLL naming suffix
+        - use non-debug C runtime lib.
+
+        * win/tools/vsprops/debug_all.vsprops: Added.
+        Use debug C runtime library in debug_all.
+        Specify USE_DEBUG_SAFARI_THEME to get "_debug" suffix for debug_all.
+        * win/tools/vsprops/debug_internal.vsprops:
+        Don't specify debug C runtime library in debug_internal.
+        Don't specify _debug suffix for standard debug_internal builds.
+
+2009-10-05  Pierre d'Herbemont  <pdherbemont@webkit.org>
+
+        Reviewed by Simon Fraser
+        
+        Support fullscreen in MediaPlayer (Mac)
+        https://bugs.webkit.org/show_bug.cgi?id=26742
+        
+        New methods required for video fullscreen.
+
+        * WebKitSystemInterface.h:
+        * libWebKitSystemInterfaceLeopard.a:
+        * libWebKitSystemInterfaceSnowLeopard.a:
+        * libWebKitSystemInterfaceTiger.a:
+
+2009-10-02  Steve Falkenburg  <sfalken@apple.com>
+
+        Windows build fix.
+        Re-apply lost changes to auto-version.sh.
+        
+        * win/tools/scripts/auto-version.sh:
+
+2009-10-02  Eric Carlson  <eric.carlson@apple.com>
+
+        Reviewed by Adam Roben.
+
+        <rdar://problem/7271334> 
+        Rename MediaControllerThemeQT to MediaControllerThemeQuickTime
+
+        * WebKitSystemInterface.h: 
+        MediaControllerThemeQT -> MediaControllerThemeQuickTime
+
+2009-10-02  Steve Falkenburg  <sfalken@apple.com>
+
+        Reviewed by Mark Rowe.
+
+        <https://bugs.webkit.org/show_bug.cgi?id=29989>
+        Safari version number shouldn't be exposed in WebKit code
+        
+        For a WebKit version of 532.3.4:
+        Product version is: 5.32.3.4 (was 4.0.3.0)
+        File version is: 5.32.3.4 (was 4.532.3.4)
+
+        * win/tools/scripts/PRODUCTVERSION: Removed.
+        * win/tools/scripts/auto-version.sh: Re-worked script to remove references to PRODUCTVERSION.
+
+2009-09-25  Dan Bernstein  <mitz@apple.com>
+
+        Reviewed by Adam Roben.
+
+        WebKitSystemInterface changes for
+        <rdar://problem/7211635> 2 byte characters are displayed as garbaged
+        <rdar://problem/7212626> garbled/gibberish text (off-by-one)
+
+        * win/include/WebKitSystemInterface/WebKitSystemInterface.h: Added
+        wkAddFontsFromPlistRepresentation() and replaced
+        wkCreateFontsPlistRepresentation() with wkCreateFontsPlist() and
+        wkAddFontsFromPlistRepresentation() with wkAddFontsFromPlist().
+        * win/lib/WebKitSystemInterface.lib:
+        * win/lib/WebKitSystemInterface_debug.lib:
+
+2009-09-23  Marshall Culpepper  <mculpepper@appcelerator.com>
+
+        Reviewed by Eric Seidel.
+        
+        Added $(WebKitLibrariesDir)/include/cairo so cairo.h is found by
+        default when the necessary dependencies are extracted into the
+        WebKitLibrariesDir.
+        https://bugs.webkit.org/show_bug.cgi?id=29661
+
+        * win/tools/vsprops/WinCairo.vsprops:
+
+2009-09-09  Brent Fulgham  <bfulgham@webkit.org>
+
+        Reviewed by Dave Levin.
+
+        Adjust WinCairo-specific property sheet to use static versions of
+        libjpeg.lib and libpng.lib.  Change to libpng.lib required addition
+        of zlib.lib to link.
+
+        * win/tools/vsprops/WinCairo.vsprops:
+
+2009-08-28  Steve Falkenburg  <sfalken@apple.com>
+
+        Reviewed by Adam Roben.
+
+        Define _CRT_SECURE_CPP_OVERLOAD_STANDARD_NAMES=1
+        to automatically use secure versions of C runtime lib calls on Windows.
+        https://bugs.webkit.org/show_bug.cgi?id=28824
+        
+        * win/tools/vsprops/common.vsprops:
+
+2009-08-25  Brent Fulgham  <bfulgham@webkit.org>
+
+        Rubber stamped by Steve Falkenburg.
+
+        debug_wincairo.vsprops was linking against wrong C runtime.
+
+        * win/tools/vsprops/debug_wincairo.vsprops: Link to correct
+          C runtime (as in the standard 'debug.vsprops' file.)
+
+2009-08-24  Brent Fulgham  <bfulgham@webkit.org>
+
+        Reviewed by Steve Falkenburg.
+
+        Revise CFLite Debug build to emit DLL's with _debug label.
+        https://bugs.webkit.org/show_bug.cgi?id=28695.
+
+        * win/tools/vsprops/debug_wincairo.vsprops: Added.
+
+2009-08-12  Peter Kasting  <pkasting@google.com>
+
+        Reviewed by Darin Adler.
+
+        https://bugs.webkit.org/show_bug.cgi?id=27323
+        Change pattern that strips all trailing whitespace to just remove EOL
+        chars (\r, \n), to make it clear that varying EOL chars is the primary
+        problem being solved.
+
+        * win/tools/scripts/auto-version.sh:
+
+2009-08-10  Peter Kasting  <pkasting@google.com>
+
+        Reviewed by George Staikos.
+
+        https://bugs.webkit.org/show_bug.cgi?id=27323
+        Even more line ending-stripping for auto-version.sh, based on output
+        provided by Jessie Berlin.
+
+        * win/tools/scripts/auto-version.sh:
+
+2009-08-10  Brent Fulgham  <bfulgham@webkit.org>
+
+        Reviewed by Adam Roben.
+
+        https://bugs.webkit.org/show_bug.cgi?id=28048.
+        Move various WinCairo build settings into *.vsprops file.
+
+        * win/tools/vsprops/cURL.vsprops: Added.
+
+2009-08-06  Peter Kasting  <pkasting@google.com>
+
+        Reviewed by Adam Barth.
+
+        https://bugs.webkit.org/show_bug.cgi?id=27323
+        Strip line endings at all points auto-version.sh reads data, not just
+        the one I happened to run into.
+
+        * win/tools/scripts/auto-version.sh:
+
+2009-07-27  Peter Kasting  <pkasting@google.com>
+
+        Reviewed by Adam Roben.
+
+        https://bugs.webkit.org/show_bug.cgi?id=27323
+        Correctly parse command output, even when the line endings are not LF,
+        so that we don't create an autoversion.h that MSVC chokes on.
+
+        * win/tools/scripts/auto-version.sh:
+
+2009-07-13  Brent Fulgham  <bfulgham@webkit.org>
+
+        Reviewed by Adam Roben.
+
+        Add new configuration flag for redistributable Windows build.
+        https://bugs.webkit.org/show_bug.cgi=27087
+        
+        * win/tools/vsprops/WinCairo.vsprops: Added.  Defines the
+          new WIN_CAIRO flag used to drive non-Apple Windows build.
+
+2009-07-10  Eric Carlson  <eric.carlson@apple.com>
+
+        Reviewed by Simon Fraser.
+
+        Update WebKitSystemInterface for <rdar://problem/7049066>.
+
+        * WebKitSystemInterface.h:
+        * libWebKitSystemInterfaceLeopard.a:
+        * libWebKitSystemInterfaceSnowLeopard.a:
+        * libWebKitSystemInterfaceTiger.a:
+
+2009-07-06  Eric Carlson  <eric.carlson@apple.com>
+
+        Update WebKitSystemInterface for <rdar://problem/7008093>.
+
+        * WebKitSystemInterface.h:
+        * libWebKitSystemInterfaceLeopard.a:
+        * libWebKitSystemInterfaceSnowLeopard.a:
+        * libWebKitSystemInterfaceTiger.a:
+
+2009-07-06  Anders Carlsson  <andersca@apple.com>
+
+        Update WebKitSystemInterface.
+
+        * WebKitSystemInterface.h:
+        * libWebKitSystemInterfaceLeopard.a:
+        * libWebKitSystemInterfaceSnowLeopard.a:
+        * libWebKitSystemInterfaceTiger.a:
+
+2009-07-02  Pierre d'Herbemont  <pdherbemont@apple.com>
+
+        Reviewed by Simon Fraser.
+
+        Update WebKitSystemInterface for <rdar://problem/6518119>
+
+        * WebKitSystemInterface.h:
+        * libWebKitSystemInterfaceLeopard.a:
+        * libWebKitSystemInterfaceSnowLeopard.a:
+        * libWebKitSystemInterfaceTiger.a:
+
+2009-07-01  Eric Carlson  <eric.carlson@apple.com>
+
+        Reviewed by Simon Fraser.
+
+        Update WebKitSystemInterface for <rdar://problem/7014990>
+
+        * libWebKitSystemInterfaceLeopard.a:
+        * libWebKitSystemInterfaceSnowLeopard.a:
+        * libWebKitSystemInterfaceTiger.a:
+
+2009-06-29  Eric Carlson  <eric.carlson@apple.com>
+
+        Reviewed by Simon Fraser.
+
+        Update WebKitSystemInterface for <rdar://problem/7014813>
+
+        * WebKitSystemInterface.h:
+        * libWebKitSystemInterfaceLeopard.a:
+        * libWebKitSystemInterfaceSnowLeopard.a:
+        * libWebKitSystemInterfaceTiger.a:
+
+2009-06-25  Simon Fraser  <simon.fraser@apple.com>
+
+        Rubber-stamped by Mark Rowe.
+        
+        <rdar://problem/6999737>
+        
+        Update the media controller images.
+
+        * libWebKitSystemInterfaceLeopard.a:
+        * libWebKitSystemInterfaceSnowLeopard.a:
+        * libWebKitSystemInterfaceTiger.a:
+
+2009-06-16  Simon Fraser  <simon.fraser@apple.com>
+
+        Rubber-stamped by Anders Carlsson.
+
+        Update WebKitSystemInterface for <rdar://problem/6937882>.
+
+        * libWebKitSystemInterfaceLeopard.a:
+        * libWebKitSystemInterfaceSnowLeopard.a:
+        * libWebKitSystemInterfaceTiger.a:
+
+2009-06-02  Anders Carlsson  <andersca@apple.com>
+
+        Rubber-stamped by Mark Rowe.
+
+        Update WebKitSystemInterface.
+
+        * libWebKitSystemInterfaceLeopard.a:
+        * libWebKitSystemInterfaceSnowLeopard.a:
+        * libWebKitSystemInterfaceTiger.a:
+
+2009-05-27  Mark Rowe  <mrowe@apple.com>
+
+        Rubber-stamped by Dan Bernstein.
+
+        Update WebKitSystemInterface.
+
+        * libWebKitSystemInterfaceLeopard.a:
+        * libWebKitSystemInterfaceSnowLeopard.a: Added.
+        * libWebKitSystemInterfaceTiger.a:
+
+2009-05-26  Anders Carlsson  <andersca@apple.com>
+
+        Reviewed by Dan Bernstein.
+
+        <rdar://problem/6901751> 
+        REGRESSION (r35515): Tiger crash painting the selection on registration page of car2go.com
+
+        Remove WKCGContextIsSafeToClip.
+        
+        * WebKitSystemInterface.h:
+        * libWebKitSystemInterfaceTiger.a:
+
+2009-05-21  Dan Bernstein  <mitz@apple.com>
+
+        Rubber-stamped by Mark Rowe.
+
+        - correct a copyright header accidently reverted in r43964
+
+        * WebKitSystemInterface.h:
+
+2009-05-21  Dan Bernstein  <mitz@apple.com>
+
+        Reviewed by Anders Carlsson.
+
+        - WebKitSystemInterface part of <rdar://problem/6901751> REGRESSION
+          (r35515): Tiger crash painting the selection on registration page of
+          car2go.com
+
+        * WebKitSystemInterface.h:
+        * libWebKitSystemInterfaceTiger.a:
+
+2009-05-07  Simon Fraser  <simon.fraser@apple.com>
+
+        Source changes reviewed by Darin Adler
+        
+        <rdar://problem/6864091> Endcap of media controls slider is fuzzy
+        
+        * libWebKitSystemInterfaceLeopard.a:
+        * libWebKitSystemInterfaceTiger.a:
+
+2009-04-28  Steve Falkenburg  <sfalken@apple.com>
+
+        Fix extraneous warning about AnalyzeWithLargeStack not being defined in Windows builds.
+        Indirected definition through a UserMacro.
+        
+        Reviewed by Mark Rowe.
+
+        * win/tools/vsprops/common.vsprops:
+
+2009-04-28  Steve Falkenburg  <sfalken@apple.com>
+
+        Fix extraneous warning about PRODUCTION not being defined in Windows builds.
+        Indirected definition for __PRODUCTION__ through a UserMacro.
+        
+        Reviewed by Mark Rowe.
+
+        * win/tools/vsprops/common.vsprops:
+
+2009-04-24  Simon Fraser  <simon.fraser@apple.com>
+
+        Source changes reviewed by Darin Adler
+        
+        https://bugs.webkit.org/show_bug.cgi?id=22242
+        
+        Update WebKitSystemInterface for Mac with fixes for video controller drawing.
+
+        * libWebKitSystemInterfaceLeopard.a:
+        * libWebKitSystemInterfaceTiger.a:
+
+2009-04-22  Ada Chan  <adachan@apple.com>
+
+        Update WebKitSystemInterface with new method that maps CFNetwork error code to localized description.
+        
+        Reviewed by Darin Adler.
+
+        * win/include/WebKitSystemInterface/WebKitSystemInterface.h:
+        * win/lib/WebKitSystemInterface.lib:
+        * win/lib/WebKitSystemInterface_debug.lib:
+
+2009-04-20  Steve Falkenburg  <sfalken@apple.com>
+
+        Separate JavaScriptCore.dll from WebKit.dll.
+        Slight performance improvement or no change on benchmarks.
+        
+        Allows us to break a circular dependency between CFNetwork and WebKit on Windows,
+        and simplifies standalone JavaScriptCore builds.
+
+        Reviewed by Oliver Hunt.
+
+        * win/tools/vsprops/common.vsprops: Add BUILDING_{project} preprocessor define.
+
+2009-04-18  Pierre d'Herbemont  <pdherbemont@apple.com>
+
+        Reviewed by Mark Rowe.
+
+        <rdar://problem/6781295> video.buffered and video.seekable are not
+        the same. video.buffered should return only what is buffered and
+        not what is seekable
+
+        * WebKitSystemInterface.h:
+        * libWebKitSystemInterfaceLeopard.a:
+        * libWebKitSystemInterfaceTiger.a:
+
+2009-04-18  Pierre d'Herbemont  <pdherbemont@apple.com>
+
+        Reviewed by Adele Peterson.
+        
+        <rdar://problem/6747241> work around QTKit no longer reaching
+        QTMovieLoadStateComplete
+
+        * WebKitSystemInterface.h:
+        * libWebKitSystemInterfaceLeopard.a:
+        * libWebKitSystemInterfaceTiger.a:
+
+2009-04-15  Steve Falkenburg  <sfalken@apple.com>
+
+        Updated WebKitSystemInterface for Windows.
+        Changes needed for <rdar://problem/6785760>
+
+        * win/include/WebKitSystemInterface/WebKitSystemInterface.h:
+        * win/lib/WebKitSystemInterface.lib:
+        * win/lib/WebKitSystemInterface_debug.lib:
+
+2009-04-14  Mark Rowe  <mrowe@apple.com>
+
+        Update WebKitSystemInterface so that the Tiger portion supports PowerPC.
+
+        * libWebKitSystemInterfaceLeopard.a:
+        * libWebKitSystemInterfaceTiger.a:
+
+2009-04-13  Antti Koivisto  <antti@apple.com>
+
+        Reviewed by Darin Adler.
+        
+        <rdar://problem/6740294> Increase the connection count per host
+
+        * WebKitSystemInterface.h:
+        * libWebKitSystemInterfaceLeopard.a:
+        * libWebKitSystemInterfaceTiger.a:
+
+2009-04-10  Eric Carlson  <eric.carlson@apple.com>
+
+        WebKitSystemInterface changes for <rdar://problem/6646998>
+
+        * libWebKitSystemInterfaceLeopard.a:
+        * libWebKitSystemInterfaceTiger.a:
+
+2009-04-10  Simon Fraser  <simon.fraser@apple.com>
+
+        Fix the leopard build by updating WebKitSystemInterface.
+
+        * WebKitSystemInterface.h:
+        * libWebKitSystemInterfaceLeopard.a:
+
+2009-03-30  Steve Falkenburg  <sfalken@apple.com>
+
+        Bump version to 530.
+
+        * win/tools/scripts/VERSION:
+
+2009-03-26  Adam Roben  <aroben@apple.com>
+
+        Remove SafariThemeConstants.h, which is now provided by
+        WebKitSupportLibrary
+
+        * win/include/SafariTheme: Removed.
+        * win/include/SafariTheme/SafariThemeConstants.h: Removed.
+
+2009-03-07  Dan Bernstein  <mitz@apple.com>
+
+        Reviewed by Mark Rowe.
+
+        - WebKitSystemInterface part of removing build-time and run-time support
+          for legacy versions of CFNetwork and Core Graphics
+
+        * win/include/WebKitSystemInterface/WebKitSystemInterface.h:
+        * win/lib/WebKitSystemInterface.lib:
+        * win/lib/WebKitSystemInterface_debug.lib:
+
+2009-01-30  Dan Bernstein  <mitz@apple.com>
+
+        Reviewed by Timothy Hatcher.
+
+        - <rdar://problem/6545912> expose the build number in autoversion.h
+
+        * win/tools/scripts/auto-version.sh: Added a #define __BUILD_NUMBER__
+        with the full build number.
+
+2009-01-08  Dan Bernstein  <mitz@apple.com>
+
+        Reviewed by Adam Roben.
+
+        - WebKitSystemInterface changes to support Core Graphics native glyph drawing
+
+        * win/include/WebKitSystemInterface/WebKitSystemInterface.h:
+        * win/lib/WebKitSystemInterface.lib:
+        * win/lib/WebKitSystemInterface_debug.lib:
+
+2008-11-11  Ada Chan  <adachan@apple.com>
+
+        Fix: https://bugs.webkit.org/show_bug.cgi?id=22187
+        Bug 22187: CLEARTYPE_QUALITY flag is not supported on Win2000
+        
+        Update window versions to correspond to Windows XP.
+
+        Reviewed by Steve Falkenburg.
+
+        * win/tools/vsprops/common.vsprops:
+
+2008-10-23  Anders Carlsson  <andersca@apple.com>
+
+        Reviewed by John Sullivan.
+
+        Fix <rdar://problem/6306513> by adding a workaround for <rdar://problem/6304600>.
+
+        * libWebKitSystemInterfaceLeopard.a:
+        * libWebKitSystemInterfaceTiger.a:
+
+2008-10-08  Mark Rowe  <mrowe@apple.com>
+
+        Rubber-stamped by Jon Honeycutt.
+
+        Remove restriction on version number ending in a 4.
+
+        * win/tools/scripts/auto-version.sh:
+
+2008-10-07  Anders Carlsson  <andersca@apple.com>
+
+        Reviewed by Mitz Pettel.
+
+        Update WebKitSystemInterface.
+        
+        * libWebKitSystemInterfaceLeopard.a:
+        * libWebKitSystemInterfaceTiger.a:
+
+2008-09-09  Dan Bernstein  <mitz@apple.com>
+
+        Reviewed by Darin Adler.
+
+        - WebKitLibraries part of <rdar://problem/6206244> Use alternate character-to-glyph interface on Leopard
+
+        * WebKitSystemInterface.h:
+        * libWebKitSystemInterfaceLeopard.a:
+
+2008-09-04  Adam Roben  <aroben@apple.com>
+
+        Ignore warning LNK4221 on Windows
+
+        This warning is emitted when an object file with no public symbols is
+        passed to the linker/librarian. This often occurs in WebCore for files
+        that have been disabled via ENABLE()/USE() macros.
+
+        Rubberstamped by Anders Carlsson.
+
+        * win/tools/vsprops/common.vsprops: Ignore warning LNK4221.
+
+2008-08-27  Timothy Hatcher  <timothy@apple.com>
+
+        Adds the WKAdvanceDefaultButtonPulseAnimation function.
+
+        <rdar://problem/6173530> Add Mac support for -webkit-appearance: default-button
+
+        Reviewed by Adele Peterson.
+
+        * WebKitSystemInterface.h: Added WKAdvanceDefaultButtonPulseAnimation.
+        * libWebKitSystemInterfaceLeopard.a: Updated.
+        * libWebKitSystemInterfaceTiger.a: Updated.
+
+2008-08-26  Adam Roben  <aroben@apple.com>
+
+        Disable a truncation warning that is disabled/doesn't exist on Mac
+
+        This warning was firing when initializing floats from double literals.
+        I haven't yet found any other situation that would cause this warning
+        to arise.
+
+        Reviewed by Sam Weinig.
+
+        * win/tools/vsprops/common.vsprops: Turn off warning C4305.
+
+2008-07-20  Steve Falkenburg  <sfalken@apple.com>
+
+        Build fix.
+
+        * win/tools/vsprops/common.vsprops:
+
+2008-07-08  Dan Bernstein  <mitz@apple.com>
+
+        Reviewed by John Sullivan.
+
+        - WebKitSystemInterface part of <rdar://problem/6008409> Need a way to disable updates in offscreen views
+
+        * WebKitSystemInterface.h: Added WKWindowWillOrderOnScreenNotification.
+        * libWebKitSystemInterfaceLeopard.a: Updated.
+        * libWebKitSystemInterfaceTiger.a: Updated.
+
+2008-07-01  Steve Falkenburg  <sfalken@apple.com>
+
+        Bump version numbers.
+        
+        Reviewed by Mark Rowe.
+
+        * win/tools/scripts/PRODUCTVERSION:
+        * win/tools/scripts/VERSION:
+
+2008-05-13  Dan Bernstein  <mitz@apple.com>
+
+        Reviewed by John Sullivan.
+
+        - WebKitSystemInterface support for <rdar://problem/5725912> improve render quality of transformed text
+
+        * libWebKitSystemInterfaceLeopard.a: Improved glyph positioning in
+        transformed graphics contexts.
+        * win/include/WebKitSystemInterface/WebKitSystemInterface.h: Added
+        wkSetCGContextFontRenderingStyle().
+        * win/lib/WebKitSystemInterface.lib: Updated.
+        * win/lib/WebKitSystemInterface_debug.lib: Updated.
+
+2008-05-09  Adam Roben  <aroben@apple.com>
+
+        Disable a MSVC warning
+
+        Reviewed by Darin Adler.
+
+        * win/tools/vsprops/common.vsprops: Add warning 4503 to the list of
+        disabled warnings. It's a warning about decorated names being longer
+        than MSVC's limit of 4096 characters. This warning doesn't indicate a
+        correctness problem, but these truncated decorated names will be
+        harder to recognize during debugging or when they appear in linker
+        errors.
+
+2008-04-28  Darin Adler  <darin@apple.com>
+
+        Reviewed by Adam.
+
+        - fix Windows build
+
+        * win/tools/vsprops/common.vsprops: Add warning 4344 to the list of disabled warnings.
+        It's really a warning about a bug they fixed in MSVC -- not helpful to us in WebKit.
+
+2008-04-24  Mark Rowe  <mrowe@apple.com>
+
+        Reviewed by Sam Weinig.
+
+        Remove code for calculating the glyph cache size.
+
+        * WebKitSystemInterface.h: Remove unused symbol.
+        * libWebKitSystemInterfaceLeopard.a:
+        * libWebKitSystemInterfaceTiger.a:
+
+2008-03-28  Steve Falkenburg  <sfalken@apple.com>
+
+        Versioning.
+
+        * win/tools/scripts/PRODUCTVERSION:
+
+2008-03-26  Adam Roben  <aroben@apple.com>
+
+        Windows build fix after r31322
+
+        * win/include/WebKitSystemInterface/WebKitSystemInterface.h: Updated.
+        * win/lib/WebKitSystemInterface.lib: Updated.
+        * win/lib/WebKitSystemInterface_debug.lib: Updated.
+
+2008-03-26  Mark Rowe  <mrowe@apple.com>
+
+        Reviewed by David Hyatt.
+
+        Make the Ahem font antialias correctly on Acid3 on Tiger.
+
+        * WebKitSystemInterface.h:
+        * libWebKitSystemInterfaceTiger.a:
+
+2008-03-19  Mark Rowe  <mrowe@apple.com>
+
+        Rubber-stamped by Sam Weinig.
+
+        Fix http://bugs.webkit.org/show_bug.cgi?id=17816.
+        Bug 17816: libWebCoreSQLite3.a is 2-architecture universal binary (not 4-architecture)
+
+        * libWebCoreSQLite3.a:  Land a 4-way fat binary.
+
+2008-03-12  Steve Falkenburg  <sfalken@apple.com>
+
+        New version of WebKitSystemInterface.lib with
+        more compiler warnings suppressed.
+
+        * win/lib/WebKitSystemInterface.lib:
+        * win/tools/vsprops/common.vsprops:
+
+2008-03-12  Dan Bernstein  <mitz@apple.com>
+
+        Reviewed by Darin Adler and Sam Weinig.
+
+        - <rdar://problem/4433248> use CoreText API instead of SPI on Leopard
+
+        * WebKitSystemInterface.h:
+        * libWebKitSystemInterfaceLeopard.a:
+
+2008-03-11  Steve Falkenburg  <sfalken@apple.com>
+
+        Disable two PGO/LTCG specific warnings.
+        
+        Reviewed by Oliver.
+
+        * win/tools/vsprops/common.vsprops:
+
+2008-02-29  Mark Rowe  <mrowe@apple.com>
+
+        Update Tiger version of WebKitSystemInterface to match r30690.
+
+        * libWebKitSystemInterfaceTiger.a:
+
+2008-02-29  Adele Peterson  <adele@apple.com>
+
+        Reviewed by Mark.
+
+        Auto-generate image arrays.
+
+        * libWebKitSystemInterfaceLeopard.a:
+
+2008-02-29  Mark Rowe  <mrowe@apple.com>
+
+        Reviewed by Anders Carlsson.
+
+        Replace use of WKPathFromFont with implementation in terms of public API.
+
+        * WebKitSystemInterface.h:  Remove unused symbol.
+        * libWebKitSystemInterfaceLeopard.a:
+        * libWebKitSystemInterfaceTiger.a:
+
+2008-02-29  Mark Rowe  <mrowe@apple.com>
+
+        Reviewed by Oliver Hunt.
+
+        Fix spelling of "request" in name of WKNSURLProtocolClassForRequest.
+
+        * WebKitSystemInterface.h:
+        * libWebKitSystemInterfaceLeopard.a:
+        * libWebKitSystemInterfaceTiger.a:
+
+2008-02-29  Mark Rowe  <mrowe@apple.com>
+
+        Reviewed by Oliver Hunt.
+
+        Don't use WKSupportsMultipartXMixedReplace on Leopard as multipart/x-mixed-replace is always handled by NSURLRequest.
+
+        * WebKitSystemInterface.h:
+        * libWebKitSystemInterfaceLeopard.a:
+
+2008-02-29  Mark Rowe  <mrowe@apple.com>
+
+        Reviewed by Oliver Hunt and Oliver Hunt.
+
+        <rdar://problem/4753845> WebKit should use CGEventSourceSecondsSinceLastEventType in place of WKSecondsSinceLastInputEvent SPI.
+
+        * WebKitSystemInterface.h:  Remove unused symbol.
+        * libWebKitSystemInterfaceLeopard.a:
+        * libWebKitSystemInterfaceTiger.a:
+
+2008-02-28  Mark Rowe  <mrowe@apple.com>
+
+        Reviewed by Dan Bernstein.
+
+        Remove two unused functions from WebKitSystemInterface.
+
+        * WebKitSystemInterface.h:  Remove WKPreferRGB32Key and WKGetDefaultGlyphForChar as they are unused. Also remove
+        a duplicate declaration of WKSecondsSinceLastInputEvent.
+        * libWebKitSystemInterfaceLeopard.a:
+        * libWebKitSystemInterfaceTiger.a:
+
+2008-02-28  Mark Rowe  <mrowe@apple.com>
+
+        Reviewed by Dave Hyatt.
+
+        Make use of new CGFont APIs on Leopard rather than making a WebKitSystemInterface call.
+
+        * WebKitSystemInterface.h:  Only declare WKGetFontMetrics on Tiger.
+        * libWebKitSystemInterfaceLeopard.a:  Update for removal of WKGetFontMetrics.
+
+2008-02-27  Brady Eidson  <beidson@apple.com>
+
+        Tiger build fix
+
+        * libWebKitSystemInterfaceTiger.a:
+
+2008-02-27  Brady Eidson  <beidson@apple.com>
+
+        Reviewed by Mark Rowe
+
+        Removed some unused methods:
+        WKGetNSURLResponseCalculatedExpiration
+        WKGetNSURLResponseMustRevalidate
+
+        * WebKitSystemInterface.h:
+        * libWebKitSystemInterfaceLeopard.a:
+        * libWebKitSystemInterfaceTiger.a:
+
+2008-02-13  Adam Roben  <aroben@apple.com>
+
+        * win/tools/scripts/auto-version.sh: Removed a redundant symbol.
+
+2008-02-12  Adam Roben  <aroben@apple.com>
+
+        Clean up auto-version.sh a bit
+
+        It now does quite a bit less file I/O and many fewer fork/exec pairs.
+        It's also quite a bit easier to read.
+
+        Reviewed by Steve.
+
+        * win/tools/scripts/auto-version.sh:
+
+2008-02-12  Steve Falkenburg  <sfalken@apple.com>
+
+        Versioning script change.
+
+        * win/tools/scripts/auto-version.sh:
+
+2008-02-07  Ada Chan  <adachan@apple.com>
+
+        Added 4 new methods:
+        wkSetClientCertificateInSSLProperties, 
+        wkCanAccessCFURLRequestHTTPBodyParts,
+        wkCFURLRequestCopyHTTPRequestBodyParts,
+        wkCFURLRequestSetHTTPRequestBodyParts
+
+        Rubber-stamped by Steve.
+
+        * win/include/WebKitSystemInterface/WebKitSystemInterface.h:
+        * win/lib/WebKitSystemInterface.lib:
+        * win/lib/WebKitSystemInterface_debug.lib:
+
+2008-02-04  Timothy Hatcher  <timothy@apple.com>
+
+        <rdar://problem/5722735> Merge fix for SQLITE_FULL error
+        is given even if the max_page_count is increased (2920)
+
+        * libWebCoreSQLite3.a:
+
+2008-02-01  Steve Falkenburg  <sfalken@apple.com>
+
+        <rdar://problem/5717523> Don't set DEP opt-in flag (data execution prevention) since it is incompaible with the video plugin used on CNN.com
+        
+        Rubber-stamped by Jon Honeycutt.
+
+        * win/tools/vsprops/common.vsprops:
+
+2008-01-29  Mark Rowe  <mrowe@apple.com>
+
+        Reviewed by Tim Hatcher.
+
+        <rdar://problem/5600926> WebCore on Tiger must link to its own copy of SQLite 3.4 or newer (so HTML database behavior will be correct).
+
+        * WebCoreSQLite3/sqlite3.h: Added.
+        * WebCoreSQLite3/sqlite3ext.h: Added.
+        * libWebCoreSQLite3.a: Added.
+
+2008-01-29  Alexey Proskuryakov  <ap@webkit.org>
+
+        Debug (external) build fix.
+
+        Removed _DEBUG preprocessor definition, which indicates that debug libraries are used (while they aren't).
+        This preprocessor definition is automatically set by Visual Studio as needed anyway.
+
+        * win/tools/vsprops/debug.vsprops:
+
+2008-01-17  Steve Falkenburg  <sfalken@apple.com>
+
+        Add preprocessor define accidently dropped in my unification,
+        and required by some builds.  Fixes an issue that caused both
+        debug and release DLLs to be loaded.
+        
+        Rubber-stamped by Jon Honeycutt.
+
+        * win/tools/vsprops/debug_internal.vsprops:
+
+2008-01-16  Steve Falkenburg  <sfalken@apple.com>
+
+        Use recommended security-related compiler settings.
+        
+        Reviewed by Adam.
+
+        * win/tools/vsprops/common.vsprops:
+
+2008-01-16  Steve Falkenburg  <sfalken@apple.com>
+
+        Build fix.
+
+        * win/tools/vsprops/release.vsprops:
+
+2008-01-15  Adele Peterson  <adele@apple.com>
+
+        Reviewed by Adam and Antti.
+
+        Updated libraries for <rdar://problem/5619062> Add load progress indicator to video controls
+
+        * WebKitSystemInterface.h:
+        * libWebKitSystemInterfaceLeopard.a:
+        * libWebKitSystemInterfaceTiger.a:
+        * win/include/SafariTheme: Added.
+        * win/include/SafariTheme/SafariThemeConstants.h: Added. Placeholder empty header until we release an updated WebKitSupportLibrary.
+
+2008-01-14  Steve Falkenburg  <sfalken@apple.com>
+
+        Use shared vsprops for most vcproj properties.
+        
+        Reviewed by Darin Adler.
+
+        * win/tools/vsprops/common.vsprops:
+        * win/tools/vsprops/debug.vsprops:
+        * win/tools/vsprops/debug_internal.vsprops:
+        * win/tools/vsprops/release.vsprops:
+
+2008-01-11  Steve Falkenburg  <sfalken@apple.com>
+
+        Share common files across projects.
+        
+        Unify vsprops files
+        Debug:          common.vsprops, debug.vsprops
+        Debug_Internal: common.vsprops, debug.vsprops, debug_internal.vsprops
+        Release:        common.vsprops, release.vsprops
+        
+        Shared properties can go into common.vsprops, shared debug settings can go into debug.vsprops.
+        debug_internal.vsprops will be mostly empty except for file path prefix modifiers.
+
+        Moved auto-version.sh, VERSION, PRODUCTVERSION to tools.
+
+        Reviewed by Adam Roben.
+
+        * win/tools/WinTools.make:
+        * win/tools/scripts: Added.
+        * win/tools/scripts/PRODUCTVERSION: Added.
+        * win/tools/scripts/VERSION: Added.
+        * win/tools/scripts/auto-version.sh: Copied from WebCore/WebCore.vcproj/auto-version.sh.
+        * win/tools/vsprops/debug.vsprops:
+        * win/tools/vsprops/debug_internal.vsprops: Added.
+        * win/tools/vsprops/release.vsprops:
+
+2008-01-11  Steve Falkenburg  <sfalken@apple.com>
+
+        Add shared vsprops to help unify our Windows tools settings.
+
+        Reviewed by Hyatt.
+
+        * win/tools: Added.
+        * win/tools/WinTools.make: Added.
+        * win/tools/vsprops: Added.
+        * win/tools/vsprops/common.vsprops: Added.
+        * win/tools/vsprops/debug.vsprops: Added.
+        * win/tools/vsprops/release.vsprops: Added.
+
+2008-01-07  Mark Rowe  <mrowe@apple.com>
+
+        Update Tiger library to a G3-friendly version.
+
+        * libWebKitSystemInterfaceTiger.a:
+
+2008-01-07  Adele Peterson  <adele@apple.com>
+
+        Reviewed by Antti, Adam, and Mitz.
+
+        WebKitLibraries part of fix for 
+        <rdar://problem/5619073> Updated look for <video> controls
+        <rdar://problem/5619057> Add volume control to video controls
+
+        * WebKitSystemInterface.h:
+        * libWebKitSystemInterfaceLeopard.a:
+        * libWebKitSystemInterfaceTiger.a:
+
+2008-01-03  Mark Rowe  <mrowe@apple.com>
+
+        Update Tiger library to a G3-friendly version.
+
+        * libWebKitSystemInterfaceTiger.a:
+
+2008-01-03  Adele Peterson  <adele@apple.com>
+
+        Update libraries for <rdar://problem/4106190> Include "Where from" metadata in drag-and-dropped images
+
+        * WebKitSystemInterface.h:
+        * libWebKitSystemInterfaceLeopard.a:
+        * libWebKitSystemInterfaceTiger.a:
+
+2007-12-21  Mark Rowe  <mrowe@apple.com>
+
+        Rubber-stamped by Dan Bernstein.
+
+        Fix http://bugs.webkit.org/show_bug.cgi?id=16549.
+        Bug 16549: WebKit nightly build failing to launch on PowerPC G3s
+
+        * libWebKitSystemInterfaceTiger.a: Update to a G3-friendly version.
+
+2007-12-07  Dan Bernstein  <mitz@apple.com>
+
+        Reviewed by Darin Adler.
+
+        - updated system interface for fixing <rdar://problem/5499918> REGRESSION: insertion point in input field with custom border cuts holes in focus ring interior edges
+
+        * WebKitSystemInterface.h:
+        * libWebKitSystemInterfaceLeopard.a:
+        * libWebKitSystemInterfaceTiger.a:
+
+2007-11-27  John Sullivan  <sullivan@apple.com>
+
+        Fixed 5614525, caused by a recent bug in WKGetExtensionsForMIMEType
+        that affects Safari.
+        
+        reviewed by Kevin Decker
+
+        * libWebKitSystemInterfaceLeopard.a:
+        * libWebKitSystemInterfaceTiger.a:
+
+2007-11-26  Timothy Hatcher  <timothy@apple.com>
+
+        Reviewed by Adam Roben.
+
+        Bug 16137: Web Inspector window on Leopard should have a unified toolbar and window title
+        http://bugs.webkit.org/show_bug.cgi?id=16137
+
+        Add a new function to make bottom window corners square for textured windows.
+
+        * WebKitSystemInterface.h:
+        * libWebKitSystemInterfaceTiger.a:
+        * libWebKitSystemInterfaceLeopard.a:
+
+2007-11-23  Adam Roben  <aroben@apple.com>
+
+        Add wkSetPatternPhaseInUserSpace to WebKitSystemInterface on Windows
+
+        Reviewed by Tim.
+
+        * win/include/WebKitSystemInterface/WebKitSystemInterface.h: Added
+        declaration.
+        * win/lib/WebKitSystemInterface.lib: Updated.
+        * win/lib/WebKitSystemInterface_debug.lib: Updated.
+
+2007-11-16  Anders Carlsson  <andersca@apple.com>
+
+        Reviewed by Adam.
+
+        <rdar://problem/5603832>
+        XMLHttpRequest readyState 3 & responseText buffer issues.
+
+        Add wkSetCFURLRequestShouldContentSniff.
+        
+        * win/include/WebKitSystemInterface/WebKitSystemInterface.h:
+        * win/lib/WebKitSystemInterface.lib:
+        * win/lib/WebKitSystemInterface_debug.lib:
+
+2007-11-05  Antti Koivisto  <antti@apple.com>
+
+        Reviewed by Sam.
+        
+        Update WKQTMovieViewSetDrawSynchronously.
+
+        * libWebKitSystemInterfaceLeopard.a:
+        * libWebKitSystemInterfaceTiger.a:
+
+2007-11-02  Antti Koivisto  <antti@apple.com>
+
+        Reviewed by Darin Adler.
+        
+        Update to add WKQTMovieViewSetDrawSynchronously
+
+        * WebKitSystemInterface.h:
+        * libWebKitSystemInterfaceLeopard.a:
+        * libWebKitSystemInterfaceTiger.a:
+
+2007-10-26  Adele Peterson  <adele@apple.com>
+
+        Reviewed by Tim Hatcher.
+
+        Updating header too for WKDrawCapsLockIndicator.
+
+        * WebKitSystemInterface.h:
+
+2007-10-26  Adele Peterson  <adele@apple.com>
+
+        Reviewed by Oliver.
+
+        Adding WKDrawCapsLockIndicator in preparation for fixing the caps lock indicator.
+
+        * libWebKitSystemInterfaceLeopard.a:
+        * libWebKitSystemInterfaceTiger.a:
+
+2007-10-25  Adam Roben  <aroben@apple.com>
+
+        Add wkSetPatternBaseCTM.
+
+        * win/include/WebKitSystemInterface/WebKitSystemInterface.h:
+        * win/lib/WebKitSystemInterface.lib:
+        * win/lib/WebKitSystemInterface_debug.lib:
+
+2007-10-25  Sam Weinig  <sam@webkit.org>
+
+        Fix the windows build.
+
+        * win/lib/WebKitSystemInterface.lib:
+        * win/lib/WebKitSystemInterface_debug.lib:
+
+2007-10-25  Timothy Hatcher  <timothy@apple.com>
+
+        Add WKSetPatternBaseCTM.
+
+        * WebKitSystemInterface.h:
+        * libWebKitSystemInterfaceLeopard.a:
+        * libWebKitSystemInterfaceTiger.a:
+
+2007-10-25  Timothy Hatcher  <timothy@apple.com>
+
+        Reviewed by Adam.
+
+        Update the Leopard WebKitSystemInterface to be 4-way univeral to include 64-bit.
+
+        * libWebKitSystemInterfaceLeopard.a:
+
+2007-10-25  Sam Weinig  <sam@webkit.org>
+
+        Added wrapper for getting the foundation cache directory.
+
+        Reviewed by Adam Roben.
+
+        * win/include/WebKitSystemInterface/WebKitSystemInterface.h:
+        * win/lib/WebKitSystemInterface.lib:
+        * win/lib/WebKitSystemInterface_debug.lib:
+
+2007-10-24  Adam Roben  <aroben@apple.com>
+
+        Added some font-related functions needed for <rdar://5549919>
+
+        Reviewed by Ada.
+
+        * win/include/WebKitSystemInterface/WebKitSystemInterface.h:
+        * win/lib/WebKitSystemInterface.lib:
+        * win/lib/WebKitSystemInterface_debug.lib:
+
+2007-10-24  Timothy Hatcher  <timothy@apple.com>
+
+        Reviewed by Mark Rowe.
+
+        <rdar://problem/5069711> OpenSource version of libWebKitSystemInterface.a is Tiger only, causes issues if used on Leopard
+
+        Add system specific versions of WebKitSystemInterface.
+
+        * libWebKitSystemInterface.a: Removed.
+        * libWebKitSystemInterfaceLeopard.a: Added.
+        * libWebKitSystemInterfaceTiger.a: Added.
+
+2007-10-11  Ada Chan  <adachan@apple.com>
+
+        <rdar://problem/5534421>
+        Added wkGetDefaultHTTPCookieStorage().  Updated libraries.
+
+        Reviewed by Darin Adler.
+
+        * win/include/WebKitSystemInterface/WebKitSystemInterface.h:
+        * win/lib/WebKitSystemInterface.lib:
+        * win/lib/WebKitSystemInterface_debug.lib:
+
+2007-09-27  Sam Weinig  <sam@webkit.org>
+
+        Build fix. Ran update-webkitsysteminterface script on Tiger, because
+        the resulting binary differs when built on Tiger.
+
+        * libWebKitSystemInterface.a:
+
+2007-09-27  David Hyatt  <hyatt@apple.com>
+
+        Update WebKitSYstemInterface for @font-face changes.
+
+        * WebKitSystemInterface.h:
+        * libWebKitSystemInterface.a:
+
+2007-09-18  Geoffrey Garen  <ggaren@apple.com>
+
+        Build fix. Ran update-webkitsysteminterface script on Tiger, because
+        the resulting binary differs when built on Tiger. See 
+        <rdar://problem/5490613>.
+
+        * libWebKitSystemInterface.a:
+
+2007-09-18  Geoffrey Garen  <ggaren@apple.com>
+
+        Build fix. Ran update-webkitsysteminterface script.
+
+        * WebKitSystemInterface.h:
+        * libWebKitSystemInterface.a:
+
+2007-08-28  Anders Carlsson  <andersca@apple.com>
+
+        Add WKSetNSURLRequestShouldContentSniff.
+        
+        * WebKitSystemInterface.h:
+        * libWebKitSystemInterface.a:
+
+2007-08-28  Ada Chan  <adachan@apple.com>
+
+        <rdar://problem/4876242> Added SPI to fetch SSL certificate information.
+        Updated libraries.
+        
+        Reviewed by Adam.
+
+        * win/include/WebKitSystemInterface/WebKitSystemInterface.h:
+        * win/lib/WebKitSystemInterface.lib:
+        * win/lib/WebKitSystemInterface_debug.lib:
+
+2007-07-23  Ada Chan  <adachan@apple.com>
+
+        Reviewed by Steve.
+        
+        Update WebKitSystemInterface.{h,lib}.
+
+        * win/include/WebKitSystemInterface/WebKitSystemInterface.h:
+        * win/lib/WebKitSystemInterface.lib:
+        * win/lib/WebKitSystemInterface_debug.lib:
+
+2007-07-19  Ada Chan  <adachan@apple.com>
+
+        Rubber-stamped by Adam.
+        
+        Update libraries.
+
+        * win/lib/WebKitSystemInterface.lib:
+        * win/lib/WebKitSystemInterface_debug.lib:
+
+2007-07-06  Adam Roben  <aroben@apple.com>
+
+        Update WebKitSystemInterface.{h,lib} for <rdar://problem/5301994>
+
+        Reviewed by Alice.
+
+        * win/include/WebKitSystemInterface/WebKitSystemInterface.h:
+        * win/lib/WebKitSystemInterface.lib:
+        * win/lib/WebKitSystemInterface_debug.lib:
+
+2007-06-29  Antti Koivisto  <antti@apple.com>
+
+        Reviewed by Maciej.
+        
+        Added WKQTMovieDataRate and WKQTMovieMaxTimeLoaded
+
+        * WebKitSystemInterface.h:
+        * libWebKitSystemInterface.a:
+
+2007-03-29  Beth Dakin  <bdakin@apple.com>
+
+        Rubber-stamped by Adam.
+
+        Keep OpenSource building.
+
+        * WebKitSystemInterface.h:
+        * libWebKitSystemInterface.a:
+
+2007-03-28  Antti Koivisto  <antti@apple.com>
+
+        Update libWebKitSystemInterface, previous version was out of date.
+
+        * libWebKitSystemInterface.a:
+
+2007-03-27  Antti Koivisto  <antti@apple.com>
+
+        Reviewed by Darin Adler.
+        
+        Added wkGetWheelEventDeltas
+
+        * WebKitSystemInterface.h:
+        * libWebKitSystemInterface.a:
+
+2007-03-07  Mark Rowe  <mrowe@apple.com>
+
+        Build fix.  Rebuild against 10.4 SDK.
+
+        * libWebKitSystemInterface.a:
+
+2007-03-06  Kevin Decker  <kdecker@apple.com>
+
+        Reviewed by Brady
+
+        Fixed: <rdar://problem/4126976> private keys imported by WebKit should not be accessible by all applications
+
+        * libWebKitSystemInterface.a:
+
+2007-02-21  Anders Carlsson  <acarlsson@apple.com>
+
+        Add new version with WKCGContextIsBitmapContext.
+        
+        * WebKitSystemInterface.h:
+        * libWebKitSystemInterface.a:
+
+2006-12-16  Adele Peterson  <adele@apple.com>
+
+        Reviewed by Adam.
+
+        WebKitLibraries part of fix for:
+        <rdar://problem/4463829> Switch to use new search field implementation for <input type="search">
+
+        Added wkDrawTextFieldCellFocusRing.
+
+        * WebKitSystemInterface.h:
+        * libWebKitSystemInterface.a:
+
+2006-10-11  Darin Adler  <darin@apple.com>
+
+        Reviewed by John Sullivan.
+
+        * WebKitSystemInterface.h: Updated to a C++-compatible version.
+
+2006-08-31  Adele Peterson  <adele@apple.com>
+
+        Reviewed by John Sullivan.
+
+        Removed wkSecureEventInput and wkSetSecureEventInput, since this can be done with API.
+
+        * WebKitSystemInterface.h:
+        * libWebKitSystemInterface.a:
+
+2006-08-30  Adele Peterson  <adele@apple.com>
+
+        Reviewed by Hyatt.
+
+        Updated for http://bugs.webkit.org/show_bug.cgi?id=10575
+        Enable secure input mode for new password fields
+
+        * WebKitSystemInterface.h: Added WKSetSecureEventInput and WKSecureEventInput;
+        * libWebKitSystemInterface.a:
+
+2006-07-09  Anders Carlsson  <acarlsson@apple.com>
+
+        Reviewed by Darin Adler.
+
+        * WebKitSystemInterface.h:
+        * libWebKitSystemInterface.a:
+        Add WKPathFromFont.
+        
+2006-07-05  Adele Peterson  <adele@apple.com>
+
+        Reviewed by Maciej and Hyatt.
+
+        * WebKitSystemInterface.h: Updated.
+        * libWebKitSystemInterface.a: Updated.
+
+2006-06-16  Adele Peterson  <adele@apple.com>
+
+        Reviewed by Alice.
+
+        * WebKitSystemInterface.h: Added WKDrawBezeledTextArea().
+        * libWebKitSystemInterface.a: ditto.
+
+2006-04-01  Eric Seidel  <eseidel@apple.com>
+
+        * libWebKitSystemInterface.a: commit a universal binary.
+
+2006-04-01  Darin Adler  <darin@apple.com>
+
+        Reviewed by Beth.
+
+        * libWebKitSystemInterface.a: Changed alpha in the focus-ring drawing
+        code to use the system default alpha.
+
+2006-03-17  Eric Seidel  <eseidel@apple.com>
+
+        * libWebKitSystemInterface.a: commit a universal binary.
+
+2006-03-17  Adele Peterson  <adele@apple.com>
+
+        * WebKitSystemInterface.h: Added WKDrawBezeledTextFieldCell()
+        * libWebKitSystemInterface.a: ditto
+
+2006-02-28  John Sullivan  <sullivan@apple.com>
+
+        * WebKitSystemInterface.h: Removed WKMouseIsDown()
+        * libWebKitSystemInterface.a: ditto
+
+2006-02-23  Timothy Hatcher  <timothy@apple.com>
+
+        New build to fix the i386 arch. (The _cuEnc64 symbol was missing.)
+
+        * libWebKitSystemInterface.a:
+
+2006-02-19  Darin Adler  <darin@apple.com>
+
+        * WebKitSystemInterface.h: Added WKDrawFocusRing.
+        * libWebKitSystemInterface.a: Ditto.
+
+2006-02-06  John Sullivan  <sullivan@apple.com>
+
+        * WebKitSystemInterface.h:
+        * libWebKitSystemInterface.a:
+        removed WKExecutableLinkedInTigerOrEarlier
+
+2005-11-01  Darin Adler  <darin@apple.com>
+
+        * libWebKitSystemInterface.a: Updated.
+
+2005-10-04  Maciej Stachowiak  <mjs@apple.com>
+
+        - updated
+
+        * WebKitSystemInterface.h:
+        * libWebKitSystemInterface.a:
+
+2005-09-08  Justin Garcia  <justin.garcia@apple.com>
+
+        * WebKitSystemInterface.h: Update to latest
+        * libWebKitSystemInterface.a: ditto
+
+2005-09-04  Darin Adler  <darin@apple.com>
+
+        * WebKitSystemInterface.h: Update to latest
+        * libWebKitSystemInterface.a: Ditto.
+
+2005-08-07  Darin Adler  <darin@apple.com>
+
+        * libWebKitSystemInterface.a: Universal binary.
+        * WebKitSystemInterface.h: Updated for calls that Eric recently removed.
+
+2005-07-01  John Sullivan  <sullivan@apple.com>
+
+        - added WKExecutableLinkedInTigerOrEarlier
+
+        * WebKitSystemInterface.h:
+        * libWebKitSystemInterface.a:
+
+2005-06-06  Maciej Stachowiak  <mjs@apple.com>
+
+        - updated for crashing bugfix
+
+        * libWebKitSystemInterface.a:
+
+2005-06-06  Maciej Stachowiak  <mjs@apple.com>
+
+        - updated
+
+        * WebKitSystemInterface.h:
+        * libWebKitSystemInterface.a:
+
+2005-06-06  Maciej Stachowiak  <mjs@apple.com>
+
+        - updated
+
+        * WebKitSystemInterface.h:
+        * libWebKitSystemInterface.a:
+
+2005-06-06  Maciej Stachowiak  <mjs@apple.com>
+
+        - updated
+
+        * WebKitSystemInterface.h:
+        * libWebKitSystemInterface.a:
+
+2005-06-06  Maciej Stachowiak  <mjs@apple.com>
+
+        - updated
+
+        * WebKitSystemInterface.h:
+        * libWebKitSystemInterface.a:
+
+2005-06-06  Maciej Stachowiak  <mjs@apple.com>
+
+        - updated
+
+        * WebKitSystemInterface.h:
+        * libWebKitSystemInterface.a:
+
+2005-06-06  Maciej Stachowiak  <mjs@apple.com>
+
+        - updated
+
+        * WebKitSystemInterface.h:
+        * libWebKitSystemInterface.a:
+
+2005-06-06  Maciej Stachowiak  <mjs@apple.com>
+
+        - updated
+
+        * WebKitSystemInterface.h:
+        * libWebKitSystemInterface.a:
+
+2005-06-06  Maciej Stachowiak  <mjs@apple.com>
+
+        - updated
+
+        * WebKitSystemInterface.h:
+        * libWebKitSystemInterface.a:
+
+2005-06-05  Maciej Stachowiak  <mjs@apple.com>
+
+        - added a few more bits of SPI
+
+        * WebKitSystemInterface.h:
+        * libWebKitSystemInterface.a:
+
+2005-06-05  Maciej Stachowiak  <mjs@apple.com>
+
+        - added file type and NSURLResponse caching SPI
+
+        * WebKitSystemInterface.h:
+        * libWebKitSystemInterface.a:
+
+2005-06-05  Maciej Stachowiak  <mjs@apple.com>
+
+        - initial checkin of WebKitSystemInterface binary
+
+        * WebKitSystemInterface.h: Added.
+        * libWebKitSystemInterface.a: Added.
+

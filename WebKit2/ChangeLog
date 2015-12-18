@@ -1,0 +1,1573 @@
+2010-05-17  Mark Rowe  <mrowe@apple.com>
+
+        <rdar://problem/7987585> Disable SVG filters.
+
+        * Configurations/FeatureDefines.xcconfig:
+
+2010-05-17  Mark Rowe  <mrowe@apple.com>
+
+        <rdar://problem/7987743> Disable Blob.slice.
+
+        * Configurations/FeatureDefines.xcconfig:
+
+2010-05-17  Mark Rowe  <mrowe@apple.com>
+
+        <rdar://problem/7987750> Disable progress element.
+
+        * Configurations/FeatureDefines.xcconfig:
+
+2010-05-14  Mark Rowe  <mrowe@apple.com>
+
+        <rdar://problem/7677994> Disable WebGL
+
+        * Configurations/FeatureDefines.xcconfig:
+
+2010-05-04  Anders Carlsson  <andersca@apple.com>
+
+        Reviewed by Dan Bernstein.
+
+        [WebKit2] The web process doesn't need to paint when the web view is hidden.
+        https://bugs.webkit.org/show_bug.cgi?id=38549
+
+        * Shared/CoreIPCSupport/DrawingAreaMessageKinds.h:
+        (DrawingAreaMessage::):
+        Add SuspendPainting/ResumePainting messages.
+        
+        * UIProcess/DrawingAreaProxyUpdateChunk.cpp:
+        (WebKit::DrawingAreaProxyUpdateChunk::setPageIsVisible):
+        Suspend and resume painting accordingly.
+        
+        * WebProcess/WebPage/DrawingAreaUpdateChunk.cpp:
+        (WebKit::DrawingAreaUpdateChunk::DrawingAreaUpdateChunk):
+        Initialize m_shouldPaint to true.
+        
+        (WebKit::DrawingAreaUpdateChunk::display):
+        Return if m_shouldPaint is false.
+        
+        (WebKit::DrawingAreaUpdateChunk::scheduleDisplay):
+        Ditto.
+        
+        (WebKit::DrawingAreaUpdateChunk::setSize):
+        Assert that we should paint here.
+
+        (WebKit::DrawingAreaUpdateChunk::suspendPainting):
+        Set m_shouldPaint to false and stop the timer.
+        
+        (WebKit::DrawingAreaUpdateChunk::resumePainting):
+        Set m_shouldPaint to true and paint if needed.
+
+        (WebKit::DrawingAreaUpdateChunk::didReceiveMessage):
+        handle SuspendPainting/ResumePainting messages.
+
+        * WebProcess/WebPage/DrawingAreaUpdateChunk.h:
+
+2010-05-03  Anders Carlsson  <andersca@apple.com>
+
+        Reviewed by Jon Honeycutt.
+
+        [WebKit2] WKView should respond to WM_SHOWWINDOW messages
+        https://bugs.webkit.org/show_bug.cgi?id=38496
+
+        * UIProcess/win/WebView.cpp:
+        (WebKit::WebView::wndProc):
+        Add case for WM_SHOWWINDOW.
+
+        (WebKit::WebView::onShowWindowEvent):
+        Update the page visibility accordingly.
+
+        * UIProcess/win/WebView.h:
+
+2010-05-03  Anders Carlsson  <andersca@apple.com>
+
+        Reviewed by Dan Bernstein.
+
+        Get rid of PageClient::isPageVisible and pass visibility directly in setPageIsVisible
+        https://bugs.webkit.org/show_bug.cgi?id=38493
+
+        * UIProcess/API/mac/PageClientImpl.h:
+        * UIProcess/API/mac/PageClientImpl.mm:
+        Remove isPageVisible.
+        
+        * UIProcess/API/mac/WKView.mm:
+        (isViewVisible):
+        New function (moved here from PageClientImpl).
+        
+        (-[WKView _updateVisibility]):
+        Call didChangeVisibility.
+        
+        (-[WKView viewDidMoveToWindow]):
+        (-[WKView viewDidHide]):
+        (-[WKView viewDidUnhide]):
+        Call _updateVisibility.
+        
+        * UIProcess/DrawingAreaProxy.h:
+        Rename didChangeVisibility to setPageIsVisible and add an isVisible parameter.
+        
+        * UIProcess/DrawingAreaProxyUpdateChunk.cpp:
+        (WebKit::DrawingAreaProxyUpdateChunk::setPageIsVisible):
+        Don't call WebPageProxy::isVisible.
+
+        * UIProcess/DrawingAreaProxyUpdateChunk.h:
+        
+        * UIProcess/PageClient.h:
+        Remove isPageVisible.
+
+        * UIProcess/WebPageProxy.cpp:
+        * UIProcess/WebPageProxy.h:
+        Remove isVisible.
+
+2010-05-03  Anders Carlsson  <andersca@apple.com>
+
+        Reviewed by Adam Roben.
+
+        Implement PageClient::isPageVisible on Windows.
+        https://bugs.webkit.org/show_bug.cgi?id=38483
+
+        * UIProcess/PageClient.h:
+        * UIProcess/win/WebView.cpp:
+        (WebKit::WebView::isPageVisible):
+        * UIProcess/win/WebView.h:
+
+2010-05-03  Anders Carlsson  <andersca@apple.com>
+
+        Fix Windows build.
+
+        * Platform/CoreIPC/win/ConnectionWin.cpp:
+        (CoreIPC::Connection::sendOutgoingMessage):
+        * Shared/win/UpdateChunk.cpp:
+        (WebKit::UpdateChunk::UpdateChunk):
+        (WebKit::UpdateChunk::encode):
+        (WebKit::UpdateChunk::decode):
+        * Shared/win/UpdateChunk.h:
+        (WebKit::UpdateChunk::rect):
+        * UIProcess/DrawingAreaProxy.h:
+        * UIProcess/DrawingAreaProxyUpdateChunk.h:
+        * UIProcess/win/DrawingAreaProxyUpdateChunkWin.cpp:
+        (WebKit::DrawingAreaProxyUpdateChunk::drawUpdateChunkIntoBackingStore):
+        * WebProcess/WebPage/win/DrawingAreaUpdateChunkWin.cpp:
+        (WebKit::DrawingAreaUpdateChunk::paintIntoUpdateChunk):
+        * WebProcess/win/WebProcessMain.cpp:
+
+2010-04-30  Anders Carlsson  <andersca@apple.com>
+
+        Reviewed by Sam Weinig.
+
+        https://bugs.webkit.org/show_bug.cgi?id=38415
+        Have the WKView notify the DrawingAreaProxy when its visibility changes.
+
+        * UIProcess/API/mac/PageClientImpl.h:
+        * UIProcess/API/mac/PageClientImpl.mm:
+        (WebKit::PageClientImpl::isPageVisible):
+        * UIProcess/API/mac/WKView.mm:
+        (-[WKView viewDidMoveToWindow]):
+        (-[WKView viewDidHide]):
+        (-[WKView viewDidUnhide]):
+        * UIProcess/DrawingAreaProxy.h:
+        * UIProcess/DrawingAreaProxyUpdateChunk.cpp:
+        (WebKit::DrawingAreaProxyUpdateChunk::DrawingAreaProxyUpdateChunk):
+        (WebKit::DrawingAreaProxyUpdateChunk::didChangeVisibility):
+        * UIProcess/DrawingAreaProxyUpdateChunk.h:
+        * UIProcess/PageClient.h:
+        * UIProcess/WebPageProxy.cpp:
+        (WebKit::WebPageProxy::isVisible):
+        * UIProcess/WebPageProxy.h:
+
+2010-05-03  Jens Alfke  <snej@chromium.org>
+
+        Reviewed by Darin Fisher.
+
+        [chromium] Add "willSendSubmitEvent" hook to WebFrameClient and FrameLoaderClient
+        https://bugs.webkit.org/show_bug.cgi?id=38397
+
+        No tests (functionality is exposed only through native WebKit API.)
+
+        * WebProcess/WebCoreSupport/WebFrameLoaderClient.h:
+        (WebKit::WebFrameLoaderClient::dispatchWillSendSubmitEvent):
+
+2010-05-01  Sam Weinig  <sam@webkit.org>
+
+        Reviewed by Anders Carlsson.
+
+        Fix for https://bugs.webkit.org/show_bug.cgi?id=38471
+        Add generic callback mechanism
+
+        Added GenericCallback class replacing RenderTreeExternalRepresentationCallback
+        and ScriptReturnValueCallback.
+        
+        Also,
+        - Standardize C API callbacks to take the context last.
+        - Standardize C API callbacks to not have the _f suffix (now the block
+          variants have a _b suffix).
+        - Re-write toWK and toRef methods as a set of template functions using
+          the generic API->implementation mapping information.
+
+        * UIProcess/API/C/WKAPICast.h:
+        * UIProcess/API/C/WKPage.cpp:
+        (WKPageRunJavaScriptInMainFrame):
+        (callRunJavaScriptBlockAndRelease):
+        (disposeRunJavaScriptBlock):
+        (WKPageRunJavaScriptInMainFrame_b):
+        (WKPageRenderTreeExternalRepresentation):
+        (WKPageRenderTreeExternalRepresentation_b):
+        * UIProcess/API/C/WKPage.h:
+        * UIProcess/API/C/WKPagePrivate.h:
+        * UIProcess/GenericCallback.h: Added.
+        (WebKit::GenericCallback::create):
+        (WebKit::GenericCallback::~GenericCallback):
+        (WebKit::GenericCallback::performCallbackWithReturnValue):
+        (WebKit::GenericCallback::invalidate):
+        (WebKit::GenericCallback::callbackID):
+        (WebKit::GenericCallback::generateCallbackID):
+        (WebKit::GenericCallback::GenericCallback):
+        * UIProcess/RenderTreeExternalRepresentationCallback.cpp: Removed.
+        * UIProcess/RenderTreeExternalRepresentationCallback.h: Removed.
+        * UIProcess/ScriptReturnValueCallback.cpp: Removed.
+        * UIProcess/ScriptReturnValueCallback.h: Removed.
+        * UIProcess/WebPageProxy.cpp:
+        (WebKit::WebPageProxy::didRunJavaScriptInMainFrame):
+        (WebKit::WebPageProxy::didGetRenderTreeExternalRepresentation):
+        * UIProcess/WebPageProxy.h:
+        * WebKit2.xcodeproj/project.pbxproj:
+        * win/WebKit2.vcproj:
+
+2010-04-30  Sam Weinig  <sam@webkit.org>
+
+        Fix the build.
+
+        * Platform/CoreIPC/mac/ConnectionMac.cpp: Add missing #include.
+
+2010-04-30  Sam Weinig  <sam@webkit.org>
+
+        Reviewed by Anders Carlsson.
+
+        https://bugs.webkit.org/show_bug.cgi?id=38413
+        Add callback based API to get the textual representation of the RenderTree.
+
+        - Also ensures that any pending callbacks are invalidated if the WebPage
+          closes (expectedly or unexpectedly).
+        - A follow up patch will unify the callback mechanism with a common base
+          class.
+
+        * Shared/CoreIPCSupport/WebPageMessageKinds.h:
+        (WebPageMessage::):
+        * Shared/CoreIPCSupport/WebPageProxyMessageKinds.h:
+        (WebPageProxyMessage::):
+        * UIProcess/API/C/WKPage.cpp:
+        (WKPageRunJavaScriptInMainFrame_f):
+        (WKPageRenderTreeExternalRepresentation_f):
+        (callRenderTreeExternalRepresentationBlockAndDispose):
+        (disposeRenderTreeExternalRepresentationBlock):
+        (WKPageRenderTreeExternalRepresentation):
+        * UIProcess/API/C/WKPagePrivate.h: Added.
+        * UIProcess/RenderTreeExternalRepresentationCallback.cpp: Added.
+        (WebKit::generateCallbackID):
+        (WebKit::RenderTreeExternalRepresentationCallback::RenderTreeExternalRepresentationCallback):
+        (WebKit::RenderTreeExternalRepresentationCallback::~RenderTreeExternalRepresentationCallback):
+        (WebKit::RenderTreeExternalRepresentationCallback::performCallbackWithReturnValue):
+        (WebKit::RenderTreeExternalRepresentationCallback::invalidate):
+        * UIProcess/RenderTreeExternalRepresentationCallback.h: Added.
+        (WebKit::RenderTreeExternalRepresentationCallback::create):
+        (WebKit::RenderTreeExternalRepresentationCallback::callbackID):
+        * UIProcess/ScriptReturnValueCallback.cpp:
+        (WebKit::ScriptReturnValueCallback::~ScriptReturnValueCallback):
+        (WebKit::ScriptReturnValueCallback::performCallbackWithReturnValue):
+        (WebKit::ScriptReturnValueCallback::invalidate):
+        * UIProcess/ScriptReturnValueCallback.h:
+        * UIProcess/WebPageProxy.cpp:
+        (WebKit::WebPageProxy::close):
+        (WebKit::WebPageProxy::getRenderTreeExternalRepresentation):
+        (WebKit::WebPageProxy::didReceiveMessage):
+        (WebKit::WebPageProxy::didRunJavaScriptInMainFrame):
+        (WebKit::WebPageProxy::didGetRenderTreeExternalRepresentation):
+        (WebKit::WebPageProxy::processDidExit):
+        * UIProcess/WebPageProxy.h:
+        * WebKit2.xcodeproj/project.pbxproj:
+        * WebProcess/WebPage/WebPage.cpp:
+        (WebKit::WebPage::getRenderTreeExternalRepresentation):
+        (WebKit::WebPage::didReceiveMessage):
+        * WebProcess/WebPage/WebPage.h:
+        * win/WebKit2.vcproj:
+
+2010-04-30  Sam Weinig  <sam@webkit.org>
+
+        Reviewed by Anders Carlsson.
+
+        Fix for https://bugs.webkit.org/show_bug.cgi?id=38406
+        Add support for sending messages with a size greater than 4096 bytes
+
+        Adds support by putting message bodies that are larger than 4096 bytes
+        in OOL memory.
+
+        * Platform/CoreIPC/Connection.cpp:
+        (CoreIPC::Connection::sendMessage):
+        (CoreIPC::Connection::waitForMessage):
+        (CoreIPC::Connection::sendSyncMessage):
+        (CoreIPC::Connection::dispatchMessages):
+        * Platform/CoreIPC/Connection.h:
+        (CoreIPC::Connection::OutgoingMessage::OutgoingMessage):
+        (CoreIPC::Connection::OutgoingMessage::messageID):
+        (CoreIPC::Connection::send):
+        (CoreIPC::Connection::sendSync):
+        * Platform/CoreIPC/MessageID.h:
+        (CoreIPC::MessageID::):
+        (CoreIPC::MessageID::MessageID):
+        (CoreIPC::MessageID::equalIgnoringFlags):
+        (CoreIPC::MessageID::copyAddingFlags):
+        (CoreIPC::MessageID::fromInt):
+        (CoreIPC::MessageID::toInt):
+        (CoreIPC::MessageID::isMessageBodyOOL):
+        * Platform/CoreIPC/mac/ConnectionMac.cpp:
+        (CoreIPC::Connection::sendOutgoingMessage):
+        (CoreIPC::createArgumentDecoder):
+
+2010-04-28  Mike Thole  <mthole@apple.com>
+
+        Build fix, not reviewed.
+
+        Fix WebKit2 build by stubbing out WebFrameLoaderClient::canAuthenticateAgainstProtectionSpace().
+
+        * WebProcess/WebCoreSupport/WebFrameLoaderClient.cpp:
+        (WebKit::WebFrameLoaderClient::canAuthenticateAgainstProtectionSpace):
+        * WebProcess/WebCoreSupport/WebFrameLoaderClient.h:
+
+2010-04-28  Sam Weinig  <sam@webkit.org>
+
+        Reviewed by Mark Rowe.
+
+        Only build on SnowLeopard and later when using the Makefile.
+
+        * Makefile:
+
+2010-04-27  Sam Weinig  <sam@webkit.org>
+
+        Reviewed by Maciej Stachowiak.
+
+        Fix for https://bugs.webkit.org/show_bug.cgi?id=38238
+        Allow both WebKit and WebKit2 to link to the same WebCore.framework
+
+        * Configurations/WebKit2.xcconfig: Remove the OTHER_LDFLAGS. We don't
+        need to set WebCore as a sub_umbrella of WebKit2, since we are not
+        reexporting any of its symbols.
+
+2010-04-27  Sam Weinig  <sam@webkit.org>
+
+        Reviewed by Geoffrey Garen.
+
+        Add comment about not using StringImpl::createCFString in WKStringCopyCFString.
+
+        * UIProcess/API/C/cf/WKStringCF.cpp:
+        (WKStringCopyCFString):
+
+2010-04-27  Sam Weinig  <sam@webkit.org>
+
+        Reviewed by Geoffrey Garen.
+
+        Remove call to StringImpl::createCFString and instead use CFStringCreateWithCharacters
+        directly. StringImpl::createCFString only an optimization when called
+        from the thread that WebCore is running on, which is never the case for
+        WKStringCopyCFString. We should revisit this later, perhaps adding a
+        threadspecific allocator. We also now honor the passed in allocator.
+
+        * UIProcess/API/C/cf/WKStringCF.cpp:
+        (WKStringCopyCFString):
+
+2010-04-25  Sam Weinig  <sam@webkit.org>
+
+        Reviewed by Maciej Stachowiak.
+
+        Fix for https://bugs.webkit.org/show_bug.cgi?id=38097
+        Disentangle initializing the main thread from initializing threading
+
+        * UIProcess/Launcher/mac/WebProcessLauncher.mm:
+        (WebKit::webThreadBody): Add call to initializeMainThread.
+        * UIProcess/Launcher/win/WebProcessLauncher.cpp:
+        (WebKit::webThreadBody): Ditto.
+        * WebProcess/Launching/mac/WebProcessMain.mm:
+        (main): Ditto.
+        * WebProcess/win/WebProcessMain.cpp:
+        (WebKit::WebProcessMain): Ditto.
+
+2010-04-23  Sam Weinig  <sam@webkit.org>
+
+        Reviewed by Anders Carlsson.
+
+        https://bugs.webkit.org/show_bug.cgi?id=38065
+        Merge mac and win DrawingAreaProxyUpdateChunk implementations.
+
+        * UIProcess/API/mac/WKView.mm:
+        (-[WKView drawRect:]):
+        * UIProcess/DrawingAreaProxy.cpp: Copied from UIProcess/mac/DrawingAreaProxy.mm.
+        * UIProcess/DrawingAreaProxy.h: Copied from UIProcess/mac/DrawingAreaProxy.h.
+        * UIProcess/DrawingAreaProxyUpdateChunk.cpp: Copied from UIProcess/mac/DrawingAreaProxyUpdateChunk.mm.
+        (WebKit::DrawingAreaProxyUpdateChunk::DrawingAreaProxyUpdateChunk):
+        (WebKit::DrawingAreaProxyUpdateChunk::paint):
+        (WebKit::DrawingAreaProxyUpdateChunk::setSize):
+        (WebKit::DrawingAreaProxyUpdateChunk::didSetSize):
+        (WebKit::DrawingAreaProxyUpdateChunk::update):
+        (WebKit::DrawingAreaProxyUpdateChunk::didReceiveMessage):
+        * UIProcess/DrawingAreaProxyUpdateChunk.h: Copied from UIProcess/mac/DrawingAreaProxyUpdateChunk.h.
+        * UIProcess/mac/DrawingAreaProxy.h: Removed.
+        * UIProcess/mac/DrawingAreaProxy.mm: Removed.
+        * UIProcess/mac/DrawingAreaProxyUpdateChunk.h: Removed.
+        * UIProcess/mac/DrawingAreaProxyUpdateChunk.mm: Removed.
+        * UIProcess/mac/DrawingAreaProxyUpdateChunkMac.mm: Copied from UIProcess/mac/DrawingAreaProxyUpdateChunk.mm.
+        (WebKit::DrawingAreaProxyUpdateChunk::page):
+        (WebKit::DrawingAreaProxyUpdateChunk::invalidateBackingStore):
+        (WebKit::DrawingAreaProxyUpdateChunk::platformPaint):
+        (WebKit::DrawingAreaProxyUpdateChunk::drawUpdateChunkIntoBackingStore):
+        * UIProcess/win/DrawingAreaProxy.cpp: Removed.
+        * UIProcess/win/DrawingAreaProxy.h: Removed.
+        * UIProcess/win/DrawingAreaProxyUpdateChunkWin.cpp: Copied from UIProcess/win/DrawingAreaProxy.cpp.
+        (WebKit::DrawingAreaProxyUpdateChunk::page):
+        (WebKit::DrawingAreaProxyUpdateChunk::ensureBackingStore):
+        (WebKit::DrawingAreaProxyUpdateChunk::invalidateBackingStore):
+        (WebKit::DrawingAreaProxyUpdateChunk::platformPaint):
+        (WebKit::DrawingAreaProxyUpdateChunk::drawUpdateChunkIntoBackingStore):
+        * UIProcess/win/WebView.cpp:
+        (WebKit::WebView::WebView):
+        (WebKit::WebView::onPaintEvent):
+        * WebKit2.xcodeproj/project.pbxproj:
+        * win/WebKit2.vcproj:
+
+2010-04-23  Sam Weinig  <sam@webkit.org>
+
+        Reviewed by Anders Carlsson.
+
+        Fix for https://bugs.webkit.org/show_bug.cgi?id=38059
+        Merge mac and win DrawingAreaUpdateChunk implementations.
+
+        * UIProcess/win/DrawingAreaProxy.cpp:
+        (WebKit::DrawingAreaProxy::didSetSize):
+        (WebKit::DrawingAreaProxy::didReceiveMessage):
+        * UIProcess/win/DrawingAreaProxy.h:
+        * WebKit2.xcodeproj/project.pbxproj:
+        * WebProcess/WebPage/DrawingAreaUpdateChunk.cpp: Copied from WebProcess/WebPage/mac/DrawingAreaUpdateChunk.cpp.
+        (WebKit::DrawingAreaUpdateChunk::setSize):
+        * WebProcess/WebPage/DrawingAreaUpdateChunk.h: Copied from WebProcess/WebPage/mac/DrawingAreaUpdateChunk.h.
+        * WebProcess/WebPage/mac/DrawingAreaUpdateChunk.cpp: Removed.
+        * WebProcess/WebPage/mac/DrawingAreaUpdateChunk.h: Removed.
+        * WebProcess/WebPage/mac/DrawingAreaUpdateChunkMac.cpp: Copied from WebProcess/WebPage/mac/DrawingAreaUpdateChunk.cpp.
+        * WebProcess/WebPage/win/DrawingAreaUpdateChunk.cpp: Removed.
+        * WebProcess/WebPage/win/DrawingAreaUpdateChunk.h: Removed.
+        * WebProcess/WebPage/win/DrawingAreaUpdateChunkWin.cpp: Copied from WebProcess/WebPage/win/DrawingAreaUpdateChunk.cpp.
+        (WebKit::DrawingAreaUpdateChunk::paintIntoUpdateChunk):
+        * win/WebKit2.vcproj:
+
+2010-04-23  Anders Carlsson  <andersca@apple.com>
+
+        Reviewed by Sam Weinig.
+
+        Remove an assert. (It's not valid when resizing).
+
+        * WebProcess/WebPage/win/DrawingAreaUpdateChunk.cpp:
+        (WebKit::DrawingAreaUpdateChunk::didUpdate):
+
+2010-04-23  Anders Carlsson  <andersca@apple.com>
+
+        Fix build.
+
+        * UIProcess/win/DrawingAreaProxy.cpp:
+        (WebKit::DrawingAreaProxy::paint):
+        (WebKit::DrawingAreaProxy::setSize):
+        (WebKit::DrawingAreaProxy::didReceiveMessage):
+        * WebProcess/WebPage/win/DrawingAreaUpdateChunk.cpp:
+        (WebKit::DrawingAreaUpdateChunk::setSize):
+        (WebKit::DrawingAreaUpdateChunk::didReceiveMessage):
+
+2010-04-22  Anders Carlsson  <andersca@apple.com>
+
+        Reviewed by Sam Weinig.
+
+        Remove an assert. (It's not valid when resizing).
+
+        * WebProcess/WebPage/mac/DrawingAreaUpdateChunk.cpp:
+        (WebKit::DrawingAreaUpdateChunk::didUpdate):
+
+2010-04-22  Sam Weinig  <sam@webkit.org>
+
+        Reviewed by Anders Carlsson.
+
+        Merge the prefix headers.
+
+        * Configurations/BaseTarget.xcconfig:
+        * WebKit2.xcodeproj/project.pbxproj:
+        * WebKit2Prefix.h:
+        * WebKit2_Prefix.pch: Removed.
+
+2010-04-22  Anders Carlsson  <andersca@apple.com>
+
+        Reviewed by Sam Weinig.
+
+        Don't pass the new size when calling didSetSize, it's possible to get
+        the size from the update chunk.
+
+        * UIProcess/mac/DrawingAreaProxyUpdateChunk.h:
+        * UIProcess/mac/DrawingAreaProxyUpdateChunk.mm:
+        (WebKit::DrawingAreaProxyUpdateChunk::didSetSize):
+        (WebKit::DrawingAreaProxyUpdateChunk::didReceiveMessage):
+        * WebProcess/WebPage/mac/DrawingAreaUpdateChunk.cpp:
+        (WebKit::DrawingAreaUpdateChunk::setSize):
+
+2010-04-22  Anders Carlsson  <andersca@apple.com>
+
+        Reviewed by Sam Weinig.
+
+        Rename SetFrame and DidSetFrame to SetSize and DidSetSize.
+
+        * Shared/CoreIPCSupport/DrawingAreaMessageKinds.h:
+        (DrawingAreaMessage::):
+        * Shared/CoreIPCSupport/DrawingAreaProxyMessageKinds.h:
+        (DrawingAreaProxyMessage::):
+        * UIProcess/mac/DrawingAreaProxyUpdateChunk.mm:
+        (WebKit::DrawingAreaProxyUpdateChunk::drawRectIntoContext):
+        (WebKit::DrawingAreaProxyUpdateChunk::setSize):
+        (WebKit::DrawingAreaProxyUpdateChunk::didReceiveMessage):
+        * WebProcess/WebPage/mac/DrawingAreaUpdateChunk.cpp:
+        (WebKit::DrawingAreaUpdateChunk::setSize):
+        (WebKit::DrawingAreaUpdateChunk::didReceiveMessage):
+
+2010-04-22  Sam Weinig  <sam@webkit.org>
+
+        Reviewed by Anders Carlsson.
+
+        Fix for https://bugs.webkit.org/show_bug.cgi?id=38002
+        Add rudimentary statistics gathering for WebKit2
+
+        * UIProcess/API/C/WKContext.cpp:
+        (WKContextGetStatistics):
+        * UIProcess/API/C/WKContextPrivate.h: Copied from WebKit2/UIProcess/API/C/WKContext.h.
+        * UIProcess/API/C/WKPageNamespace.cpp:
+        (WKPageNamespaceGetContext):
+        * UIProcess/API/C/WKPageNamespace.h:
+        * UIProcess/WebContext.cpp:
+        (WebKit::WebContext::getStatistics):
+        * UIProcess/WebContext.h:
+        * UIProcess/WebPageNamespace.cpp:
+        (WebKit::WebPageNamespace::getStatistics):
+        * UIProcess/WebPageNamespace.h:
+        * UIProcess/WebPageProxy.cpp:
+        (WebKit::WebPageProxy::getStatistics):
+        * UIProcess/WebPageProxy.h:
+        * UIProcess/WebProcessProxy.cpp:
+        (WebKit::WebProcessProxy::numberOfPages):
+        * UIProcess/WebProcessProxy.h:
+        * WebKit2.xcodeproj/project.pbxproj:
+        * win/WebKit2.vcproj:
+
+2010-04-20  Anders Carlsson  <andersca@apple.com>
+
+        Reviewed by Sam Weinig.
+
+        Don't paint the web page before we've blit the last update chunk to the backing store.
+
+        * UIProcess/win/DrawingAreaProxy.cpp:
+        (WebKit::DrawingAreaProxy::update):
+        (WebKit::DrawingAreaProxy::didReceiveMessage):
+        * UIProcess/win/DrawingAreaProxy.h:
+        * WebProcess/WebPage/win/DrawingAreaUpdateChunk.cpp:
+        (WebKit::DrawingAreaUpdateChunk::DrawingAreaUpdateChunk):
+        (WebKit::DrawingAreaUpdateChunk::display):
+        (WebKit::DrawingAreaUpdateChunk::scheduleDisplay):
+        (WebKit::DrawingAreaUpdateChunk::setSize):
+        (WebKit::DrawingAreaUpdateChunk::didUpdate):
+        (WebKit::DrawingAreaUpdateChunk::didReceiveMessage):
+        * WebProcess/WebPage/win/DrawingAreaUpdateChunk.h:
+
+2010-04-20  Anders Carlsson  <andersca@apple.com>
+
+        Fix build.
+
+        * WebProcess/WebCoreSupport/WebFrameLoaderClient.cpp:
+        (WebKit::WebFrameLoaderClient::receivedData):
+
+2010-04-20  Anders Carlsson  <andersca@apple.com>
+
+        Reviewed by Sam Weinig.
+
+        Don't paint the web page before we've blit the last update chunk to the backing store
+        https://bugs.webkit.org/show_bug.cgi?id=37896
+
+        * Shared/CoreIPCSupport/DrawingAreaMessageKinds.h:
+        (DrawingAreaMessage::):
+        * UIProcess/mac/DrawingAreaProxyUpdateChunk.h:
+        * UIProcess/mac/DrawingAreaProxyUpdateChunk.mm:
+        (WebKit::DrawingAreaProxyUpdateChunk::drawUpdateChunkIntoBackingStore):
+        (WebKit::DrawingAreaProxyUpdateChunk::update):
+        (WebKit::DrawingAreaProxyUpdateChunk::didReceiveMessage):
+        * WebProcess/WebPage/mac/DrawingAreaUpdateChunk.cpp:
+        (WebKit::DrawingAreaUpdateChunk::DrawingAreaUpdateChunk):
+        (WebKit::DrawingAreaUpdateChunk::display):
+        (WebKit::DrawingAreaUpdateChunk::scheduleDisplay):
+        (WebKit::DrawingAreaUpdateChunk::setSize):
+        (WebKit::DrawingAreaUpdateChunk::didUpdate):
+        (WebKit::DrawingAreaUpdateChunk::didReceiveMessage):
+        * WebProcess/WebPage/mac/DrawingAreaUpdateChunk.h:
+
+2010-04-20  Anders Carlsson  <andersca@apple.com>
+
+        Fix build.
+
+        * WebProcess/WebCoreSupport/WebChromeClient.cpp:
+        (WebKit::WebChromeClient::chooseIconForFiles):
+        * WebProcess/WebCoreSupport/WebChromeClient.h:
+
+2010-04-19  Anders Carlsson  <andersca@apple.com>
+
+        Fix build.
+
+        * WebProcess/WebCoreSupport/WebFrameLoaderClient.cpp:
+        (WebKit::WebFrameLoaderClient::dispatchDidChangeIcons):
+        * WebProcess/WebCoreSupport/WebFrameLoaderClient.h:
+
+2010-04-17  Sam Weinig  <weinig@apple.com>
+
+        Reviewed by Jon "The Belly" Honeycutt.
+
+        Remove the need for a .defs file! Define WK_EXPORT.
+
+        * UIProcess/API/C/WKBase.h:
+        * WebProcess/win/WebProcessMain.h:
+        * win/WebKit2.def: Removed.
+        * win/WebKit2.vcproj:
+
+2010-04-17  Sam Weinig  <weinig@apple.com>
+
+        Reviewed by Adam Roben.
+
+        Teach windows MiniBrowser how to work with window.open()
+        and targeted links.
+
+        Export WKPageSetPageUIClient.
+
+        * win/WebKit2.def:
+
+2010-04-16  Sam Weinig  <sam@webkit.org>
+
+        Reviewed by Anders Carlsson.
+
+        Fix window.open() and targeted links.
+
+        * UIProcess/WebPageProxy.cpp:
+        (WebKit::WebPageProxy::didReceiveSyncMessage): Pass in the new pageID
+        instead of 0.
+
+        * WebProcess/WebProcess.cpp:
+        (WebKit::WebProcess::createWebPage): Allow for the page to have already
+        been created, as is the case with programmatic window opening from within
+        WebCore (e.g. window.open() or <a target="_blank">).
+
+2010-04-16  Sam Weinig  <sam@webkit.org>
+
+        Reviewed by Mark Rowe.
+
+        Don't optimize debug builds.
+
+        * WebKit2.xcodeproj/project.pbxproj: Define GCC_OPTIMIZATION_LEVEL correctly.
+
+2010-04-16  Anders Carlsson  <andersca@apple.com>
+
+        Fix build.
+
+        * WebProcess/WebPage/WebPage.cpp:
+        (WebKit::WebPage::runJavaScriptInMainFrame):
+
+2010-04-16  Anders Carlsson  <andersca@apple.com>
+
+        Reviewed by Sam Weinig.
+
+        Fix windows build.
+
+        * Platform/win/RunLoopWin.cpp:
+        (RunLoop::run):
+        * UIProcess/Launcher/win/WebProcessLauncher.cpp:
+        (WebKit::webThreadBody):
+        (WebKit::launchWebProcess):
+        * WebProcess/win/WebProcessMain.cpp:
+        (WebKit::WebProcessMain):
+
+2010-04-16  Sam Weinig  <weinig@apple.com>
+
+        Reviewed by Anders Carlsson.
+
+        Make resizing responsive on Windows.
+
+        - Use the same waitFor logic as do for the Mac resizing
+          DrawingAreaUpdateChunk code.
+
+        * Shared/win/UpdateChunk.cpp:
+        (WebKit::UpdateChunk::UpdateChunk):
+        * Shared/win/UpdateChunk.h:
+         Add a constructor that only takes an IntRect and allocates
+         the shared memory mapping for you.
+        * UIProcess/win/DrawingAreaProxy.cpp:
+        (WebKit::DrawingAreaProxy::DrawingAreaProxy):
+        (WebKit::DrawingAreaProxy::ensureBackingStore):
+        (WebKit::DrawingAreaProxy::paint):
+        (WebKit::DrawingAreaProxy::drawUpdateChunkIntoBackingStore):
+        (WebKit::DrawingAreaProxy::setSize):
+        (WebKit::DrawingAreaProxy::didSetSize):
+        (WebKit::DrawingAreaProxy::didReceiveMessage):
+        * UIProcess/win/DrawingAreaProxy.h:
+        Perform wait in paint as we do on the mac.
+
+        * UIProcess/win/WebView.cpp:
+        (WebKit::WebView::onSizeEvent):
+        Change to use an IntSize.
+
+        * WebProcess/WebPage/win/DrawingAreaUpdateChunk.cpp:
+        (WebKit::DrawingAreaUpdateChunk::paintIntoUpdateChunk):
+        (WebKit::DrawingAreaUpdateChunk::display):
+        (WebKit::DrawingAreaUpdateChunk::setSize):
+        * WebProcess/WebPage/win/DrawingAreaUpdateChunk.h:
+        Specialize setSize() drawing and factor out painting
+        into a helper function.
+
+2010-04-16  Anders Carlsson  <andersca@apple.com>
+
+        Reviewed by David Hyatt.
+
+        Make run loops be allocated as thread specific data.
+        https://bugs.webkit.org/show_bug.cgi?id=37723
+
+        * Platform/RunLoop.cpp:
+        (RunLoop::initializeMainRunLoop):
+        (RunLoop::current):
+        (RunLoop::main):
+        * Platform/RunLoop.h:
+        * Platform/mac/RunLoopMac.mm:
+        (RunLoop::run):
+        (RunLoop::stop):
+        * UIProcess/Launcher/mac/WebProcessLauncher.mm:
+        (WebKit::webThreadBody):
+        (WebKit::launchWebProcess):
+        * UIProcess/ResponsivenessTimer.cpp:
+        (WebKit::ResponsivenessTimer::ResponsivenessTimer):
+        * WebProcess/Launching/mac/WebProcessMain.mm:
+        (main):
+        * WebProcess/WebProcess.cpp:
+        (WebKit::WebProcess::isSeparateProcess):
+
+2010-04-16  Sam Weinig  <weinig@apple.com>
+
+        Reviewed by Adam Roben.
+
+        Use GDI text rendering on Windows by default.
+
+        * WebProcess/WebPage/win/WebPageWin.cpp:
+        (WebKit::WebPage::platformInitialize): Use the AlternateRenderingMode
+        setting.
+
+2010-04-16  Sam Weinig  <weinig@apple.com>
+
+        Reviewed by Adam Roben.
+
+        Fix crash when trying to load an invalid URL.
+
+        * WebProcess/WebPage/WebPage.cpp:
+        (WebKit::WebPage::loadURL): Use constructor for ResourceRequest
+        that takes a KURL instead of the one that takes a String. The one
+        that takes a string expects a valid URL.
+
+2010-04-16  Sam Weinig  <weinig@apple.com>
+
+        Reviewed by Adam Roben.
+
+        Make tooltips work. Thanks Adam!
+
+        * UIProcess/win/WebView.cpp:
+        (WebKit::WebView::toolTipChanged): Pass the WebView's HWND, not the tooltip's.
+
+2010-04-15  Anders Carlsson  <andersca@apple.com>
+
+        Reviewed by Adam Roben.
+
+        Fix build dependencies.
+
+        * WebKit2.sln:
+
+2010-04-15  Adam Roben  <aroben@apple.com>
+
+        Fix Windows WebKit2 build.
+
+        * UIProcess/WebPageProxy.cpp:
+        (WebKit::WebPageProxy::processDidExit):
+        * win/WebKit2Generated.make:
+
+2010-04-15  Sam Weinig  <sam@webkit.org>
+
+        Reviewed by Anders Carlsson.
+
+        Add WebHistoryClient support.
+        https://bugs.webkit.org/show_bug.cgi?id=37671
+
+        Adds the following callbacks:
+            didNavigateWithNavigationData
+            didPerformClientRedirect
+            didPerformServerRedirect
+            didUpdateHistoryTitle
+
+        * Shared/CoreIPCSupport/WebPageProxyMessageKinds.h:
+        (WebPageProxyMessage::):
+        * Shared/WebNavigationDataStore.h: Added.
+        * UIProcess/API/C/WKAPICast.h:
+        * UIProcess/API/C/WKBase.h:
+        * UIProcess/API/C/WKNavigationData.cpp: Added.
+        * UIProcess/API/C/WKNavigationData.h: Added.
+        * UIProcess/API/C/WKPage.cpp:
+        * UIProcess/API/C/WKPage.h:
+        * UIProcess/API/C/WebKit2.h:
+        * UIProcess/WebHistoryClient.cpp: Copied from UIProcess/WebUIClient.cpp.
+        * UIProcess/WebHistoryClient.h: Copied from UIProcess/WebUIClient.h.
+        * UIProcess/WebNavigationData.cpp: Added.
+        * UIProcess/WebNavigationData.h: Added.
+        * UIProcess/WebPageProxy.cpp:
+        * UIProcess/WebPageProxy.h:
+        * WebKit2.xcodeproj/project.pbxproj:
+        * WebProcess/WebCoreSupport/WebFrameLoaderClient.cpp:
+        * win/WebKit2.vcproj:
+
+2010-04-15  Sam Weinig  <sam@webkit.org>
+
+        Reviewed by Adam Roben.
+
+        Remove empty file configurations.
+
+        * win/WebKit2.vcproj:
+
+2010-04-15  Sam Weinig  <sam@webkit.org>
+
+        Reviewed by Anders Carlsson.
+
+        Fix WebKit2s build. Don't return temporaries.
+
+        * UIProcess/API/C/cf/WKStringCF.cpp:
+        (WKStringCreateWithCFString):
+        * UIProcess/API/C/cf/WKURLCF.cpp:
+        (WKURLCreateWithCFURL):
+        (WKURLCopyCFURL):
+
+2010-04-12  Geoffrey Garen  <ggaren@apple.com>
+
+        Reviewed by Anders Carlsson.
+
+        Fixed complexity and performance FIXME created by using KURL in the UI
+        process -- it turned out that everywhere we were using KURL, we could
+        have just used String instead. (That's how Windows WebKit works, too.)
+
+        I kept WKURLRef and WKStringRef distinct opaque types in the API for now,
+        though, since there may be profit in changing their backing stores in the
+        future, and it's nice for the API to encode a difference between generic
+        strings and strings that are valid, canonical URLs.
+
+        * Shared/KURLWrapper.h: Removed. Yay!
+
+        * Shared/WebCoreTypeArgumentMarshalling.h: Nixed KURL marshalling functions.
+        Old callers marshal Strings now, instead. (This is what KURL was doing
+        under the covers, anyway.)
+
+        * UIProcess/API/C/WKAPICast.h:
+        (toWK): Backed by StringImpl* now.
+        (toURLRef): Added a disambiguating function for specifying that you want
+        a WKURLRef, since StringImpl* converts to WKStringRef by default.
+
+        * UIProcess/API/C/WKFrame.cpp:
+        (WKFrameGetProvisionalURL):
+        (WKFrameGetURL):
+        * UIProcess/API/C/WKPage.cpp:
+        (WKPageLoadURL):
+        * UIProcess/API/C/WKURL.cpp:
+        * UIProcess/API/C/cf/WKURLCF.cpp:
+        (WKURLCreateWithCFURL):
+        (WKURLCopyCFURL):
+        * UIProcess/WebFrameProxy.cpp:
+        (WebKit::WebFrameProxy::didStartProvisionalLoad):
+        (WebKit::WebFrameProxy::didCommitLoad):
+        * UIProcess/WebFrameProxy.h:
+        (WebKit::WebFrameProxy::url):
+        (WebKit::WebFrameProxy::provisionalURL):
+        * UIProcess/WebPageProxy.cpp:
+        (WebKit::WebPageProxy::loadURL):
+        (WebKit::WebPageProxy::didReceiveMessage):
+        (WebKit::WebPageProxy::didStartProvisionalLoadForFrame):
+        (WebKit::WebPageProxy::decidePolicyForNavigationAction):
+        (WebKit::WebPageProxy::decidePolicyForNewWindowAction):
+        (WebKit::WebPageProxy::decidePolicyForMIMEType):
+        (WebKit::WebPageProxy::processDidExit):
+        * UIProcess/WebPageProxy.h:
+        (WebKit::WebPageProxy::urlAtProcessExit):
+        * UIProcess/WebPolicyClient.cpp:
+        (WebKit::WebPolicyClient::decidePolicyForNavigationAction):
+        (WebKit::WebPolicyClient::decidePolicyForNewWindowAction):
+        (WebKit::WebPolicyClient::decidePolicyForMIMEType):
+        * UIProcess/WebPolicyClient.h:
+        * WebKit2.xcodeproj/project.pbxproj:
+        * WebProcess/WebCoreSupport/WebFrameLoaderClient.cpp:
+        (WebKit::WebFrameLoaderClient::dispatchDidStartProvisionalLoad):
+        (WebKit::WebFrameLoaderClient::dispatchDecidePolicyForMIMEType):
+        (WebKit::WebFrameLoaderClient::dispatchDecidePolicyForNewWindowAction):
+        (WebKit::WebFrameLoaderClient::dispatchDecidePolicyForNavigationAction):
+        * WebProcess/WebPage/WebPage.cpp:
+        (WebKit::WebPage::loadURL):
+        (WebKit::WebPage::didReceiveMessage):
+        * WebProcess/WebPage/WebPage.h: Replaced KURL / KURLWrapper with String.
+
+2010-04-14  Anders Carlsson  <andersca@apple.com>
+
+        Reviewed by Sam Weinig.
+
+        Fix horizontal scrollbar repainting
+        https://bugs.webkit.org/show_bug.cgi?id=37626
+
+        Make sure that the update chunk is flipped because that's what WebCore expects.
+        
+        * Shared/mac/UpdateChunk.cpp:
+        (WebKit::UpdateChunk::createImage):
+        * Shared/mac/UpdateChunk.h:
+        Add new createImage member function that creates a CGImageRef from the update chunk.
+        
+        * UIProcess/mac/DrawingAreaProxyUpdateChunk.mm:
+        (WebKit::DrawingAreaProxyUpdateChunk::drawUpdateChunkIntoBackingStore):
+        Pass the right rectangle here; CoreGraphics wants it in non-flipped coordinates.
+        
+        (WebKit::DrawingAreaProxyUpdateChunk::ensureBackingStore):
+        Create a flipped backing store.
+
+        * WebProcess/WebPage/mac/DrawingAreaUpdateChunk.cpp:
+        (WebKit::DrawingAreaUpdateChunk::paintIntoUpdateChunk):
+        Flip the update chunk.
+
+2010-04-14  Sam Weinig  <sam@webkit.org>
+
+        Reviewed by Anders Carlsson.
+
+        Add WKRetainPtr helper class as private header
+        https://bugs.webkit.org/show_bug.cgi?id=37603
+
+        WKRetainPtr is just like RetainPtr, but works for WK types instead of
+        CF/NS types.
+
+        * UIProcess/API/cpp: Added.
+        * UIProcess/API/cpp/WKRetainPtr.h: Added.
+        * WebKit2.xcodeproj/project.pbxproj: Add new file.
+        * win/WebKit2.vcproj: Ditto.
+
+2010-04-14  Sam Weinig  <sam@webkit.org>
+
+        Reviewed by Anders Carlsson.
+
+        Make the WebProcess a LSUIElement to suppress its icon from the Dock.
+
+        * WebKit2.xcodeproj/project.pbxproj:
+        * WebProcess/Info.plist:
+
+2010-04-14  Anders Carlsson  <andersca@apple.com>
+
+        Reviewed by Sam Weinig.
+
+        Factor code to paint into an update chunk out into a separate function.
+        https://bugs.webkit.org/show_bug.cgi?id=37594
+
+        * WebProcess/WebPage/mac/DrawingAreaUpdateChunk.cpp:
+        (WebKit::DrawingAreaUpdateChunk::paintIntoUpdateChunk):
+        (WebKit::DrawingAreaUpdateChunk::display):
+        (WebKit::DrawingAreaUpdateChunk::setSize):
+        * WebProcess/WebPage/mac/DrawingAreaUpdateChunk.h:
+
+2010-04-13  Sam Weinig  <sam@webkit.org>
+
+        Reviewed by Anders Carlsson.
+
+        Fix reported leaks when quitting MiniBrowser with open pages.
+
+        * WebProcess/WebPage/WebPage.h: Make close() public.
+        * WebProcess/WebProcess.cpp:
+        (WebKit::WebProcess::WebProcess):
+        (WebKit::WebProcess::removeWebPage):
+        (WebKit::WebProcess::didClose): If the UIProcess disappears, close
+        the live pages in an effort to not leak.
+        * WebProcess/WebProcess.h:
+
+2010-04-13  Sam Weinig  <sam@webkit.org>
+
+        Reviewed by Anders Carlsson.
+
+        Do a JS collection and clear the memory cache to improve leaks output
+        when exiting. Only do this in debug builds as it is slow.
+
+        * UIProcess/API/mac/WKView.h:
+        * UIProcess/WebProcessProxy.cpp:
+        * WebProcess/WebPage/WebPage.cpp:
+        * WebProcess/WebProcess.cpp:
+        (WebKit::WebProcess::shutdown):
+        (WebKit::WebProcess::didClose):
+
+2010-04-13  Sam Weinig  <sam@webkit.org>
+
+        Reviewed by Adele Peterson.
+
+        Post a null event after calling [NSApp stop] to flush the run loop
+        and finish teardown.
+
+        * Platform/mac/RunLoopMac.mm:
+        (RunLoop::stop):
+
+2010-04-12  Sam Weinig  <sam@webkit.org>
+
+        Reviewed by Anders Carlsson.
+
+        Add #ifdef so that WKView is not included on the mac if not
+        compiling objective-c.
+
+        * UIProcess/API/C/WebKit2.h:
+
+2010-04-12  Anders Carlsson  <andersca@apple.com>
+
+        Reviewed by Adam Roben.
+
+        Add WebKit2 solution file.
+
+        * WebKit2.sln: Added.
+
+2010-04-11  Sam Weinig  <sam@webkit.org>
+
+        Reviewed by Darin Adler.
+
+        Fix for https://bugs.webkit.org/show_bug.cgi?id=37417
+        Move duplicated internal CoreIPC message kinds to a
+        header.
+
+        * Platform/CoreIPC/Connection.cpp:
+        (CoreIPC::Connection::processIncomingMessage):
+        * Platform/CoreIPC/CoreIPCMessageKinds.h: Added.
+        (CoreIPC::CoreIPCMessage::):
+        (CoreIPC::):
+        * Platform/CoreIPC/mac/ConnectionMac.cpp:
+        * WebKit2.xcodeproj/project.pbxproj:
+        * win/WebKit2.vcproj:
+
+2010-04-11  Sam Weinig  <sam@webkit.org>
+
+        Rubber-stamped by Anders Carlsson.
+
+        Disable not-implemented warnings by default for now.
+
+        * Shared/NotImplemented.h:
+
+2010-04-10  Sam Weinig  <sam@webkit.org>
+
+        Reviewed by Anders Carlsson.
+
+        Fix for https://bugs.webkit.org/show_bug.cgi?id=37399
+        Remove use of STL data structures from CoreIPC code
+
+        * Platform/CoreIPC/ArgumentDecoder.cpp:
+        (CoreIPC::ArgumentDecoder::ArgumentDecoder):
+        (CoreIPC::ArgumentDecoder::decodeBytes):
+        (CoreIPC::ArgumentDecoder::removeAttachment):
+        * Platform/CoreIPC/ArgumentDecoder.h:
+        Use WTF::Deque instead of std::queue and WTF::Vector
+        instead of std::vector. Replace use of malloc/free with 
+        fastMalloc/fastFree.
+
+        * Platform/CoreIPC/ArgumentEncoder.cpp:
+        (CoreIPC::ArgumentEncoder::addAttachment):
+        (CoreIPC::ArgumentEncoder::releaseAttachments):
+        * Platform/CoreIPC/ArgumentEncoder.h:
+        Use WTF::Vector instead of std::list. Replace use of malloc/free
+        with fastMalloc/fastFree.
+
+        * Platform/CoreIPC/Connection.cpp:
+        (CoreIPC::Connection::sendMessage):
+        (CoreIPC::Connection::waitForMessage):
+        (CoreIPC::Connection::processIncomingMessage):
+        (CoreIPC::Connection::sendOutgoingMessages):
+        (CoreIPC::Connection::dispatchMessages):
+        * Platform/CoreIPC/Connection.h:
+        * Platform/CoreIPC/mac/ConnectionMac.cpp:
+        (CoreIPC::Connection::sendOutgoingMessage):
+        (CoreIPC::createArgumentDecoder):
+        Use WTF::Vector instead of std::queue.
+
+        * Platform/RunLoop.cpp:
+        (RunLoop::performWork):
+        (RunLoop::scheduleWork):
+        * Platform/RunLoop.h:
+        Ditto.
+
+        * Platform/WorkQueue.h:
+        * Platform/win/WorkQueueWin.cpp:
+        (WorkQueue::scheduleWork):
+        (WorkQueue::performWork):
+        Ditto.
+
+2010-04-10  Mark Rowe  <mrowe@apple.com>
+
+        Fix an obviously incorrect part of the Xcode configuration cleanup that resulted in debug builds
+        asserting shortly after launch.
+
+        * WebKit2.xcodeproj/project.pbxproj: Fix the setting of DEBUG_DEFINES for the Debug configuration.
+
+2010-04-09  Mark Rowe  <mrowe@apple.com>
+
+        Reviewed by Sam Weinig.
+
+        Bring the WebKit2 Xcode configuration in to sync with recent changes to the WebKit Xcode configuration files.
+
+        In particular, this updates the FEATURE_DEFINES to match those used in the other projects, and brings in
+        the changes to support building WebKit for older Mac OS X versions from the current Mac OS X version.
+
+        * Configurations/Base.xcconfig:
+        * Configurations/DebugRelease.xcconfig:
+        * Configurations/FeatureDefines.xcconfig:
+        * Configurations/Version.xcconfig:
+
+2010-04-09  Mark Rowe  <mrowe@apple.com>
+
+        Reviewed by Sam Weinig.
+
+        Clean up the Xcode project configuration.
+
+        Common target settings are pulled out in to BaseTarget.xcconfig.  The majority of setting overrides are
+        removed from the Xcode project itself.  Info.plist files are updated to match those used in other frameworks.
+
+        * Configurations/BaseTarget.xcconfig: Copied from WebKit2/Configurations/WebKit2.xcconfig.
+        * Configurations/WebKit2.xcconfig:
+        * Configurations/WebProcess.xcconfig: Copied from WebKit2/Configurations/WebKit2.xcconfig.
+        * Info.plist:
+        * WebKit2.xcodeproj/project.pbxproj:
+        * WebProcess-Info.plist: Removed.
+        * WebProcess/Info.plist: Moved from WebProcess-Info.plist.
+
+2010-04-09  Mark Rowe  <mrowe@apple.com>
+
+        Build fix.
+
+        * WebProcess/WebCoreSupport/mac/WebSystemInterface.m:
+        (InitWebCoreSystemInterface): Update for recent WKSI changes.
+
+2010-04-09  Sam Weinig  <sam@webkit.org>
+
+        Reviewed by Darin Adler.
+
+        Fix for https://bugs.webkit.org/show_bug.cgi?id=37351
+        Cannot build with build-webkit --webkit2
+
+        Add some headers that it seems others are not getting
+        already.
+
+        * Platform/mac/WorkQueueMac.cpp: #inlude <mach/mach_port.h>
+        * Shared/mac/UpdateChunk.cpp: #inlude <mach/vm_map.h>
+
+2010-04-09  Anders Carlsson  <andersca@apple.com>
+
+        More build fixes.
+        
+        * WebProcess/win/WebProcessMain.h:
+        Include windows.h here.
+        
+        * win/WebKit2.def:
+        Add new exports.
+
+        * win/WebKit2.vcproj:
+        Add new files.
+
+2010-04-09  Sam Weinig  <sam@webkit.org>
+
+        Reviewed by Anders Carlsson.
+
+        Add new WKString.h and WKURL.h headers to top
+        level include.
+
+        * UIProcess/API/C/WebKit2.h:
+
+2010-04-09  Anders Carlsson  <andersca@apple.com>
+
+        More Windows build fixes.
+        
+        * Shared/NotImplemented.h:
+        * UIProcess/API/C/cf/WKURLCF.cpp:
+        Fix typo.
+        
+        (WKURLCreateWithCFURL):
+        * UIProcess/API/C/cf/WKURLCF.h:
+        Ditto.
+        
+        * win/WebKit2Generated.make:
+        Copy the new CF headers.
+
+2010-04-09  Sam Weinig  <sam@webkit.org>
+
+        Reviewed by Anders Carlsson.
+
+        Two more #include sorting issues.
+
+        * Shared/NotImplemented.h:
+        * WebProcess/WebPage/win/DrawingAreaUpdateChunk.cpp:
+
+2010-04-09  Sam Weinig  <sam@webkit.org>
+
+        Reviewed by Anders Carlsson.
+
+        Fix minor style nits found by the style-script.
+
+        * Platform/CoreIPC/ArgumentDecoder.h:
+        * Platform/CoreIPC/ArgumentEncoder.cpp:
+        * Platform/CoreIPC/Attachment.cpp:
+        * Platform/CoreIPC/Connection.cpp:
+        * Platform/CoreIPC/Connection.h:
+        * Platform/CoreIPC/mac/ConnectionMac.cpp:
+        * Platform/CoreIPC/win/ConnectionWin.cpp:
+        * Platform/WorkQueue.h:
+        * Platform/mac/WorkQueueMac.cpp:
+        * Platform/win/RunLoopWin.cpp:
+        * Shared/KURLWrapper.h:
+        * Shared/WebCoreTypeArgumentMarshalling.h:
+        * Shared/mac/UpdateChunk.cpp:
+        * UIProcess/API/C/WKPage.cpp:
+        * UIProcess/API/C/WKURL.cpp:
+        * UIProcess/Launcher/win/WebProcessLauncher.cpp:
+        * UIProcess/ResponsivenessTimer.cpp:
+        * UIProcess/WebLoaderClient.cpp:
+        * UIProcess/WebPageProxy.h:
+        * UIProcess/WebPolicyClient.cpp:
+        * UIProcess/WebUIClient.cpp:
+        * UIProcess/win/DrawingAreaProxy.cpp:
+        * UIProcess/win/WebView.cpp:
+        * WebProcess/Launching/win/WebProcessWinMain.cpp:
+        * WebProcess/WebCoreSupport/WebChromeClient.cpp:
+        * WebProcess/WebCoreSupport/WebFrameLoaderClient.cpp:
+        * WebProcess/WebCoreSupport/mac/WebSystemInterface.h:
+        * WebProcess/WebCoreSupport/win/WebCoreLocalizedStrings.cpp:
+        * WebProcess/WebCoreSupport/win/WebErrorsWin.cpp:
+        * WebProcess/WebPage/WebFrame.h:
+        * WebProcess/WebPage/WebPage.cpp:
+        * WebProcess/WebPage/mac/DrawingAreaUpdateChunk.cpp:
+        * WebProcess/WebProcess.h:
+        * WebProcess/win/WebLocalizableStrings.cpp:
+        * WebProcess/win/WebLocalizableStrings.h:
+        * WebProcess/win/WebProcessMain.cpp:
+
+2010-04-09  Anders Carlsson  <andersca@apple.com>
+
+        Fix Windows build.
+
+        * Shared/NotImplemented.h:
+        Include stdio.h.
+
+2010-04-09  Sam Weinig  <sam@webkit.org>
+
+        Reviewed by Anders Carlsson.
+
+        Fix for https://bugs.webkit.org/show_bug.cgi?id=37347
+        Don't use CF types in the new C API
+
+        Replace all uses of CF types in the C API.
+        - Replace CFStringRef with WKStringRef.
+        - Replace CFURLRef with WKURLRef.
+
+        * WebKit2.xcodeproj/project.pbxproj: Add new files.
+
+        * Shared/KURLWrapper.h: Added. RefCounted wrapper around KURL.
+        * UIProcess/API/C/WKAPICast.h: Add new conversions.
+        * UIProcess/API/C/WKBase.h: Add new types.
+        * UIProcess/API/C/WKFrame.cpp:
+        * UIProcess/API/C/WKFrame.h: 
+        * UIProcess/API/C/WKPage.cpp:
+        * UIProcess/API/C/WKPage.h:
+        Replace uses of CF types with WK equivalents.
+
+        * UIProcess/API/C/WKString.cpp: Added.
+        * UIProcess/API/C/WKString.h: Added.
+        Represents a WebCore::StringImpl*.
+
+        * UIProcess/API/C/WKURL.cpp: Added.
+        * UIProcess/API/C/WKURL.h: Added.
+        Represents a WebKit::KURLWrapper*.
+
+        * UIProcess/API/C/cf: Added.
+        * UIProcess/API/C/cf/WKStringCF.cpp: Added.
+        * UIProcess/API/C/cf/WKStringCF.h: Added.
+        * UIProcess/API/C/cf/WKURLCF.cpp: Added.
+        * UIProcess/API/C/cf/WKURLCF.h: Added.
+        CoreFoundation conversion files. Allows converting
+         WKStringRef <-> CFStringRef
+         WKURLRef <-> CFURLRef
+
+        * UIProcess/ScriptReturnValueCallback.cpp:
+        (WebKit::ScriptReturnValueCallback::performCallbackWithReturnValue):
+        * UIProcess/ScriptReturnValueCallback.h:
+        * UIProcess/WebFrameProxy.cpp:
+        (WebKit::WebFrameProxy::didStartProvisionalLoad):
+        (WebKit::WebFrameProxy::didCommitLoad):
+        * UIProcess/WebFrameProxy.h:
+        (WebKit::WebFrameProxy::url):
+        (WebKit::WebFrameProxy::provisionalURL):
+        * UIProcess/WebLoaderClient.cpp:
+        (WebKit::WebLoaderClient::didReceiveTitleForFrame):
+        * UIProcess/WebLoaderClient.h:
+        * UIProcess/WebPageProxy.cpp:
+        (WebKit::WebPageProxy::close):
+        (WebKit::WebPageProxy::didReceiveTitleForFrame):
+        (WebKit::WebPageProxy::decidePolicyForNavigationAction):
+        (WebKit::WebPageProxy::decidePolicyForNewWindowAction):
+        (WebKit::WebPageProxy::decidePolicyForMIMEType):
+        (WebKit::WebPageProxy::runJavaScriptAlert):
+        (WebKit::WebPageProxy::didRunJavaScriptInMainFrame):
+        (WebKit::WebPageProxy::processDidExit):
+        * UIProcess/WebPageProxy.h:
+        (WebKit::WebPageProxy::pageTitle):
+        (WebKit::WebPageProxy::urlAtProcessExit):
+        * UIProcess/WebPolicyClient.cpp:
+        (WebKit::WebPolicyClient::decidePolicyForNavigationAction):
+        (WebKit::WebPolicyClient::decidePolicyForNewWindowAction):
+        (WebKit::WebPolicyClient::decidePolicyForMIMEType):
+        * UIProcess/WebPolicyClient.h:
+        * UIProcess/WebUIClient.cpp:
+        (WebKit::WebUIClient::runJavaScriptAlert):
+        * UIProcess/WebUIClient.h:
+        Don't use CF types internally at all.
+
+        * WebProcess/WebCoreSupport/WebFrameLoaderClient.cpp:
+        (WebKit::WebFrameLoaderClient::frameLoaderDestroyed):
+        Fix typo.
+
+2010-04-08  Sam Weinig  <sam@webkit.org>
+
+        Reviewed by Anders Carlsson.
+
+        Add build support for WebKit2.
+
+        * Configurations: Added.
+        * Configurations/Base.xcconfig: Added.
+        * Configurations/DebugRelease.xcconfig: Added.
+        * Configurations/FeatureDefines.xcconfig: Added.
+        * Configurations/Version.xcconfig: Added.
+        * Configurations/WebKit2.xcconfig: Added.
+        * English.lproj: Added.
+        * English.lproj/InfoPlist.strings: Added.
+        * Info.plist: Added.
+        * Makefile: Added.
+        * WebKit2.xcodeproj: Added.
+        * WebKit2.xcodeproj/project.pbxproj: Added.
+        * WebKit2Prefix.cpp: Added.
+        * WebKit2Prefix.h: Added.
+        * WebKit2_Prefix.pch: Added.
+        * WebProcess-Info.plist: Added.
+        * version.plist: Added.
+        * win: Added.
+        * win/WebKit2.def: Added.
+        * win/WebKit2.vcproj: Added.
+        * win/WebKit2Generated.make: Added.
+        * win/WebKit2Generated.vcproj: Added.
+        * win/WebKit2WebProcess.vcproj: Added.
+
+2010-04-08  Anders Carlsson  <andersca@apple.com>
+
+        Reviewed by Sam Weinig.
+
+        https://bugs.webkit.org/show_bug.cgi?id=37301
+        Add WebKit2/UIProcess directory.
+
+        * UIProcess: Added.
+        * UIProcess/API: Added.
+        * UIProcess/API/C: Added.
+        * UIProcess/API/C/WKAPICast.h: Added.
+        * UIProcess/API/C/WKBase.h: Added.
+        * UIProcess/API/C/WKContext.cpp: Added.
+        * UIProcess/API/C/WKContext.h: Added.
+        * UIProcess/API/C/WKFrame.cpp: Added.
+        * UIProcess/API/C/WKFrame.h: Added.
+        * UIProcess/API/C/WKFramePolicyListener.cpp: Added.
+        * UIProcess/API/C/WKFramePolicyListener.h: Added.
+        * UIProcess/API/C/WKPage.cpp: Added.
+        * UIProcess/API/C/WKPage.h: Added.
+        * UIProcess/API/C/WKPageNamespace.cpp: Added.
+        * UIProcess/API/C/WKPageNamespace.h: Added.
+        * UIProcess/API/C/WKPreferences.cpp: Added.
+        * UIProcess/API/C/WKPreferences.h: Added.
+        * UIProcess/API/C/WebKit2.h: Added.
+        * UIProcess/API/mac: Added.
+        * UIProcess/API/mac/PageClientImpl.h: Added.
+        * UIProcess/API/mac/PageClientImpl.mm: Added.
+        * UIProcess/API/mac/WKView.h: Added.
+        * UIProcess/API/mac/WKView.mm: Added.
+        * UIProcess/API/mac/WKViewInternal.h: Added.
+        * UIProcess/API/win: Added.
+        * UIProcess/API/win/WKAPICastWin.h: Added.
+        * UIProcess/API/win/WKBaseWin.h: Added.
+        * UIProcess/API/win/WKView.cpp: Added.
+        * UIProcess/API/win/WKView.h: Added.
+        * UIProcess/Launcher: Added.
+        * UIProcess/Launcher/WebProcessLauncher.h: Added.
+        * UIProcess/Launcher/mac: Added.
+        * UIProcess/Launcher/mac/WebProcessLauncher.mm: Added.
+        * UIProcess/Launcher/win: Added.
+        * UIProcess/Launcher/win/WebProcessLauncher.cpp: Added.
+        * UIProcess/PageClient.h: Added.
+        * UIProcess/ProcessModel.h: Added.
+        * UIProcess/ResponsivenessTimer.cpp: Added.
+        * UIProcess/ResponsivenessTimer.h: Added.
+        * UIProcess/ScriptReturnValueCallback.cpp: Added.
+        * UIProcess/ScriptReturnValueCallback.h: Added.
+        * UIProcess/WebContext.cpp: Added.
+        * UIProcess/WebContext.h: Added.
+        * UIProcess/WebFramePolicyListenerProxy.cpp: Added.
+        * UIProcess/WebFramePolicyListenerProxy.h: Added.
+        * UIProcess/WebFrameProxy.cpp: Added.
+        * UIProcess/WebFrameProxy.h: Added.
+        * UIProcess/WebLoaderClient.cpp: Added.
+        * UIProcess/WebLoaderClient.h: Added.
+        * UIProcess/WebPageNamespace.cpp: Added.
+        * UIProcess/WebPageNamespace.h: Added.
+        * UIProcess/WebPageProxy.cpp: Added.
+        * UIProcess/WebPageProxy.h: Added.
+        * UIProcess/WebPolicyClient.cpp: Added.
+        * UIProcess/WebPolicyClient.h: Added.
+        * UIProcess/WebPreferences.cpp: Added.
+        * UIProcess/WebPreferences.h: Added.
+        * UIProcess/WebProcessManager.cpp: Added.
+        * UIProcess/WebProcessManager.h: Added.
+        * UIProcess/WebProcessProxy.cpp: Added.
+        * UIProcess/WebProcessProxy.h: Added.
+        * UIProcess/WebUIClient.cpp: Added.
+        * UIProcess/WebUIClient.h: Added.
+        * UIProcess/mac: Added.
+        * UIProcess/mac/DrawingAreaProxy.h: Added.
+        * UIProcess/mac/DrawingAreaProxy.mm: Added.
+        * UIProcess/mac/DrawingAreaProxyUpdateChunk.h: Added.
+        * UIProcess/mac/DrawingAreaProxyUpdateChunk.mm: Added.
+        * UIProcess/win: Added.
+        * UIProcess/win/DrawingAreaProxy.cpp: Added.
+        * UIProcess/win/DrawingAreaProxy.h: Added.
+        * UIProcess/win/WebView.cpp: Added.
+        * UIProcess/win/WebView.h: Added.
+
+2010-04-08  Anders Carlsson  <andersca@apple.com>
+
+        Reviewed by Sam Weinig and Oliver Hunt.
+
+        https://bugs.webkit.org/show_bug.cgi?id=37300
+        Add WebKit2/WebProcess directory.
+
+        * WebProcess: Added.
+        * WebProcess/Launching: Added.
+        * WebProcess/Launching/mac: Added.
+        * WebProcess/Launching/mac/WebProcessMain.mm: Added.
+        * WebProcess/Launching/win: Added.
+        * WebProcess/Launching/win/WebProcessWinMain.cpp: Added.
+        * WebProcess/WebCoreSupport: Added.
+        * WebProcess/WebCoreSupport/WebChromeClient.cpp: Added.
+        * WebProcess/WebCoreSupport/WebChromeClient.h: Added.
+        * WebProcess/WebCoreSupport/WebContextMenuClient.cpp: Added.
+        * WebProcess/WebCoreSupport/WebContextMenuClient.h: Added.
+        * WebProcess/WebCoreSupport/WebDragClient.cpp: Added.
+        * WebProcess/WebCoreSupport/WebDragClient.h: Added.
+        * WebProcess/WebCoreSupport/WebEditorClient.cpp: Added.
+        * WebProcess/WebCoreSupport/WebEditorClient.h: Added.
+        * WebProcess/WebCoreSupport/WebErrors.h: Added.
+        * WebProcess/WebCoreSupport/WebFrameLoaderClient.cpp: Added.
+        * WebProcess/WebCoreSupport/WebInspectorClient.h: Added.
+        * WebProcess/WebCoreSupport/mac: Added.
+        * WebProcess/WebCoreSupport/mac/WebErrorsMac.mm: Added.
+        * WebProcess/WebCoreSupport/mac/WebSystemInterface.h: Added.
+        * WebProcess/WebCoreSupport/mac/WebSystemInterface.m: Added.
+        * WebProcess/WebCoreSupport/win: Added.
+        * WebProcess/WebCoreSupport/win/WebCoreLocalizedStrings.cpp: Added.
+        * WebProcess/WebCoreSupport/win/WebErrorsWin.cpp: Added.
+        * WebProcess/WebPage: Added.
+        * WebProcess/WebPage/DrawingArea.cpp: Added.
+        * WebProcess/WebPage/DrawingArea.h: Added.
+        * WebProcess/WebPage/WebFrame.cpp: Added.
+        * WebProcess/WebPage/WebFrame.h: Added.
+        * WebProcess/WebPage/WebPage.cpp: Added.
+        * WebProcess/WebPage/WebPage.h: Added.
+        * WebProcess/WebPage/mac: Added.
+        * WebProcess/WebPage/mac/DrawingAreaUpdateChunk.cpp: Added.
+        * WebProcess/WebPage/mac/DrawingAreaUpdateChunk.h: Added.
+        * WebProcess/WebPage/mac/WebPageMac.mm: Added.
+        * WebProcess/WebPage/win: Added.
+        * WebProcess/WebPage/win/DrawingAreaUpdateChunk.cpp: Added.
+        * WebProcess/WebPage/win/DrawingAreaUpdateChunk.h: Added.
+        * WebProcess/WebPage/win/WebPageWin.cpp: Added.
+        * WebProcess/WebProcess.cpp: Added.
+        * WebProcess/WebProcess.h: Added.
+        * WebProcess/win: Added.
+        * WebProcess/win/DllMain.cpp: Added.
+        * WebProcess/win/WebLocalizableStrings.cpp: Added.
+        * WebProcess/win/WebLocalizableStrings.h: Added.
+        * WebProcess/win/WebProcessMain.cpp: Added.
+        * WebProcess/win/WebProcessMain.h: Added.
+
+2010-04-08  Sam Weinig  <sam@webkit.org>
+
+        Reviewed by Anders Carlsson.
+
+        https://bugs.webkit.org/show_bug.cgi?id=37295
+        Add WebKit2/Shared directory.
+
+        * Shared: Added.
+        * Shared/CoreIPCSupport: Added.
+        * Shared/CoreIPCSupport/DrawingAreaMessageKinds.h: Added.
+        * Shared/CoreIPCSupport/DrawingAreaProxyMessageKinds.h: Added.
+        * Shared/CoreIPCSupport/WebPageMessageKinds.h: Added.
+        * Shared/CoreIPCSupport/WebPageProxyMessageKinds.h: Added.
+        * Shared/CoreIPCSupport/WebProcessMessageKinds.h: Added.
+        * Shared/NotImplemented.h: Added.
+        * Shared/WebCoreTypeArgumentMarshalling.h: Added.
+        * Shared/WebEvent.h: Added.
+        * Shared/WebEventConversion.cpp: Added.
+        * Shared/WebEventConversion.h: Added.
+        * Shared/WebPreferencesStore.cpp: Added.
+        * Shared/WebPreferencesStore.h: Added.
+        * Shared/mac: Added.
+        * Shared/mac/UpdateChunk.cpp: Added.
+        * Shared/mac/UpdateChunk.h: Added.
+        * Shared/mac/WebEventFactory.h: Added.
+        * Shared/mac/WebEventFactory.mm: Added.
+        * Shared/win: Added.
+        * Shared/win/UpdateChunk.cpp: Added.
+        * Shared/win/UpdateChunk.h: Added.
+        * Shared/win/WebEventFactory.cpp: Added.
+        * Shared/win/WebEventFactory.h: Added.
+
+2010-04-08  Sam Weinig  <sam@webkit.org>
+
+        Reviewed by Anders Carlsson.
+
+        https://bugs.webkit.org/show_bug.cgi?id=37293
+        Add WebKit2/Platform directory.
+
+        * Platform: Added.
+        * Platform/CoreIPC: Added.
+        * Platform/CoreIPC/ArgumentDecoder.cpp: Added.
+        * Platform/CoreIPC/ArgumentDecoder.h: Added.
+        * Platform/CoreIPC/ArgumentEncoder.cpp: Added.
+        * Platform/CoreIPC/ArgumentEncoder.h: Added.
+        * Platform/CoreIPC/Arguments.h: Added.
+        * Platform/CoreIPC/Attachment.cpp: Added.
+        * Platform/CoreIPC/Attachment.h: Added.
+        * Platform/CoreIPC/Connection.cpp: Added.
+        * Platform/CoreIPC/Connection.h: Added.
+        * Platform/CoreIPC/MessageID.h: Added.
+        * Platform/CoreIPC/mac: Added.
+        * Platform/CoreIPC/mac/ConnectionMac.cpp: Added.
+        * Platform/CoreIPC/mac/MachPort.h: Added.
+        * Platform/CoreIPC/win: Added.
+        * Platform/CoreIPC/win/ConnectionWin.cpp: Added.
+        * Platform/PlatformProcessIdentifier.h: Added.
+        * Platform/RunLoop.cpp: Added.
+        * Platform/RunLoop.h: Added.
+        * Platform/WorkItem.h: Added.
+        * Platform/WorkQueue.cpp: Added.
+        * Platform/WorkQueue.h: Added.
+        * Platform/mac: Added.
+        * Platform/mac/RunLoopMac.mm: Added.
+        * Platform/mac/WorkQueueMac.cpp: Added.
+        * Platform/win: Added.
+        * Platform/win/RunLoopWin.cpp: Added.
+
+2010-04-08  Sam Weinig  <sam@webkit.org>
+
+        Rubber-stamped by Mark Rowe.
+
+        Add WebKit2 directory.

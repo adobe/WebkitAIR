@@ -1,0 +1,33 @@
+#include "../../../../products/AIR/osx/Mac/AIR-Common.xcconfig"
+
+// AIR.xcconfig turns this on, but this library will fail with this enabled, so turn it back off
+GCC_WARN_HIDDEN_VIRTUAL_FUNCTIONS = NO
+
+#include "../../Configurations/Base.xcconfig"
+
+ARCHS = i386 x86_64
+
+// Override Base.xcconfig setting the SDK and target to the current MAC OS version
+// Set the sdkroot to the value set in CompilerSettings.xcconfig
+SDKROOT = ${AIR_SDKROOT}
+
+GCC_PREFIX_HEADER = ../../WebCorePrefix.h;
+
+// DO NOT ADD THE WEBKIT SOURCE DIRECTORY TO THE HEADER_SEARCH_PATHS LIST.  WebCore is only supposed to know about public
+// WebKit interfaces, not implementation classes!!!  If you are added the WebKit source directory to the include path you
+// wrote your code in WebCore incorrectly.
+HEADER_SEARCH_PATHS = "$(WEBCORE_SRC_ROOT)" "$(PROJECT_TEMP_DIR)/$(CONFIGURATION)" "$(PROJECT_TEMP_DIR)/../JavaScriptCore.build/$(CONFIGURATION)/FrameworkHeaders" "$(PROJECT_TEMP_DIR)/$(CONFIGURATION)/DerivedSources" "$(WEBCORE_SRC_ROOT)/../JavaScriptCore" "$(WEBCORE_SRC_ROOT)/../JavaScriptCore/kjs" "$(WEBCORE_SRC_ROOT)/../JavaScriptCore/VM" "$(WEBCORE_SRC_ROOT)/platform" "$(WEBCORE_SRC_ROOT)/platform/apollo" "$(WEBCORE_SRC_ROOT)/platform/apollo/mac" "$(WEBCORE_SRC_ROOT)/bridge" "$(WEBCORE_SRC_ROOT)/bridge/c" "$(WEBCORE_SRC_ROOT)/bridge/objc" "$(WEBCORE_SRC_ROOT)/platform/graphics" "$(WEBCORE_SRC_ROOT)/platform/graphics/cg" "$(WEBCORE_SRC_ROOT)/platform/graphics/apollo/mac" "$(WEBCORE_SRC_ROOT)/platform/network" "$(WEBCORE_SRC_ROOT)/platform/network/apollo" "$(WEBCORE_SRC_ROOT)/platform/text" "$(WEBCORE_SRC_ROOT)/plugins" "$(WEBCORE_SRC_ROOT)/plugins/mac" "$(WEBCORE_SRC_ROOT)/loader" "$(WEBCORE_SRC_ROOT)/loader/archive" "$(WEBCORE_SRC_ROOT)/loader/apollo" "$(WEBCORE_SRC_ROOT)/loader/icon" "$(WEBCORE_SRC_ROOT)/rendering" "$(WEBCORE_SRC_ROOT)/rendering/style" "$(WEBCORE_SRC_ROOT)/editing" "$(WEBCORE_SRC_ROOT)/history" "$(WEBCORE_SRC_ROOT)/page" "$(WEBCORE_SRC_ROOT)/css" "$(WEBCORE_SRC_ROOT)/dom" "$(WEBCORE_SRC_ROOT)/html" "$(WEBCORE_SRC_ROOT)/xml" "$(WEBCORE_SRC_ROOT)/icu" "$(WEBCORE_SRC_ROOT)/bindings/js" "$(SDKROOT)/usr/include/libxml2" "$(SDKROOT)/usr/include" "$(WEBCORE_SRC_ROOT)/../WebKit/apollo/include" "$(WEBCORE_SRC_ROOT)/../WebKit/apollo/include/mac" "${WEBCORE_SRC_ROOT}/../../../SDK/Loki/include" "${PROJECT_DIR}" $(HEADER_SEARCH_PATHS);
+GCC_PFE_FILE_C_DIALECTS = c c++ objective-c++;
+PRODUCT_NAME = WebCore
+INSTALL_PATH = /usr/local/lib
+GCC_GENERATE_DEBUGGING_SYMBOLS = YES
+GCC_MODEL_TUNING = G5
+COPY_PHASE_STRIP = NO
+FEATURE_DEFINES = ENABLE_XPATH=1 ENABLE_XSLT=1 ENABLE_ICONDATABASE=0 ENABLE_DATABASE=0 ENABLE_FTPDIR=0 ENABLE_NETSCAPE_PLUGIN_API=1
+PLATFORM_DEFINES = BUILDING_APOLLO__ WTF_PLATFORM_CG WTF_PLATFORM_CF
+GCC_PREPROCESSOR_DEFINITIONS = $(PLATFORM_DEFINES) $(FEATURE_DEFINES) $(DEBUG_DEFINES) $(GCC_PREPROCESSOR_DEFINITIONS)
+USE_HEADERMAP = NO
+GCC_STRICT_ALIASING = NO
+
+GCC_TREAT_WARNINGS_AS_ERRORS = YES
+GCC_VERSION = ${AIR_WEBKIT_GCC_VERSION}

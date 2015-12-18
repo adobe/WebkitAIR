@@ -1,0 +1,58 @@
+// include this file in your .rc file in order to add custom version information to the WebKit.dll file used by your product (e.g. AIR, Dreamweaver etc)
+// this file (VersionCommon.rc) must not be part of any vcproj.
+
+#include <winver.h>
+
+#define APSTUDIO_READONLY_SYMBOLS
+    #include "afxres.h"
+#undef APSTUDIO_READONLY_SYMBOLS
+
+#define MAKE_STR2_(x) #x
+#define MAKE_STR(x) MAKE_STR2_(x)
+
+#define WebKitVersionHigh 6531
+#define WebKitVersionLow 9
+#define WebKitVersionString MAKE_STR(WebKitVersionHigh) "." MAKE_STR(WebKitVersionLow)
+
+//#if !defined(ProductUsesWebKitVersionHigh) || !defined(ProductUsesWebKitVersionLow)
+//    #error Please define ProductUsesWebKitVersionHigh and ProductUsesWebKitVersionHigh in your specific resource file 
+//#endif
+//#define ProductUsesWebKitVersionString MAKE_STR(ProductUsesWebKitVersionHigh) "." MAKE_STR(ProductUsesWebKitVersionLow)
+
+// Version
+VS_VERSION_INFO VERSIONINFO
+ FILEVERSION WebKitVersionHigh,WebKitVersionLow,0,0
+ //PRODUCTVERSION ProductUsesWebKitVersionHigh,ProductUsesWebKitVersionLow,WebKitVersionHigh,WebKitVersionLow
+ PRODUCTVERSION WebKitVersionHigh,WebKitVersionLow,0,0
+ FILEFLAGSMASK 0x17L
+#ifdef _DEBUG
+ FILEFLAGS 0x1L
+#else
+ FILEFLAGS 0x0L
+#endif
+ FILEOS 0x4L
+ FILETYPE 0x2L
+ FILESUBTYPE 0x0L
+BEGIN
+    BLOCK "StringFileInfo"
+    BEGIN
+        BLOCK "040904b0" // US English, Unicode
+        BEGIN
+            VALUE "FileDescription", "WebKit dynamic link library"
+            VALUE "FileVersion", WebKitVersionString
+            VALUE "InternalName", "WebKit"
+            VALUE "OriginalFilename", "WebKit.dll"
+            //VALUE "ProductName", "WebKit DLL used by " ProductUsesWebKitName " " ProductUsesWebKitVersionString
+            VALUE "ProductName", "WebKit DLL used by " ProductUsesWebKitName
+            //VALUE "ProductVersion", ProductUsesWebKitVersionString "." WebKitVersionString
+            //VALUE "ProductVersion", ProductUsesWebKitName " " ProductUsesWebKitVersionString "; WebKit " WebKitVersionString
+            VALUE "ProductVersion", WebKitVersionString
+            VALUE "LegalCopyright", "Copyright © 1998-2012 various authors"
+        END
+    END
+    BLOCK "VarFileInfo"
+    BEGIN
+        VALUE "Translation", 0x409, 1200
+    END
+END
+
